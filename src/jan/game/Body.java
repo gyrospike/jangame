@@ -3,6 +3,7 @@ package jan.game;
 public class Body extends BaseObject {
 
 	public Sprite mSprite;
+	//this is a small change
 	
 	public Body() {
 		mSprite = new Sprite(0);
