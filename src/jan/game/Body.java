@@ -3,16 +3,16 @@ package jan.game;
 public class Body extends BaseObject {
 
 	public Sprite mSprite;
-	//this is a small change
 	
-	public Body() {
+	public Body(int x, int y) {
 		mSprite = new Sprite(0);
+		mSprite.xOffset = x;
+		mSprite.yOffset = y;
 	}
 	
 	@Override
 	public void update(float timeDelta, BaseObject parent) {
 		RenderSystem system = sSystemRegistry.renderSystem;
-		mSprite.textureIndex = 0;
 		system.scheduleForDraw(mSprite);
 	}
 }

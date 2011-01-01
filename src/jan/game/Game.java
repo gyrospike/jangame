@@ -23,9 +23,12 @@ public class Game {
 		TextureLibrary longTermTextureLibrary = new TextureLibrary();
 		BaseObject.sSystemRegistry.longTermTextureLibrary = longTermTextureLibrary;
 		
-		Body redBody = new Body();
+		Body redBody = new Body(0, 0);
+		Body blueBody = new Body(1, 0);
 		redBody.mSprite.setTexture(longTermTextureLibrary.allocateTexture(R.drawable.red_box), 4, 4);
+		blueBody.mSprite.setTexture(longTermTextureLibrary.allocateTexture(R.drawable.blue_box), 4, 4);
 		mGameRoot.add(redBody);
+		mGameRoot.add(blueBody);
 		
 		mGameThread = new GameThread(mSurfaceView.getRenderer());
 		mGameThread.setGameRoot(mGameRoot);

@@ -22,66 +22,57 @@ import android.util.Log;
 public class Sprite {
 
 	private Context mContext;
-	private FloatBuffer mVertexBuffer;
-	private FloatBuffer mTexBuffer;
-	private ShortBuffer mIndexBuffer;
-
-	private int[] textures = new int[1];
-	private int mResourceId;
-
-	private Texture[] mTexture;
-
 	private int mPriority;
-
 	public float xOffset;
 	public float yOffset;
 	public boolean cameraRelative;
-	public int textureIndex;
+	
+	private Texture[] mTexture;
+	
+	/** The buffer holding the vertices */
+	private FloatBuffer vertexBuffer;
+	/** The buffer holding the texture coordinates */
+	private FloatBuffer textureBuffer;
+	/** The buffer holding the indices */
+	private ByteBuffer indexBuffer;
+	
+	private byte[] indices = { 1, 0, 2, 3 };
+
+	private float[] vertices = { -.1f, -.1f, // 0 bottom left
+			-.1f, .1f, // 1 top left
+			.1f, .1f, // 2 top right
+			.1f, -.1f, // 3 bottom right
+	};
+
+	private float[] texture = { 0.0f, 0.0f, //
+			1.0f, 0.0f, //
+			1.0f, 1.0f, //
+			0.0f, 1.0f //
+	};
 
 	public Sprite(int priority) {
 
-		xOffset = 0.0f;
-		yOffset = 0.0f;
-
 		mTexture = new Texture[2];
 		mPriority = priority;
-		// mResourceId = resourceId;
-		// mContext = context;
+		
+		//
+		ByteBuffer byteBuf = ByteBuffer.allocateDirect(vertices.length * 4);
+		byteBuf.order(ByteOrder.nativeOrder());
+		vertexBuffer = byteBuf.asFloatBuffer();
+		vertexBuffer.put(vertices);
+		vertexBuffer.position(0);
 
-		short[] mIndicesArray = { 1, 0, 2, 3 };
+		//
+		byteBuf = ByteBuffer.allocateDirect(texture.length * 4);
+		byteBuf.order(ByteOrder.nativeOrder());
+		textureBuffer = byteBuf.asFloatBuffer();
+		textureBuffer.put(texture);
+		textureBuffer.position(0);
 
-		float[] coords = { -.1f, -.1f, // 0 bottom left
-				.1f, -.1f, // 3 bottom right
-				-.1f, .1f, // 1 top left
-				.1f, .1f, // 2 top right
-		};
-
-		float[] texCoords = { 0.0f, 0.0f, //
-	    		0.0f, 1.0f, //
-	    		1.0f, 0.0f, //
-	    		1.0f, 1.0f //
-		};
-
-		ByteBuffer vbb = ByteBuffer.allocateDirect(coords.length * 4);
-		vbb.order(ByteOrder.nativeOrder());
-		mVertexBuffer = vbb.asFloatBuffer();
-
-		ByteBuffer ibb = ByteBuffer.allocateDirect(mIndicesArray.length * 2);
-		ibb.order(ByteOrder.nativeOrder());
-		mIndexBuffer = ibb.asShortBuffer();
-
-		ByteBuffer tbb = ByteBuffer.allocateDirect(texCoords.length * 4);
-		tbb.order(ByteOrder.nativeOrder());
-		mTexBuffer = tbb.asFloatBuffer();
-
-		mVertexBuffer.put(coords);
-		mIndexBuffer.put(mIndicesArray);
-		mTexBuffer.put(texCoords);
-
-		mVertexBuffer.position(0);
-		mIndexBuffer.position(0);
-		mTexBuffer.position(0);
-
+		//
+		indexBuffer = ByteBuffer.allocateDirect(indices.length);
+		indexBuffer.put(indices);
+		indexBuffer.position(0);
 	}
 
 	public int getPriority() {
@@ -89,37 +80,33 @@ public class Sprite {
 	}
 
 	public void setTexture(Texture texture, int width, int height) {
-		mTexture[textureIndex] = texture;
+		mTexture[0] = texture;
 		// mWidth = width;
 		// mHeight = height;
 		// setCrop(0, height, width, height);
-		textureIndex++;
+		//textureIndex++;
 	}
 
 	public void draw(GL10 gl, float angle, float x, float y) {
-		gl.glEnable(GL10.GL_TEXTURE_2D);
-		gl.glEnableClientState(GL10.GL_VERTEX_ARRAY);
-		gl.glEnableClientState(GL10.GL_TEXTURE_COORD_ARRAY);
+		// Bind the texture according to the set texture filter
+		gl.glBindTexture(GL10.GL_TEXTURE_2D, mTexture[0].name);
 
-		final Texture texture = mTexture[textureIndex];
-
-		// Bind our only previously generated texture in this case
-		gl.glBindTexture(GL10.GL_TEXTURE_2D, texture.name);
-
-		// Point to our buffers
+		// Enable the vertex, texture and normal state
 		gl.glEnableClientState(GL10.GL_VERTEX_ARRAY);
 		gl.glEnableClientState(GL10.GL_TEXTURE_COORD_ARRAY);
 
 		// Set the face rotation
 		gl.glFrontFace(GL10.GL_CCW);
 
-		// Enable the vertex and texture state
-		gl.glVertexPointer(3, GL10.GL_FLOAT, 0, mVertexBuffer);
-		gl.glTexCoordPointer(2, GL10.GL_FLOAT, 0, mTexBuffer);
+		gl.glTranslatef(x, y, 0);
+		
+		// Point to our buffers
+		gl.glVertexPointer(2, GL10.GL_FLOAT, 0, vertexBuffer);
+		gl.glTexCoordPointer(2, GL10.GL_FLOAT, 0, textureBuffer);
 
 		// Draw the vertices as triangles, based on the Index Buffer information
-		gl.glDrawElements(GL10.GL_TRIANGLES, 4, GL10.GL_UNSIGNED_BYTE,
-				mIndexBuffer);
+		gl.glDrawElements(GL10.GL_TRIANGLE_STRIP, indices.length, GL10.GL_UNSIGNED_BYTE,
+				indexBuffer);
 
 		// Disable the client state before leaving
 		gl.glDisableClientState(GL10.GL_VERTEX_ARRAY);

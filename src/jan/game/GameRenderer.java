@@ -5,8 +5,6 @@ import java.io.InputStream;
 
 import javax.microedition.khronos.egl.EGLConfig;
 import javax.microedition.khronos.opengles.GL10;
-import javax.microedition.khronos.opengles.GL11;
-import javax.microedition.khronos.opengles.GL11Ext;
 
 import android.content.Context;
 import android.graphics.Bitmap;
@@ -21,7 +19,6 @@ public class GameRenderer implements Renderer {
 	private Context mContext;
 
 	private Sprite[] spriteArray;
-
 	private float originX, originY;
 	private float xCamera, yCamera;
 	private boolean setOrigin = false;
@@ -37,8 +34,8 @@ public class GameRenderer implements Renderer {
 	public void onSurfaceCreated(GL10 gl, EGLConfig config) {
 		loadTextures(gl, BaseObject.sSystemRegistry.longTermTextureLibrary);
 
-		gl.glEnable(GL10.GL_TEXTURE_2D);			//Enable Texture Mapping ( NEW )
 		gl.glShadeModel(GL10.GL_SMOOTH); 			//Enable Smooth Shading
+		gl.glEnable(GL10.GL_TEXTURE_2D);
 		gl.glClearColor(0.0f, 0.0f, 0.0f, 0.5f); 	//Black Background
 		gl.glClearDepthf(1.0f); 					//Depth Buffer Setup
 		gl.glEnable(GL10.GL_DEPTH_TEST); 			//Enables Depth Testing
@@ -49,6 +46,10 @@ public class GameRenderer implements Renderer {
 	}
 
 	public void onSurfaceChanged(GL10 gl, int width, int height) {
+		if(height == 0) { 						//Prevent A Divide By Zero By
+			height = 1; 						//Making Height Equal One
+		}
+
 		gl.glViewport(0, 0, width, height); 	//Reset The Current Viewport
 		gl.glMatrixMode(GL10.GL_PROJECTION); 	//Select The Projection Matrix
 		gl.glLoadIdentity(); 					//Reset The Projection Matrix
@@ -57,7 +58,7 @@ public class GameRenderer implements Renderer {
 		GLU.gluPerspective(gl, 45.0f, (float)width / (float)height, 0.1f, 100.0f);
 
 		gl.glMatrixMode(GL10.GL_MODELVIEW); 	//Select The Modelview Matrix
-		gl.glLoadIdentity(); 					//Reset The Modelview Matrix
+		gl.glLoadIdentity(); 				//Reset The Modelview Matrix
 	}
 
 	private void viewOrtho(GL10 gl, int w, int h) { // Set Up An Ortho View
@@ -80,9 +81,13 @@ public class GameRenderer implements Renderer {
 		gl.glPopMatrix(); // Pop The Matrix
 	}
 
-
 	public void onDrawFrame(GL10 gl) {
 
+		gl.glClear(GL10.GL_COLOR_BUFFER_BIT | GL10.GL_DEPTH_BUFFER_BIT);	
+		gl.glLoadIdentity();
+		gl.glTranslatef(0.0f, -1.2f, -6.0f);	
+		
+		
 		synchronized (mDrawLock) {
 			if (!mDrawQueueChanged) {
 				while (!mDrawQueueChanged) {
@@ -96,7 +101,7 @@ public class GameRenderer implements Renderer {
 			mDrawQueueChanged = false;
 		}
 
-		viewOrtho(gl, 480, 854);
+		//viewOrtho(gl, 480, 854);
 		
 		synchronized (this) {
 			if (spriteArray != null) {
@@ -113,13 +118,13 @@ public class GameRenderer implements Renderer {
 							x = (x + xCamera) + 160;
 							y = (y + yCamera) + 240;
 						}
-						spriteArray[i].draw(gl, 0, 0, 0);
+						spriteArray[i].draw(gl, 0, x, y);
 					}
 				}
 			}
 		}
 
-		viewPerspective(gl);
+		//viewPerspective(gl);
 	}
 
 	public void loadTextures(GL10 gl, TextureLibrary library) {
