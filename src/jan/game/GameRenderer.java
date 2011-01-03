@@ -10,10 +10,8 @@ import android.util.Log;
 
 public class GameRenderer implements Renderer {
 	
-	private final int ZOOM_SCALE = 200;
-	
 	private Context mContext;
-	private Sprite[] spriteArray;
+	private FixedSizeArray spriteList;
 	private float originX, originY;
 	private float xCamera, yCamera;
 	private boolean setOrigin = false;
@@ -47,11 +45,16 @@ public class GameRenderer implements Renderer {
 		
 		mWidth = width;
 		mHeight = height;
-		Log.d("DEBUG", "Width, Height: " + width + ", " + height);
+		
+		Log.d("DEBUG", "screen dimsensions, dpi: " + mWidth + ", " + mHeight);
+		int newWidth = (width * 240 / 160);
+		int newHeight = (height * 240 / 160);
+		Log.d("DEBUG", "screen dimsensions, pix: " + newWidth + ", " + newHeight);
+		
 		gl.glViewport(0, 0, width, height);
 		gl.glMatrixMode(GL10.GL_PROJECTION);
 		gl.glLoadIdentity();
-		GLU.gluPerspective(gl, 45.0f, (float)width / (float)height, 0.1f, 100.0f);
+		//GLU.gluPerspective(gl, 45.0f, (float)width / (float)height, 0.1f, 100.0f);
 		gl.glMatrixMode(GL10.GL_MODELVIEW);
 		gl.glLoadIdentity();
 	}
@@ -60,7 +63,8 @@ public class GameRenderer implements Renderer {
 		gl.glMatrixMode(gl.GL_PROJECTION);
 		gl.glPushMatrix();
 		gl.glLoadIdentity();
-		gl.glOrthof(-w/ZOOM_SCALE, w/ZOOM_SCALE, -h/ZOOM_SCALE, h/ZOOM_SCALE, -1, 1);
+		gl.glOrthof(0, w, -h, 0, -1, 1);
+		//Log.d("DEBUG", "w, h: " + w + ", " + h);
 		gl.glMatrixMode(gl.GL_MODELVIEW);
 		gl.glPushMatrix();
 		gl.glLoadIdentity();
@@ -95,19 +99,23 @@ public class GameRenderer implements Renderer {
 		viewOrtho(gl, mWidth, mHeight);
 		
 		synchronized (this) {
-			if (spriteArray != null) {
+			if (spriteList != null) {
+                Object[] objectArray = spriteList.getArray();
 				float x;
 				float y;
-				final int count = spriteArray.length;
+				final int count = objectArray.length;
 				for (int i = 0; i < count; i++) {
-					if (spriteArray[i] != null) {
-						x = spriteArray[i].xOffset;
-						y = spriteArray[i].yOffset;
+					if (objectArray[i] != null) {
+						Sprite currentSprite = (Sprite)objectArray[i];
+						x = currentSprite.xOffset;
+						y = currentSprite.yOffset;
+						/*
 						if (spriteArray[i].cameraRelative) {
 							x = (x + xCamera) + (mWidth/2);
 							y = (y + yCamera) + (mHeight/2);
 						}
-						spriteArray[i].draw(gl, 0, x, y);
+						*/
+						currentSprite.draw(gl, 0, x, y);
 					}
 				}
 			}
@@ -121,8 +129,8 @@ public class GameRenderer implements Renderer {
 		}
 	}
 	
-	public synchronized void setDrawQueue(Sprite[] dArray) {
-		spriteArray = dArray;
+	public synchronized void setDrawQueue(FixedSizeArray<Sprite> sList) {
+		spriteList = sList;
 		synchronized (mDrawLock) {
 			mDrawQueueChanged = true;
 			mDrawLock.notify();

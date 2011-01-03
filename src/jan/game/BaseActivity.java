@@ -26,7 +26,7 @@ public class BaseActivity extends Activity {
 
 		GLSurfaceView mGLView = new OGLSurfaceView(this);
 		setContentView(mGLView);
-
+		
 		Game mGame = new Game();
 		mGame.setSurfaceView((OGLSurfaceView) mGLView);
 		mGame.bootstrap(this);

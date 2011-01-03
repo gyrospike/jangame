@@ -5,6 +5,8 @@ import java.nio.ByteOrder;
 import java.nio.FloatBuffer;
 import java.util.Comparator;
 import javax.microedition.khronos.opengles.GL10;
+
+import android.util.Log;
 import jan.game.Texture;
 
 public class Sprite {
@@ -19,20 +21,25 @@ public class Sprite {
 	private FloatBuffer vertexBuffer;
 	private FloatBuffer textureBuffer;
 	private ByteBuffer indexBuffer;
+	
+	private float widthScale;
+	private float heightScale;
 
 	public Sprite(int priority) {
 		byte[] indices = { 1, 0, 2, 3 };
 
-		float[] vertices = { -.1f, -.1f, // 0 bottom left
-				-.1f, .1f, // 1 top left
-				.1f, .1f, // 2 top right
-				.1f, -.1f, // 3 bottom right
+		float[] vertices = {
+				-1.0f, -1.0f, // 0 bottom left
+				-1.0f, 1.0f, // 1 top left
+				1.0f, 1.0f, // 2 top right
+				1.0f, -1.0f, // 3 bottom right
 		};
 
-		float[] texture = { 0.0f, 0.0f, //
-				1.0f, 0.0f, //
+		float[] texture = { 
 				1.0f, 1.0f, //
-				0.0f, 1.0f //
+				1.0f, 0.0f, //
+				0.0f, 0.0f, //
+				0.0f, 1.0f, //
 		};
 		
 		mTexture = new Texture[2];
@@ -54,6 +61,15 @@ public class Sprite {
 		indexBuffer.put(indices);
 		indexBuffer.position(0);
 	}
+	
+	public void setPosition(float x, float y) {
+		xOffset = x;
+		yOffset = -y;
+	}
+	
+	public Vector2 getPosition() {
+		return new Vector2(xOffset, yOffset);
+	}
 
 	public int getPriority() {
 		return mPriority;
@@ -61,6 +77,8 @@ public class Sprite {
 
 	public void setTexture(Texture texture, int width, int height) {
 		mTexture[0] = texture;
+		widthScale = width;
+		heightScale = height;
 	}
 
 	public void draw(GL10 gl, float angle, float x, float y) {
@@ -69,9 +87,12 @@ public class Sprite {
 		gl.glEnableClientState(GL10.GL_TEXTURE_COORD_ARRAY);
 		gl.glVertexPointer(2, GL10.GL_FLOAT, 0, vertexBuffer);
 		gl.glTexCoordPointer(2, GL10.GL_FLOAT, 0, textureBuffer);
-
+		
 		gl.glTranslatef(x, y, 0);
 		gl.glRotatef(rotation, 0, 0, 1);
+		gl.glScalef(widthScale, heightScale, 0);
+		//gl.glTranslatef(widthScale/2, heightScale/2, 0);
+		
 		gl.glDrawElements(GL10.GL_TRIANGLE_STRIP, 4, GL10.GL_UNSIGNED_BYTE, indexBuffer);
 		gl.glLoadIdentity();
 		

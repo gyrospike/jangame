@@ -77,6 +77,12 @@ public final class Vector2 {
         float dy = y - other.y;
         return (dx * dx) + (dy * dy);
     }
+    
+    public final float distance(Vector2 other) {
+        float dx = x - other.x;
+        float dy = y - other.y;
+        return (float)Math.sqrt((dx * dx) + (dy * dy));
+    }
 
     public final float normalize() {
         final float magnitude = length();

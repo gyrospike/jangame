@@ -16,13 +16,14 @@ public class Body extends BaseObject {
 		mSprite = new Sprite(0);
 		originRotate = false;
 		rotationInc = rot;
-		mSprite.xOffset = x;
-		mSprite.yOffset = y;
+		mSprite.setPosition(x, y);
 	}
 	
 	public void setRotationOrigin(Vector2 origin) {
 		originRotate = true;
-		radius = origin.distance2(new Vector2(mSprite.xOffset, mSprite.yOffset));
+		radius = origin.distance(mSprite.getPosition());
+		rotationOrigin = origin;
+		Log.d("DEBUG", "radius: " + radius);
 	}
 	
 	@Override
@@ -30,10 +31,8 @@ public class Body extends BaseObject {
 		RenderSystem system = sSystemRegistry.renderSystem;
 		mSprite.rotation += rotationInc;
 		if(originRotate) {
-			angle += 0.005;
-			mSprite.xOffset = (float)(radius * Math.cos(angle));
-			mSprite.yOffset = (float)(radius * Math.sin(angle));
-			Log.d("DEBUG", "cos: " + (float)(radius * Math.cos(angle)));
+			angle += 0.1;	
+			mSprite.setPosition(rotationOrigin.x + (float)(radius * Math.cos(angle)), rotationOrigin.y + (float)(radius * Math.sin(angle)));
 		}
 		system.scheduleForDraw(mSprite);
 	}

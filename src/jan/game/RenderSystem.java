@@ -6,35 +6,39 @@ import android.util.Log;
 
 public class RenderSystem extends BaseObject {
 
+	private final static int DRAW_QUEUE_COUNT = 2;
+	
 	private PriorityComparator priorityComparator = new PriorityComparator();
-	private FixedSizeArray<Sprite> spriteList = new FixedSizeArray<Sprite>(80);
+	private FixedSizeArray<Sprite> spriteList[] = new FixedSizeArray[DRAW_QUEUE_COUNT];
+	private int currentBufferIndex;
 
 	public RenderSystem() {
 		super();
-		spriteList.setComparator(priorityComparator);
+		for(int i = 0; i < DRAW_QUEUE_COUNT; i++) {
+			spriteList[i] = new FixedSizeArray<Sprite>(20);
+			spriteList[i].setComparator(priorityComparator);
+		}
+		currentBufferIndex = 0;
 	}
 
 	public void scheduleForDraw(Sprite sprite) {
 		if (sprite != null) {
-			spriteList.add(sprite);
+			spriteList[currentBufferIndex].add(sprite);
 		}
 	}
 
 	public void sendUpdates(GameRenderer renderer) {
 		// ensures that the spriteArray contains sprites sorted by their
 		// priorities, prevents background from being drawn over nodes
-		spriteList.sort(false);
+		spriteList[currentBufferIndex].sort(false);
 
-		final Object[] objectArray = spriteList.getArray();
-		Sprite[] spriteArray = new Sprite[objectArray.length];
-
-		int count = spriteArray.length;
-		for (int i = 0; i < count; i++) {
-			spriteArray[i] = (Sprite) objectArray[i];
-		}
-
-		renderer.setDrawQueue(spriteArray);
-		clearQueue(spriteList);
+		renderer.setDrawQueue(spriteList[currentBufferIndex]);
+		
+		final int lastQueue = (currentBufferIndex == 0) ? DRAW_QUEUE_COUNT - 1 : currentBufferIndex - 1;
+		
+		clearQueue(spriteList[lastQueue]);
+		
+		currentBufferIndex = (currentBufferIndex + 1) % DRAW_QUEUE_COUNT;
 	}
 
 	private void clearQueue(FixedSizeArray<Sprite> objects) {

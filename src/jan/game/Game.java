@@ -23,13 +23,17 @@ public class Game {
 		TextureLibrary longTermTextureLibrary = new TextureLibrary();
 		BaseObject.sSystemRegistry.longTermTextureLibrary = longTermTextureLibrary;
 		
-		Body redBody = new Body(0, 0, 0.1f);
-		Body blueBody = new Body(1, 0, 0.4f);
+		Body ship = new Body(240, 600, 0.0f);
+		Body redBody = new Body(240, 427, 0.1f);
+		Body blueBody = new Body(40, 40, 0.4f);
 		
-		blueBody.setRotationOrigin(new Vector2(0, 0));
+		blueBody.setRotationOrigin(new Vector2(100, 100));
 		
+		ship.mSprite.setTexture(longTermTextureLibrary.allocateTexture(R.drawable.ship), 32, 32);
 		redBody.mSprite.setTexture(longTermTextureLibrary.allocateTexture(R.drawable.red_box), 4, 4);
 		blueBody.mSprite.setTexture(longTermTextureLibrary.allocateTexture(R.drawable.blue_box), 4, 4);
+		
+		mGameRoot.add(ship);
 		mGameRoot.add(redBody);
 		mGameRoot.add(blueBody);
 		
