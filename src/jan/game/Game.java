@@ -25,6 +25,9 @@ public class Game {
 		
 		Body redBody = new Body(0, 0, 0.1f);
 		Body blueBody = new Body(1, 0, 0.4f);
+		
+		blueBody.setRotationOrigin(new Vector2(0, 0));
+		
 		redBody.mSprite.setTexture(longTermTextureLibrary.allocateTexture(R.drawable.red_box), 4, 4);
 		blueBody.mSprite.setTexture(longTermTextureLibrary.allocateTexture(R.drawable.blue_box), 4, 4);
 		mGameRoot.add(redBody);
