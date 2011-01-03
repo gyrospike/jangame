@@ -23,7 +23,7 @@ public class Game {
 		TextureLibrary longTermTextureLibrary = new TextureLibrary();
 		BaseObject.sSystemRegistry.longTermTextureLibrary = longTermTextureLibrary;
 		
-		Body ship = new Body(240, 600, 0.0f);
+		Body ship = new Body(240, 300, 0.0f);
 		Body redBody = new Body(240, 427, 0.1f);
 		Body blueBody = new Body(40, 40, 0.4f);
 		
