@@ -7,6 +7,7 @@ import android.util.Log;
 public class RenderSystem extends BaseObject {
 
 	private final static int DRAW_QUEUE_COUNT = 2;
+	private final static int MAX_DRAWABLE_ELEMENTS = 400;
 	
 	private PriorityComparator priorityComparator = new PriorityComparator();
 	private FixedSizeArray<Sprite> spriteList[] = new FixedSizeArray[DRAW_QUEUE_COUNT];
@@ -15,7 +16,7 @@ public class RenderSystem extends BaseObject {
 	public RenderSystem() {
 		super();
 		for(int i = 0; i < DRAW_QUEUE_COUNT; i++) {
-			spriteList[i] = new FixedSizeArray<Sprite>(20);
+			spriteList[i] = new FixedSizeArray<Sprite>(MAX_DRAWABLE_ELEMENTS);
 			spriteList[i].setComparator(priorityComparator);
 		}
 		currentBufferIndex = 0;

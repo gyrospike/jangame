@@ -63,7 +63,7 @@ public class InputObject {
 		time = event.getEventTime();
 		x = (int) event.getX();
 		//"854 -" is a fix for the origin being bottom left for opengl and top left for android
-		y = 854 - (int)event.getY();
+		y = (int)event.getY();
 	}
 
 	public void useEventHistory(MotionEvent event, int historyItem) {

@@ -5,6 +5,7 @@ import java.util.concurrent.ArrayBlockingQueue;
 import android.app.Activity;
 import android.opengl.GLSurfaceView;
 import android.os.Bundle;
+import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.Window;
@@ -12,7 +13,7 @@ import android.view.WindowManager;
 
 public class BaseActivity extends Activity {
 
-	private static final int INPUT_QUEUE_SIZE = 16;
+	private static final int INPUT_QUEUE_SIZE = 32;
 	private ArrayBlockingQueue<InputObject> inputObjectPool;
 	private GameThread gameThread;
 
@@ -21,23 +22,25 @@ public class BaseActivity extends Activity {
 		super.onCreate(savedInstanceState);
 
 		this.requestWindowFeature(Window.FEATURE_NO_TITLE);
-		getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
-				WindowManager.LayoutParams.FLAG_FULLSCREEN);
+		getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
+		
+		DisplayMetrics metrics = new DisplayMetrics();
+		getWindowManager().getDefaultDisplay().getMetrics(metrics);
+		Log.d("DEBUG", "Real dpi: " + metrics.densityDpi);
 
 		GLSurfaceView mGLView = new OGLSurfaceView(this);
 		setContentView(mGLView);
-		
-		Game mGame = new Game();
+
+		Game mGame = new Game(metrics.densityDpi);
 		mGame.setSurfaceView((OGLSurfaceView) mGLView);
 		mGame.bootstrap(this);
-		
+
 		gameThread = mGame.getGameThread();
 		createInputObjectPool();
 	}
 
 	@Override
 	public boolean onTouchEvent(MotionEvent event) {
-		//Log.d("DEBUG", "toucha toucha touch me!");
 		// we only care about down actions in this game.
 		try {
 			// history first

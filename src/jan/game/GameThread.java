@@ -9,7 +9,7 @@ import android.view.SurfaceHolder;
 class GameThread implements Runnable {
 
 	private long mLastTime;
-	private ObjectManager objectManager;
+	private GameManager gameManager;
 	private SurfaceHolder mSurfaceHolder;
 	private boolean mFinished;
 	private GameRenderer mRenderer;
@@ -55,29 +55,25 @@ class GameThread implements Runnable {
         return mPaused;
     }
 
-	public void setGameRoot(ObjectManager manager) {
-		objectManager = manager;
+	public void setGameRoot(GameManager manager) {
+		gameManager = manager;
 	}
 
 	@Override
 	public void run() {
 		mLastTime = SystemClock.uptimeMillis();
 		while (!mFinished) {
-			if (objectManager != null) {
+			if (gameManager != null) {
 				mRenderer.waitDrawingComplete();
 				
 				final long time = SystemClock.uptimeMillis();
                 final long timeDelta = time - mLastTime;
                 long finalDelta = timeDelta;
 
-				if (timeDelta > 12) {
-					float secondsDelta = (time - mLastTime) * 0.001f;
-					if (secondsDelta > 0.1f) {
-						secondsDelta = 0.1f;
-					}
+				if (timeDelta > 16) {
 					mLastTime = time;
 					processInput();
-					objectManager.update(timeDelta, null);
+					gameManager.update(timeDelta, null);
 					BaseObject.sSystemRegistry.renderSystem.sendUpdates(mRenderer);
 				}
 				
@@ -128,6 +124,9 @@ class GameThread implements Runnable {
 						if (input.action == InputObject.ACTION_TOUCH_DOWN) {
 							processTouchDownEvent(input);
 						}
+						if (input.action == InputObject.ACTION_TOUCH_MOVE) {
+							processTouchMoveEvent(input);
+						}
 						if (input.action == InputObject.ACTION_TOUCH_UP) {
 							processTouchUpEvent(input);
 						}
@@ -139,10 +138,19 @@ class GameThread implements Runnable {
 			}
 		}
 	}
+	
+	private void processTouchMoveEvent(InputObject input) {
+		// objectManager.checkNodePress(input.x, input.y);
+		// objectManager.checkButtonPress(input.x, input.y);
+		Log.d("DEBUG", "Create Particle at (" + input.x + ", " + input.y + ")");
+		gameManager.createParticle(input.x, input.y);
+	}
 
 	private void processTouchDownEvent(InputObject input) {
 		// objectManager.checkNodePress(input.x, input.y);
 		// objectManager.checkButtonPress(input.x, input.y);
+		Log.d("DEBUG", "Create Particle at (" + input.x + ", " + input.y + ")");
+		gameManager.createParticle(input.x, input.y);
 	}
 
 	private void processTouchUpEvent(InputObject input) {

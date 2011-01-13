@@ -24,6 +24,7 @@ public class Sprite {
 	
 	private float widthScale;
 	private float heightScale;
+	private float opacity;
 
 	public Sprite(int priority) {
 		byte[] indices = { 1, 0, 2, 3 };
@@ -67,6 +68,10 @@ public class Sprite {
 		yOffset = -y;
 	}
 	
+	public void setOpacity(float value) {
+		opacity = value;
+	}
+	
 	public Vector2 getPosition() {
 		return new Vector2(xOffset, yOffset);
 	}
@@ -75,7 +80,7 @@ public class Sprite {
 		return mPriority;
 	}
 
-	public void setTexture(Texture texture, int width, int height) {
+	public void setTexture(Texture texture, float width, float height) {
 		mTexture[0] = texture;
 		widthScale = width;
 		heightScale = height;
@@ -88,6 +93,7 @@ public class Sprite {
 		gl.glVertexPointer(2, GL10.GL_FLOAT, 0, vertexBuffer);
 		gl.glTexCoordPointer(2, GL10.GL_FLOAT, 0, textureBuffer);
 		
+		gl.glColor4f(opacity, opacity, opacity, opacity);
 		gl.glTranslatef(x, y, 0);
 		gl.glRotatef(rotation, 0, 0, 1);
 		gl.glScalef(widthScale, heightScale, 0);

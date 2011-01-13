@@ -11,7 +11,7 @@ import android.util.Log;
 public class GameRenderer implements Renderer {
 	
 	private Context mContext;
-	private FixedSizeArray spriteList;
+	private FixedSizeArray<Sprite> spriteList;
 	private float originX, originY;
 	private float xCamera, yCamera;
 	private boolean setOrigin = false;
