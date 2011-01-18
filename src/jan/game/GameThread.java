@@ -13,7 +13,7 @@ class GameThread implements Runnable {
 	private SurfaceHolder mSurfaceHolder;
 	private boolean mFinished;
 	private GameRenderer mRenderer;
-	private static final int INPUT_QUEUE_SIZE = 8;
+	private static final int INPUT_QUEUE_SIZE = 32; //equal to INPUT_QUEUE_SIZE in BaseActivity, otherwise will allow for ANR (Application Not Responding) error
 	private ArrayBlockingQueue<InputObject> inputQueue = new ArrayBlockingQueue<InputObject>(INPUT_QUEUE_SIZE);
 	private Object inputQueueMutex = new Object();
 	private boolean mPaused = false;

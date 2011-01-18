@@ -5,6 +5,7 @@ import java.util.concurrent.ArrayBlockingQueue;
 import android.app.Activity;
 import android.opengl.GLSurfaceView;
 import android.os.Bundle;
+import android.os.Debug;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.MotionEvent;
@@ -37,6 +38,22 @@ public class BaseActivity extends Activity {
 
 		gameThread = mGame.getGameThread();
 		createInputObjectPool();
+		
+		//Debug.startMethodTracing("calc");
+	}
+	
+	@Override
+	protected void onPause() {
+        super.onPause();
+	}
+	
+	@Override
+	protected void onStop() {
+	}
+	
+	@Override
+	protected void onDestroy() {
+		//Debug.stopMethodTracing();
 	}
 
 	@Override
