@@ -48,4 +48,14 @@ public class RenderSystem extends BaseObject {
 			objects.removeLast();
 		}
 	}
+	
+	/* Empties all draw queues and disconnects the game thread from the renderer. */
+    public void emptyQueues(GameRenderer renderer) {
+        renderer.setDrawQueue(null); 
+        for (int x = 0; x < DRAW_QUEUE_COUNT; x++) {
+            //mRenderQueues[x].commitUpdates();
+            FixedSizeArray<Sprite> objects = spriteList[x];
+            clearQueue(objects);
+        }
+    }
 }

@@ -29,6 +29,7 @@ public class Game {
 
 		TextureLibrary longTermTextureLibrary = new TextureLibrary();
 		BaseObject.sSystemRegistry.longTermTextureLibrary = longTermTextureLibrary;
+		//mSurfaceView.loadTextures(BaseObject.sSystemRegistry.longTermTextureLibrary);
 
 		// on D2G these units: 1 DPI = 1.5 PIXELS, so screen dims are 320 X 570
 		// Body ship = new Body(240, 300, 0.0f);
@@ -75,6 +76,14 @@ public class Game {
 		mGame = new Thread(mGameThread);
 		mGame.setName("Game");
 		mGame.start();
+	}
+	
+	public void pause() {
+		mGameThread.pauseGame();
+	}
+	
+	public void resume() {
+		mGameThread.resumeGame();
 	}
 
 	public void setSurfaceView(OGLSurfaceView view) {

@@ -88,6 +88,7 @@ public class GameRenderer implements Renderer {
 				while (!mDrawQueueChanged) {
 					try {
 						mDrawLock.wait();
+						//Log.d("DEBUG", "waiting for mDrawLock");
 					} catch (InterruptedException e) {
 						// No big deal if this wait is interrupted.
 					}
@@ -118,7 +119,11 @@ public class GameRenderer implements Renderer {
 						currentSprite.draw(gl, 0, x, y);
 					}
 				}
-			}
+			} else if (spriteList == null) {
+                // If we have no draw queue, clear the screen.  If we have a draw queue that
+                // is empty, we'll leave the frame buffer alone.
+                gl.glClear(GL10.GL_COLOR_BUFFER_BIT | GL10.GL_DEPTH_BUFFER_BIT);
+            }
 		}
 		viewPerspective(gl);
 	}
@@ -155,6 +160,7 @@ public class GameRenderer implements Renderer {
 		originY = y;
 	}
 
+	/*
 	public synchronized void onPause() {
 		// Stop waiting to avoid deadlock.
 		// TODO: this is a hack. Probably this renderer
@@ -165,6 +171,7 @@ public class GameRenderer implements Renderer {
 			mDrawLock.notify();
 		}
 	}
+	*/
 
 	public synchronized void waitDrawingComplete() {
 	}

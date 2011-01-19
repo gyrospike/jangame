@@ -17,6 +17,8 @@ public class BaseActivity extends Activity {
 	private static final int INPUT_QUEUE_SIZE = 32;
 	private ArrayBlockingQueue<InputObject> inputObjectPool;
 	private GameThread gameThread;
+	private GLSurfaceView mGLView;
+	private Game mGame;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -29,31 +31,32 @@ public class BaseActivity extends Activity {
 		getWindowManager().getDefaultDisplay().getMetrics(metrics);
 		Log.d("DEBUG", "Real dpi: " + metrics.densityDpi);
 
-		GLSurfaceView mGLView = new OGLSurfaceView(this);
+		mGLView = new OGLSurfaceView(this);
 		setContentView(mGLView);
 
-		Game mGame = new Game(metrics.densityDpi);
+		mGame = new Game(metrics.densityDpi);
 		mGame.setSurfaceView((OGLSurfaceView) mGLView);
 		mGame.bootstrap(this);
 
 		gameThread = mGame.getGameThread();
 		createInputObjectPool();
-		
-		//Debug.startMethodTracing("calc");
 	}
 	
 	@Override
 	protected void onPause() {
-        super.onPause();
+		super.onPause();
+        mGame.pause();
+        mGLView.onPause();
+        //gameThread.getRenderer().onPause();
+		Log.d("DEBUG", "Game paused");
 	}
 	
 	@Override
-	protected void onStop() {
-	}
-	
-	@Override
-	protected void onDestroy() {
-		//Debug.stopMethodTracing();
+	protected void onResume() {
+		super.onResume();
+        mGame.resume();
+        mGLView.onResume();
+        Log.d("DEBUG", "Game resumed");
 	}
 
 	@Override
