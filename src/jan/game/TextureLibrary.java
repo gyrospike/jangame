@@ -72,7 +72,7 @@ public class TextureLibrary extends BaseObject {
     /** Loads all unloaded textures into OpenGL memory.  Already-loaded textures are ignored. */
     public void loadAll(Context context, GL10 gl) {
         for (int x = 0; x < mTextureHash.length; x++) {
-            if (mTextureHash[x].resource != -1 && mTextureHash[x].loaded == false) {
+        	if (mTextureHash[x].resource != -1 && mTextureHash[x].loaded == false) {
                 loadBitmap(context, gl, mTextureHash[x]);
             }
         }
@@ -112,6 +112,7 @@ public class TextureLibrary extends BaseObject {
         assert gl != null;
         assert context != null;
         assert texture != null;
+        
         if (texture.loaded == false && texture.resource != -1) {
             gl.glGenTextures(1, mTextureNameWorkspace, 0);
             

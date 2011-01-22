@@ -10,7 +10,6 @@ class GameThread implements Runnable {
 
 	private long mLastTime;
 	private GameManager gameManager;
-	private SurfaceHolder mSurfaceHolder;
 	private boolean mFinished;
 	private GameRenderer mRenderer;
 	private static final int INPUT_QUEUE_SIZE = 32; // equal to INPUT_QUEUE_SIZE

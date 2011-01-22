@@ -5,7 +5,6 @@ import java.util.concurrent.ArrayBlockingQueue;
 import android.app.Activity;
 import android.opengl.GLSurfaceView;
 import android.os.Bundle;
-import android.os.Debug;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.MotionEvent;
@@ -47,7 +46,8 @@ public class BaseActivity extends Activity {
 		super.onPause();
         mGame.pause();
         mGLView.onPause();
-        //gameThread.getRenderer().onPause();
+        //instructs renderer to invalidate all textures so that they can be reloaded onResume
+        gameThread.getRenderer().onPause();
 		Log.d("DEBUG", "Game paused");
 	}
 	
