@@ -11,12 +11,16 @@ public class Game {
 	private GameManager mGameRoot;
 
 	private float pixToDpiScale;
+	private int screenWidth;
+	private int screenHeight;
 
-	public Game(int screenScale) {
+	public Game(int screenScale, int sWidth, int sHeight) {
 		// gives a scalar to adjust for different screen resolutions so that
 		// sprites are scaled 1:1 to their pixels
 		// NOTE: this is NOT a good / permanent solution
 		pixToDpiScale = screenScale / 160.0f;
+		screenWidth = sWidth;
+		screenHeight = sHeight;
 		mGameRoot = new GameManager();
 	}
 
@@ -29,25 +33,26 @@ public class Game {
 
 		TextureLibrary longTermTextureLibrary = new TextureLibrary();
 		BaseObject.sSystemRegistry.longTermTextureLibrary = longTermTextureLibrary;
-
-		// on D2G these units: 1 DPI = 1.5 PIXELS, so screen dims are 320 X 570
-		// Body ship = new Body(240, 300, 0.0f);
-		// Body redBody = new Body(240, 427, 0.1f);
-		// Body blueBody = new Body(320, 570, 0.4f);
-
-		// blueBody.setRotationOrigin(new Vector2(100, 100));
-
-		// ship.mSprite.setTexture(longTermTextureLibrary.allocateTexture(R.drawable.ship),
-		// 32 / pixToDpiScale, 32 / pixToDpiScale);
-		// redBody.mSprite.setTexture(longTermTextureLibrary.allocateTexture(R.drawable.red_box),
-		// 4 / pixToDpiScale, 4 / pixToDpiScale);
-		// blueBody.mSprite.setTexture(longTermTextureLibrary.allocateTexture(R.drawable.blue_box),
-		// 4 / pixToDpiScale, 4 / pixToDpiScale);
 		
-		// mGameRoot.add(ship);
-		// mGameRoot.add(redBody);
-		// mGameRoot.add(blueBody);
+		Grid mGrid = new Grid(3, 5, (32.0f / pixToDpiScale), screenWidth, screenHeight);
+		
+		for(int i = 0; i < mGrid.getWidth(); i++) {
+			for(int j = 0; j < mGrid.getHeight(); j++) {
+				mGrid.mNodes[i][j].mSprite.setTexture(longTermTextureLibrary.allocateTexture(R.drawable.grey_node), (32.0f / pixToDpiScale), (32.0f / pixToDpiScale));
+				mGrid.mNodes[i][j].mSprite.setTexture(longTermTextureLibrary.allocateTexture(R.drawable.yellow_node), 32 / pixToDpiScale, 32 / pixToDpiScale);
+				mGrid.mNodes[i][j].mSprite.setTexture(longTermTextureLibrary.allocateTexture(R.drawable.green_node), 32 / pixToDpiScale, 32 / pixToDpiScale);
+				mGameRoot.add(mGrid.mNodes[i][j]);
+			}
+		}
+		
+		//marker is useful for showing where a certain dpi location is
+		Marker myMarker = new Marker(320, 10);
+		myMarker.mSprite.setTexture(longTermTextureLibrary.allocateTexture(R.drawable.red_box), (4.0f / pixToDpiScale), (4.0f / pixToDpiScale));
+		mGameRoot.add(myMarker);
+		
+		mGameRoot.addGrid(mGrid);
 
+		/*
 		Particle[] particleArray = new Particle[400];
 
 		for (int i = 0; i < particleArray.length; i++) {
@@ -65,6 +70,7 @@ public class Game {
 		}
 
 		mGameRoot.setParticleArray(particleArray);
+		*/
 
 		mGameThread = new GameThread(mSurfaceView.getRenderer());
 		mGameThread.setGameRoot(mGameRoot);

@@ -4,10 +4,10 @@ import android.util.Log;
 
 public class GameManager extends BaseObject {
 
+	public Grid gameGrid;
+	
 	private FixedSizeArray<BaseObject> mObjects = new FixedSizeArray<BaseObject>(420);
-	
 	private Particle[] particleArray;
-	
 	private int particleIndex;
 
 	public GameManager() {
@@ -28,20 +28,27 @@ public class GameManager extends BaseObject {
 
 	public void setParticleArray(Particle[] pArray) {
 		particleArray = pArray;
-		for(int i = 0; i < particleArray.length; i++) {
+		for (int i = 0; i < particleArray.length; i++) {
 			mObjects.add(particleArray[i]);
 		}
 	}
-	
+
 	public void createParticle(int x, int y) {
-		particleArray[particleIndex].createParticle(x, y);
-		particleIndex++;
-		if(particleIndex > particleArray.length-1)
-			particleIndex = 0;
+		if (particleArray != null) {
+			particleArray[particleIndex].createParticle(x, y);
+			particleIndex++;
+			if (particleIndex > particleArray.length - 1)
+				particleIndex = 0;
+		}
 	}
 
 	public void add(BaseObject object) {
 		mObjects.add(object);
 		Log.d("DEBUG", "Object added: " + mObjects.getCount());
+	}
+
+	public void addGrid(BaseObject object) {
+		mObjects.add(object);
+		gameGrid = (Grid) object;
 	}
 }

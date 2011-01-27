@@ -144,17 +144,17 @@ class GameThread implements Runnable {
 	}
 
 	private void processTouchMoveEvent(InputObject input) {
-		// objectManager.checkNodePress(input.x, input.y);
+		//gameManager.checkNodePress(input.x, input.y);
 		// objectManager.checkButtonPress(input.x, input.y);
-		Log.d("DEBUG", "Create Particle at (" + input.x + ", " + input.y + ")");
-		gameManager.createParticle(input.x, input.y);
+		//Log.d("DEBUG", "Create Particle at (" + input.x + ", " + input.y + ")");
+		//gameManager.createParticle(input.x, input.y);
 	}
 
 	private void processTouchDownEvent(InputObject input) {
-		// objectManager.checkNodePress(input.x, input.y);
+		gameManager.gameGrid.checkNodePress(input.x, input.y);
 		// objectManager.checkButtonPress(input.x, input.y);
-		Log.d("DEBUG", "Create Particle at (" + input.x + ", " + input.y + ")");
-		gameManager.createParticle(input.x, input.y);
+		//Log.d("DEBUG", "Create Particle at (" + input.x + ", " + input.y + ")");
+		//gameManager.createParticle(input.x, input.y);
 	}
 
 	private void processTouchUpEvent(InputObject input) {

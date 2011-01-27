@@ -29,11 +29,12 @@ public class BaseActivity extends Activity {
 		DisplayMetrics metrics = new DisplayMetrics();
 		getWindowManager().getDefaultDisplay().getMetrics(metrics);
 		Log.d("DEBUG", "Real dpi: " + metrics.densityDpi);
+		Log.d("DEBUG", "screen dimensions in dpi: " + metrics.widthPixels + " x " + metrics.heightPixels);
 
 		mGLView = new OGLSurfaceView(this);
 		setContentView(mGLView);
 
-		mGame = new Game(metrics.densityDpi);
+		mGame = new Game(metrics.densityDpi, metrics.widthPixels, metrics.heightPixels);
 		mGame.setSurfaceView((OGLSurfaceView) mGLView);
 		mGame.bootstrap(this);
 

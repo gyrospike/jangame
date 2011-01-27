@@ -15,8 +15,10 @@ public class Sprite {
 	public float yOffset;
 	public float rotation;
 	public boolean cameraRelative;
+	public int currentTextureIndex;
 	
 	private Texture[] mTexture;
+	private int textureIndex;
 	private int mPriority;
 	private FloatBuffer vertexBuffer;
 	private FloatBuffer textureBuffer;
@@ -43,7 +45,9 @@ public class Sprite {
 				0.0f, 1.0f, //
 		};
 		
-		mTexture = new Texture[2];
+		mTexture = new Texture[3];
+		currentTextureIndex = 0;
+		opacity = 1.0f;
 		mPriority = priority;
 		
 		ByteBuffer byteBuf = ByteBuffer.allocateDirect(vertices.length * 4);
@@ -81,13 +85,14 @@ public class Sprite {
 	}
 
 	public void setTexture(Texture texture, float width, float height) {
-		mTexture[0] = texture;
+		mTexture[textureIndex] = texture;
 		widthScale = width;
 		heightScale = height;
+		textureIndex++;
 	}
 
 	public void draw(GL10 gl, float angle, float x, float y) {
-		gl.glBindTexture(GL10.GL_TEXTURE_2D, mTexture[0].name);
+		gl.glBindTexture(GL10.GL_TEXTURE_2D, mTexture[currentTextureIndex].name);
 		gl.glEnableClientState(GL10.GL_VERTEX_ARRAY);
 		gl.glEnableClientState(GL10.GL_TEXTURE_COORD_ARRAY);
 		gl.glVertexPointer(2, GL10.GL_FLOAT, 0, vertexBuffer);
@@ -97,6 +102,7 @@ public class Sprite {
 		gl.glTranslatef(x, y, 0);
 		gl.glRotatef(rotation, 0, 0, 1);
 		gl.glScalef(widthScale, heightScale, 0);
+		
 		//gl.glTranslatef(widthScale/2, heightScale/2, 0);
 		
 		gl.glDrawElements(GL10.GL_TRIANGLE_STRIP, 4, GL10.GL_UNSIGNED_BYTE, indexBuffer);

@@ -38,7 +38,6 @@ public class Particle extends BaseObject {
 		velocity_Y = (r.nextFloat() - 0.5f) * 0.1f;
 
 		Log.d("DEBUG", "Particle created at: (" + x + ", " + y + ") with velocity: (" + velocity_X + ", " + velocity_Y + ")");
-
 	}
 
 	@Override
@@ -50,7 +49,7 @@ public class Particle extends BaseObject {
 			lifeRemaining -= timeDelta;
 
 			velocity_Y += timeDelta * GRAVITY;
-
+			
 			position_X += timeDelta * velocity_X;
 			position_Y += timeDelta * velocity_Y;
 			// Log.d("DEBUG", "Particle now at: (" + position_X + ", " +
