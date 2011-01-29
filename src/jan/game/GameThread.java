@@ -144,6 +144,7 @@ class GameThread implements Runnable {
 	}
 
 	private void processTouchMoveEvent(InputObject input) {
+		gameManager.gameGrid.updateWire(input.x, input.y);
 		//gameManager.checkNodePress(input.x, input.y);
 		// objectManager.checkButtonPress(input.x, input.y);
 		//Log.d("DEBUG", "Create Particle at (" + input.x + ", " + input.y + ")");
@@ -158,6 +159,6 @@ class GameThread implements Runnable {
 	}
 
 	private void processTouchUpEvent(InputObject input) {
-		// objectManager.checkNodeRelease(input.x, input.y);
+		gameManager.gameGrid.checkNodeRelease(input.x, input.y);
 	}
 }

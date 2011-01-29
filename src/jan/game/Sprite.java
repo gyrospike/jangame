@@ -16,6 +16,7 @@ public class Sprite {
 	public float rotation;
 	public boolean cameraRelative;
 	public int currentTextureIndex;
+	public float xScale, yScale;
 	
 	private Texture[] mTexture;
 	private int textureIndex;
@@ -49,6 +50,8 @@ public class Sprite {
 		currentTextureIndex = 0;
 		opacity = 1.0f;
 		mPriority = priority;
+		xScale = 1.0f;
+		yScale = 1.0f;
 		
 		ByteBuffer byteBuf = ByteBuffer.allocateDirect(vertices.length * 4);
 		byteBuf.order(ByteOrder.nativeOrder());
@@ -76,6 +79,15 @@ public class Sprite {
 		opacity = value;
 	}
 	
+	public void setScale(float x, float y) {
+		xScale = x;
+		yScale = y;
+	}
+	
+	public void setRotation(float angle) {
+		rotation = (float)(180 * (angle / Math.PI));
+	}
+	
 	public Vector2 getPosition() {
 		return new Vector2(xOffset, yOffset);
 	}
@@ -101,7 +113,7 @@ public class Sprite {
 		gl.glColor4f(opacity, opacity, opacity, opacity);
 		gl.glTranslatef(x, y, 0);
 		gl.glRotatef(rotation, 0, 0, 1);
-		gl.glScalef(widthScale, heightScale, 0);
+		gl.glScalef(widthScale * xScale, heightScale * yScale, 0);
 		
 		//gl.glTranslatef(widthScale/2, heightScale/2, 0);
 		

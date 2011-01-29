@@ -36,6 +36,9 @@ public class Game {
 		
 		Grid mGrid = new Grid(3, 5, (32.0f / pixToDpiScale), screenWidth, screenHeight);
 		
+		mGrid.mSpark.mSprite.setTexture(longTermTextureLibrary.allocateTexture(R.drawable.spark), (32.0f / pixToDpiScale), (32.0f / pixToDpiScale));
+		mGameRoot.add(mGrid.mSpark);
+		
 		for(int i = 0; i < mGrid.getWidth(); i++) {
 			for(int j = 0; j < mGrid.getHeight(); j++) {
 				mGrid.mNodes[i][j].mSprite.setTexture(longTermTextureLibrary.allocateTexture(R.drawable.grey_node), (32.0f / pixToDpiScale), (32.0f / pixToDpiScale));
@@ -43,6 +46,11 @@ public class Game {
 				mGrid.mNodes[i][j].mSprite.setTexture(longTermTextureLibrary.allocateTexture(R.drawable.green_node), 32 / pixToDpiScale, 32 / pixToDpiScale);
 				mGameRoot.add(mGrid.mNodes[i][j]);
 			}
+		}
+		
+		for(int i = 0; i < mGrid.MAX_WIRE_SEGMENTS; i++) {
+			mGrid.mWire[i].mSprite.setTexture(longTermTextureLibrary.allocateTexture(R.drawable.wire_segment), (16.0f / pixToDpiScale), (4.0f / pixToDpiScale));
+			mGameRoot.add(mGrid.mWire[i]);
 		}
 		
 		//marker is useful for showing where a certain dpi location is
