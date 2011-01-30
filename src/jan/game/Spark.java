@@ -10,6 +10,10 @@ public Sprite mSprite;
 		mSprite = new Sprite(2);
 	}
 	
+	public void hide() {
+		mSprite.setPosition(-32.0f, -32.0f);
+	}
+	
 	public void setPosition(float x, float y) {
 		mSprite.setPosition(x, y);
 	}

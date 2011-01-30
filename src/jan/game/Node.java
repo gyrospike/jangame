@@ -6,8 +6,8 @@ import android.util.Log;
 public class Node extends BaseObject {
 
 	public Sprite mSprite;
-	public int iX, iY;
-	public boolean active, source;
+	public int iX, iY, saveIndex;
+	public boolean active, source, savePoint;
 
 	private Point[] targetArray;
 	private int[] targetWireTypeArray;
@@ -21,6 +21,7 @@ public class Node extends BaseObject {
 		
 		active = false;
 		source = false;
+		savePoint = false;
 		
 		targetArray = new Point[4];
 		targetWireTypeArray = new int[4];
@@ -38,12 +39,15 @@ public class Node extends BaseObject {
 		mSprite.setPosition(posVector.x, posVector.y);
 		mSprite.currentTextureIndex = 0;
 		
+		saveIndex = -1;
+		
 		Log.d("DEBUG", "Node placed at: (" + i + ", " + j + ") ");
 	}
 	
 	public void setSource() {
 		source = true;
-		activate();
+		active = true;
+		mSprite.currentTextureIndex = 2;
 	}
 
 	public void setConnection(Point point, int wireType) {
@@ -82,9 +86,9 @@ public class Node extends BaseObject {
 		return targetWireTypeArray;
 	}
 
-	public void activate() {
+	public void activate(int level) {
 		active = true;
-		mSprite.currentTextureIndex = 2;
+		mSprite.currentTextureIndex = level;
 	}
 
 	public void deactivate() {
