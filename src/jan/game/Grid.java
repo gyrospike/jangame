@@ -209,19 +209,28 @@ public class Grid extends BaseObject {
 			mNodes[firstIndexI][firstIndexJ].setConnection(new Point(i, j), 0);
 			mNodes[i][j].setConnection(new Point(firstIndexI, firstIndexJ), 0);
 
+			for (int u = 0; u < mWidth-1; u++) {
+				for(int v = 0; v < mHeight-1; v++) {
+					mNodes[u][v].saveIndex = -1;
+				}
+			}
+			circuitList.clear();
 			calcCircuit(new Point(0, 0), null);
-			if(circuitCalcDone) {
+			if (circuitCalcDone) {
 				releaseSpark();
 			}
-			displayPathList();
+			//displayPathList();
+			for (int u = 0; u < circuitList.getCount(); u++) {
+				Log.d("DEBUG",
+						"Circuit List: (" + circuitList.get(u).iX + ", "
+								+ circuitList.get(u).iY + "), length: "
+								+ circuitList.getCount());
+			}
 
 			/*
-			timesSetNodes++;
-			if (timesSetNodes > DEBUG_WIRES_BEFORE_SPARK) {
-				releaseSpark();
-				timesSetNodes = 0;
-			}
-			*/
+			 * timesSetNodes++; if (timesSetNodes > DEBUG_WIRES_BEFORE_SPARK) {
+			 * releaseSpark(); timesSetNodes = 0; }
+			 */
 		}
 
 		if (firstIndexI == i && firstIndexJ == j) {
@@ -246,19 +255,46 @@ public class Grid extends BaseObject {
 			Log.d("DEBUG", "HARD: Reached the End!");
 			circuitCalcDone = true;
 		}
+		Log.d("DEBUG", "HARD: " + myPoint + ", last: " + lastPoint);
+		/*
+		 * boolean loopExists = false; for (int r = 0; r <
+		 * circuitList.getCount(); r++) { if (circuitList.get(r).iX == myPoint.x
+		 * && circuitList.get(r).iY == myPoint.y && myPoint.x != 0 && myPoint.y
+		 * != 0 && myPoint.x != mWidth - 1 && myPoint.y != mHeight - 1) {
+		 * loopExists = true; } }
+		 */
 
-		Log.d("DEBUG", "HARD: " + myPoint + "lastPoint: " + lastPoint);
-		circuitList.add(mNodes[myPoint.x][myPoint.y]);
+		boolean newPoint = true;
+		int len2 = circuitList.getCount();
+		if (len2 > 0) {
+			for (int r = 0; r < len2; r++) {
+				if (circuitList.get(r).iX == myPoint.x
+						&& circuitList.get(r).iY == myPoint.y) {
+					newPoint = false;
+				}
+			}
+			if (newPoint) {
+				circuitList.add(mNodes[myPoint.x][myPoint.y]);
+				mNodes[myPoint.x][myPoint.y].saveIndex = mNodes[lastPoint.x][lastPoint.y].saveIndex;
+				Log.d("DEBUG", "HARD: added to circuitList " + myPoint
+						+ ", length: " + circuitList.getCount());
+			}
+		} else {
+			circuitList.add(mNodes[myPoint.x][myPoint.y]);
+		}
+
 		Point[] pArray = mNodes[myPoint.x][myPoint.y].getConnections();
 		int len = 0;
 		for (int p = 0; p < pArray.length; p++) {
 			if (!pArray[p].equals(new Point(-1, -1))) {
 				len++;
+				/*
 				if (!pArray[p].equals(lastPoint)) {
 					Log.d("DEBUG", "HARD: " + pArray[p] + " with save index: "
 							+ mNodes[myPoint.x][myPoint.y].saveIndex);
-					mNodes[pArray[p].x][pArray[p].y].saveIndex = mNodes[myPoint.x][myPoint.y].saveIndex;
+					//mNodes[pArray[p].x][pArray[p].y].saveIndex = mNodes[myPoint.x][myPoint.y].saveIndex;
 				}
+				*/
 			}
 		}
 
@@ -274,17 +310,28 @@ public class Grid extends BaseObject {
 		} else if (len == 2) {
 			for (int j = 0; j < len; j++) {
 				if (!pArray[j].equals(lastPoint)) {
-					calcCircuit(pArray[j], myPoint);
+					if (mNodes[pArray[j].x][pArray[j].y].saveIndex == -1) {
+						calcCircuit(pArray[j], myPoint);
+					} else {
+						circuitRemove(mNodes[pArray[j].x][pArray[j].y].saveIndex);
+					}
 				}
 			}
 		} else {
 			for (int j = 0; j < len; j++) {
 				if (!pArray[j].equals(lastPoint)) {
-					mNodes[pArray[j].x][pArray[j].y].saveIndex = savePointIndex;
-					Log.d("DEBUG", "saving index " + savePointIndex
-							+ " on node: " + pArray[j]);
-					calcCircuit(pArray[j], myPoint);
-					savePointIndex++;
+					if (mNodes[pArray[j].x][pArray[j].y].saveIndex == -1) {
+						mNodes[myPoint.x][myPoint.y].saveIndex = savePointIndex;
+						savePointIndex++;
+						mNodes[myPoint.x][myPoint.y].savePoint = true;
+						Log.d("DEBUG", "HARD: BRANCH POINT: " + myPoint);
+						mNodes[pArray[j].x][pArray[j].y].saveIndex = savePointIndex;
+						Log.d("DEBUG", "setting node " + pArray[j] + " to " + savePointIndex);
+						calcCircuit(pArray[j], myPoint);
+						
+					} else {
+						Log.d("DEBUG", "HARD: calCircuit denied, didn't have right index, had: " + mNodes[pArray[j].x][pArray[j].y].saveIndex);
+					}
 				}
 			}
 		}
@@ -293,7 +340,7 @@ public class Grid extends BaseObject {
 	public void circuitRemove(int i) {
 		if (i != -1) {
 			for (int j = 0; j < circuitList.getCount(); j++) {
-				if (circuitList.get(j).saveIndex == i) {
+				if (circuitList.get(j).saveIndex == i && !circuitList.get(j).savePoint) {
 					Log.d("DEBUG", "removing (" + circuitList.get(j).iX + ", "
 							+ circuitList.get(j).iY + ")");
 					circuitList.remove(j);
