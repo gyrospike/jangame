@@ -29,8 +29,7 @@ public class Grid extends BaseObject {
 	private int lastJ = 0;
 	private int runTimes = 0;
 	private int timesSetNodes;
-	private boolean nothingPressed, layingWire, nodePressed, sparkActive,
-			chooseRandom, circuitCalcDone;
+	private boolean nothingPressed, layingWire, nodePressed, sparkActive, chooseRandom, circuitCalcDone;
 
 	private Point[] pointTrace;
 	private int pointIndex = 0;
@@ -38,8 +37,7 @@ public class Grid extends BaseObject {
 	private Point[] circuitArray = new Point[10];
 	private int circuitIndex;
 
-	public Grid(int width, int height, float nodeDim, float screenWidth,
-			float screenHeight) {
+	public Grid(int width, int height, float nodeDim, float screenWidth, float screenHeight) {
 
 		mHeight = height;
 		mWidth = width;
@@ -65,11 +63,8 @@ public class Grid extends BaseObject {
 
 		for (int i = 0; i < width; i++) {
 			for (int j = 0; j < height; j++) {
-				mNodes[i][j] = new Node(i, j, new Vector2(xSideBuffer
-						+ (SPACING * i) + (nodeDim / 2), ySideBuffer
-						+ (SPACING * j)));
-				Log.d("DEBUG", "Node placed at X: "
-						+ (xSideBuffer + (SPACING * i)));
+				mNodes[i][j] = new Node(i, j, new Vector2(xSideBuffer + (SPACING * i) + (nodeDim / 2), ySideBuffer + (SPACING * j)));
+				Log.d("DEBUG", "Node placed at X: " + (xSideBuffer + (SPACING * i)));
 			}
 		}
 
@@ -139,17 +134,12 @@ public class Grid extends BaseObject {
 
 			layingWire = true;
 
-			wireOriginX = mNodes[firstIndexI][firstIndexJ].getX()
-					+ ((x - mNodes[firstIndexI][firstIndexJ].getX()) / 2);
-			wireOriginY = mNodes[firstIndexI][firstIndexJ].getY()
-					+ ((y - mNodes[firstIndexI][firstIndexJ].getY()) / 2);
+			wireOriginX = mNodes[firstIndexI][firstIndexJ].getX() + ((x - mNodes[firstIndexI][firstIndexJ].getX()) / 2);
+			wireOriginY = mNodes[firstIndexI][firstIndexJ].getY() + ((y - mNodes[firstIndexI][firstIndexJ].getY()) / 2);
 
-			double angle = (Math.PI / 2)
-					+ Math.atan((mNodes[firstIndexI][firstIndexJ].getY() - y)
-							/ (x - mNodes[firstIndexI][firstIndexJ].getX()));
+			double angle = (Math.PI / 2) + Math.atan((mNodes[firstIndexI][firstIndexJ].getY() - y) / (x - mNodes[firstIndexI][firstIndexJ].getX()));
 			Vector2 newPoint = new Vector2(x, y);
-			float distance = newPoint.distance(new Vector2(wireOriginX,
-					wireOriginY));
+			float distance = newPoint.distance(new Vector2(wireOriginX, wireOriginY));
 			// Log.d("DEBUG", "angle: " + angle + ", distance: " + distance);
 			mWire[0].mSprite.setPosition(wireOriginX, wireOriginY);
 			mWire[0].mSprite.setScale(1.0f, distance * 3 / 9);
@@ -171,16 +161,14 @@ public class Grid extends BaseObject {
 			double angle = (Math.PI / 2) + Math.atan((ay - by) / (ax - bx));
 
 			for (int i = 1; i < MAX_WIRE_SEGMENTS; i++) {
-				if (mWire[i].mSprite.xScale == 0.0f
-						&& mWire[i].mSprite.yScale == 0.0f) {
+				if (mWire[i].mSprite.xScale == 0.0f && mWire[i].mSprite.yScale == 0.0f) {
 					mWire[i].mSprite.setPosition(x, y);
 					mWire[i].mSprite.setScale(1.0f, distance * 2 / 9);
 					mWire[i].mSprite.setRotation((float) angle);
 					mWire[i].setOrigin(ai, aj);
 					mWire[i].setTarget(bi, bj);
 					numWires++;
-					Log.d("DEBUG", "Wire " + i + " created between: (" + ai
-							+ ", " + aj + ") and (" + bi + ", " + bj + ")");
+					Log.d("DEBUG", "Wire " + i + " created between: (" + ai + ", " + aj + ") and (" + bi + ", " + bj + ")");
 					i = MAX_WIRE_SEGMENTS;
 				}
 			}
@@ -198,8 +186,7 @@ public class Grid extends BaseObject {
 	}
 
 	public void nodeReleased(int i, int j) {
-		if (isAdjacent(firstIndexI, firstIndexJ, i, j)
-				&& !connectionBetween(firstIndexI, firstIndexJ, i, j)) {
+		if (isAdjacent(firstIndexI, firstIndexJ, i, j) && !connectionBetween(firstIndexI, firstIndexJ, i, j)) {
 
 			if (!mNodes[i][j].source) {
 				mNodes[i][j].activate(1);
@@ -209,22 +196,22 @@ public class Grid extends BaseObject {
 			mNodes[firstIndexI][firstIndexJ].setConnection(new Point(i, j), 0);
 			mNodes[i][j].setConnection(new Point(firstIndexI, firstIndexJ), 0);
 
-			for (int u = 0; u < mWidth-1; u++) {
-				for(int v = 0; v < mHeight-1; v++) {
+			for (int u = 0; u < mWidth; u++) {
+				for (int v = 0; v < mHeight; v++) {
 					mNodes[u][v].saveIndex = -1;
+					mNodes[u][v].branchPoint = false;
 				}
 			}
+
+			savePointIndex = 0;
 			circuitList.clear();
 			calcCircuit(new Point(0, 0), null);
 			if (circuitCalcDone) {
 				releaseSpark();
 			}
-			//displayPathList();
+			// displayPathList();
 			for (int u = 0; u < circuitList.getCount(); u++) {
-				Log.d("DEBUG",
-						"Circuit List: (" + circuitList.get(u).iX + ", "
-								+ circuitList.get(u).iY + "), length: "
-								+ circuitList.getCount());
+				Log.d("DEBUG", "Circuit List: (" + circuitList.get(u).iX + ", " + circuitList.get(u).iY + "), length: " + circuitList.getCount());
 			}
 
 			/*
@@ -255,29 +242,21 @@ public class Grid extends BaseObject {
 			Log.d("DEBUG", "HARD: Reached the End!");
 			circuitCalcDone = true;
 		}
-		Log.d("DEBUG", "HARD: " + myPoint + ", last: " + lastPoint);
-		/*
-		 * boolean loopExists = false; for (int r = 0; r <
-		 * circuitList.getCount(); r++) { if (circuitList.get(r).iX == myPoint.x
-		 * && circuitList.get(r).iY == myPoint.y && myPoint.x != 0 && myPoint.y
-		 * != 0 && myPoint.x != mWidth - 1 && myPoint.y != mHeight - 1) {
-		 * loopExists = true; } }
-		 */
 
 		boolean newPoint = true;
 		int len2 = circuitList.getCount();
 		if (len2 > 0) {
 			for (int r = 0; r < len2; r++) {
-				if (circuitList.get(r).iX == myPoint.x
-						&& circuitList.get(r).iY == myPoint.y) {
+				if (circuitList.get(r).iX == myPoint.x && circuitList.get(r).iY == myPoint.y) {
 					newPoint = false;
 				}
 			}
 			if (newPoint) {
+				if(!mNodes[lastPoint.x][lastPoint.y].branchPoint) {
+					mNodes[myPoint.x][myPoint.y].saveIndex = mNodes[lastPoint.x][lastPoint.y].saveIndex;
+				}
 				circuitList.add(mNodes[myPoint.x][myPoint.y]);
-				mNodes[myPoint.x][myPoint.y].saveIndex = mNodes[lastPoint.x][lastPoint.y].saveIndex;
-				Log.d("DEBUG", "HARD: added to circuitList " + myPoint
-						+ ", length: " + circuitList.getCount());
+				Log.d("DEBUG", "HARD: added to circuitList " + myPoint + ", length: " + circuitList.getCount() + ", saveIndex: " + mNodes[myPoint.x][myPoint.y].saveIndex);
 			}
 		} else {
 			circuitList.add(mNodes[myPoint.x][myPoint.y]);
@@ -289,65 +268,126 @@ public class Grid extends BaseObject {
 			if (!pArray[p].equals(new Point(-1, -1))) {
 				len++;
 				/*
-				if (!pArray[p].equals(lastPoint)) {
-					Log.d("DEBUG", "HARD: " + pArray[p] + " with save index: "
-							+ mNodes[myPoint.x][myPoint.y].saveIndex);
-					//mNodes[pArray[p].x][pArray[p].y].saveIndex = mNodes[myPoint.x][myPoint.y].saveIndex;
-				}
-				*/
+				 * if (!pArray[p].equals(lastPoint)) { Log.d("DEBUG", "HARD: " +
+				 * pArray[p] + " with save index: " +
+				 * mNodes[myPoint.x][myPoint.y].saveIndex);
+				 * //mNodes[pArray[p].x][pArray[p].y].saveIndex =
+				 * mNodes[myPoint.x][myPoint.y].saveIndex; }
+				 */
 			}
 		}
 
+		Log.d("DEBUG", "HARD: " + myPoint + " has saveIndex: " + mNodes[myPoint.x][myPoint.y].saveIndex);
+
 		if (len == 1) {
-			if (pArray[0].equals(lastPoint)) {
-				Log.d("DEBUG", "HARD: dead end, removing node " + pArray[0]
-						+ " with index "
-						+ mNodes[pArray[0].x][pArray[0].y].saveIndex);
-				circuitRemove(mNodes[pArray[0].x][pArray[0].y].saveIndex);
-			} else {
-				calcCircuit(pArray[0], myPoint);
+			if (!myPoint.equals(new Point(mWidth - 1, mHeight - 1))) {
+				if (pArray[0].equals(lastPoint)) {
+					Log.d("DEBUG", "HARD: " + myPoint + " is a dead end, removing nodes with saveIndex: " + mNodes[myPoint.x][myPoint.y].saveIndex);
+					// circuitRemove(mNodes[pArray[0].x][pArray[0].y].saveIndex);
+					circuitRemove(mNodes[myPoint.x][myPoint.y].saveIndex, true);
+					checkNewDeadEnd(mNodes[myPoint.x][myPoint.y].saveIndex - 1);
+				} else {
+					calcCircuit(pArray[0], myPoint);
+				}
 			}
 		} else if (len == 2) {
 			for (int j = 0; j < len; j++) {
+				Log.d("DEBUG", "HARD: " + myPoint + " for loop index j: " + j + " is point " + pArray[j] + " that has save index: " + mNodes[pArray[j].x][pArray[j].y].saveIndex);
 				if (!pArray[j].equals(lastPoint)) {
 					if (mNodes[pArray[j].x][pArray[j].y].saveIndex == -1) {
+						Log.d("DEBUG", "HARD: len = 2, calcCircuit called on " + myPoint + ")");
+						mNodes[pArray[j].x][pArray[j].y].saveIndex = mNodes[myPoint.x][myPoint.y].saveIndex;
 						calcCircuit(pArray[j], myPoint);
 					} else {
-						circuitRemove(mNodes[pArray[j].x][pArray[j].y].saveIndex);
+						Log.d("DEBUG", "HARD: " + myPoint + " tried to call circuit remove");
+						// circuitRemove(mNodes[pArray[j].x][pArray[j].y].saveIndex);
+						circuitRemove(mNodes[myPoint.x][myPoint.y].saveIndex, true);
 					}
 				}
 			}
-		} else {
+		} else if (len > 2) {
+			mNodes[myPoint.x][myPoint.y].branchPoint = true;
+			mNodes[myPoint.x][myPoint.y].saveIndex = savePointIndex;
+			pArray = orderConnectionPreference(myPoint, lastPoint, pArray);
 			for (int j = 0; j < len; j++) {
 				if (!pArray[j].equals(lastPoint)) {
 					if (mNodes[pArray[j].x][pArray[j].y].saveIndex == -1) {
-						mNodes[myPoint.x][myPoint.y].saveIndex = savePointIndex;
+						Log.d("DEBUG", "HARD: BRANCH POINT[" + j + "]: " + myPoint + ", lastPoint: " + lastPoint);
 						savePointIndex++;
-						mNodes[myPoint.x][myPoint.y].savePoint = true;
-						Log.d("DEBUG", "HARD: BRANCH POINT: " + myPoint);
 						mNodes[pArray[j].x][pArray[j].y].saveIndex = savePointIndex;
-						Log.d("DEBUG", "setting node " + pArray[j] + " to " + savePointIndex);
+						Log.d("DEBUG", "HARD: Assigning " + pArray[j] + " saveIndex: " + savePointIndex);
 						calcCircuit(pArray[j], myPoint);
-						
 					} else {
-						Log.d("DEBUG", "HARD: calCircuit denied, didn't have right index, had: " + mNodes[pArray[j].x][pArray[j].y].saveIndex);
+						Log.d("DEBUG", "HARD: calCircuit denied, didn't have right index for " + pArray[j] + " from " + myPoint + ", had: " + mNodes[pArray[j].x][pArray[j].y].saveIndex);
 					}
 				}
 			}
 		}
 	}
 
-	public void circuitRemove(int i) {
+	public void circuitRemove(int i, boolean branchPointRemove) {
 		if (i != -1) {
-			for (int j = 0; j < circuitList.getCount(); j++) {
-				if (circuitList.get(j).saveIndex == i && !circuitList.get(j).savePoint) {
-					Log.d("DEBUG", "removing (" + circuitList.get(j).iX + ", "
-							+ circuitList.get(j).iY + ")");
+			int len = circuitList.getCount();
+			for (int j = 0; j < len; j++) {
+				if (circuitList.get(j).saveIndex == i) {
+					Log.d("DEBUG", "removing (" + circuitList.get(j).iX + ", " + circuitList.get(j).iY + ")");
 					circuitList.remove(j);
+					len--;
 					j--;
 				}
 			}
 		}
+	}
+
+	public void checkNewDeadEnd(int index) {
+		if (index > -1) {
+			Log.d("DEBUG", "Checking new dead end for index: " + index);
+			for (int i = 0; i < mWidth; i++) {
+				for (int j = 0; j < mHeight; j++) {
+					if (mNodes[i][j].saveIndex == index) {
+						Log.d("DEBUG", "HARD: Got connections for point: (" + i + ", " + j + ")");
+						Point[] pArray = mNodes[i][j].getConnections();
+						int len = 0;
+						for (int h = 0; h < pArray.length; h++) {
+							if (!pArray[h].equals(new Point(-1, -1))) {
+								len++;
+							}
+						}
+						if (len == 2) {
+							circuitRemove(index, false);
+						}
+					}
+				}
+			}
+		}
+	}
+
+	public Point[] orderConnectionPreference(Point currentPoint, Point lastPoint, Point[] pArray) {
+		boolean xPreference = false;
+		boolean yPreference = false;
+		int firstIndex = 0;
+		Point holder;
+
+		if (currentPoint != null && lastPoint != null) {
+			if (currentPoint.x == lastPoint.x) {
+				xPreference = true;
+			} else {
+				yPreference = true;
+			}
+
+			for (int i = 0; i < pArray.length; i++) {
+				if (pArray[i].x == currentPoint.x && xPreference) {
+					firstIndex = i;
+				} else if (pArray[i].y == currentPoint.y && yPreference) {
+					firstIndex = i;
+				}
+			}
+
+			holder = pArray[0];
+			pArray[0] = pArray[firstIndex];
+			pArray[firstIndex] = holder;
+		}
+		return pArray;
 	}
 
 	/*
@@ -431,8 +471,7 @@ public class Grid extends BaseObject {
 		}
 
 		for (int k = 0; k < MAX_WIRE_SEGMENTS; k++) {
-			if ((mWire[k].targetNode.x == i && mWire[k].targetNode.y == j)
-					|| (mWire[k].originNode.x == i && mWire[k].originNode.y == j)) {
+			if ((mWire[k].targetNode.x == i && mWire[k].targetNode.y == j) || (mWire[k].originNode.x == i && mWire[k].originNode.y == j)) {
 				mWire[k].setTarget(-1, -1);
 				mWire[k].setOrigin(-1, -1);
 				mWire[k].mSprite.setScale(0.0f, 0.0f);
@@ -453,10 +492,8 @@ public class Grid extends BaseObject {
 	}
 
 	public Point checkNodeTouch(int x, int y) {
-		int xIndex = Math.round((x - (nodeDimension / 2) - xSideBuffer)
-				/ SPACING);
-		int yIndex = Math.round((y - (nodeDimension / 2) - ySideBuffer)
-				/ SPACING);
+		int xIndex = Math.round((x - (nodeDimension / 2) - xSideBuffer) / SPACING);
+		int yIndex = Math.round((y - (nodeDimension / 2) - ySideBuffer) / SPACING);
 
 		if (xIndex < 0) {
 			xIndex = 0;
@@ -492,30 +529,20 @@ public class Grid extends BaseObject {
 					Point nextConnection = pArray[v];
 					if (lastJ != nextConnection.y || lastI != nextConnection.x) {
 						chooseRandom = false;
-						if ((nextConnection.x == currentI)
-								&& (currentI == lastI)) {
-							Log.d("DEBUG", "(lastI, lastJ): " + "(" + lastI
-									+ ", " + lastJ + ")");
-							Log.d("DEBUG", "(currentI, currentJ): " + "("
-									+ currentI + ", " + currentJ + ")");
-							Log.d("DEBUG", "(pArray[v].x, pArray[v].y): " + "("
-									+ nextConnection.x + ", "
-									+ nextConnection.y + ")");
+						if ((nextConnection.x == currentI) && (currentI == lastI)) {
+							Log.d("DEBUG", "(lastI, lastJ): " + "(" + lastI + ", " + lastJ + ")");
+							Log.d("DEBUG", "(currentI, currentJ): " + "(" + currentI + ", " + currentJ + ")");
+							Log.d("DEBUG", "(pArray[v].x, pArray[v].y): " + "(" + nextConnection.x + ", " + nextConnection.y + ")");
 							Log.d("DEBUG", "Going Straight on Y");
 							lastI = currentI;
 							lastJ = currentJ;
 							currentI = nextConnection.x;
 							currentJ = nextConnection.y;
 							v = pArray.length;
-						} else if ((nextConnection.y == currentJ)
-								&& (currentJ == lastJ)) {
-							Log.d("DEBUG", "(lastI, lastJ): " + "(" + lastI
-									+ ", " + lastJ + ")");
-							Log.d("DEBUG", "(currentI, currentJ): " + "("
-									+ currentI + ", " + currentJ + ")");
-							Log.d("DEBUG", "(pArray[v].x, pArray[v].y): " + "("
-									+ nextConnection.x + ", "
-									+ nextConnection.y + ")");
+						} else if ((nextConnection.y == currentJ) && (currentJ == lastJ)) {
+							Log.d("DEBUG", "(lastI, lastJ): " + "(" + lastI + ", " + lastJ + ")");
+							Log.d("DEBUG", "(currentI, currentJ): " + "(" + currentI + ", " + currentJ + ")");
+							Log.d("DEBUG", "(pArray[v].x, pArray[v].y): " + "(" + nextConnection.x + ", " + nextConnection.y + ")");
 							Log.d("DEBUG", "Going Straight on X");
 							lastI = currentI;
 							lastJ = currentJ;
@@ -531,18 +558,12 @@ public class Grid extends BaseObject {
 				if (chooseRandom) {
 					for (int z = 0; z < pArray.length; z++) {
 						Point nextConnection = pArray[z];
-						if (lastJ != nextConnection.y
-								|| lastI != nextConnection.x) {
-							if (nextConnection.x != -1
-									&& nextConnection.y != -1) {
+						if (lastJ != nextConnection.y || lastI != nextConnection.x) {
+							if (nextConnection.x != -1 && nextConnection.y != -1) {
 
-								Log.d("DEBUG", "(lastI, lastJ): " + "(" + lastI
-										+ ", " + lastJ + ")");
-								Log.d("DEBUG", "(currentI, currentJ): " + "("
-										+ currentI + ", " + currentJ + ")");
-								Log.d("DEBUG", "(pArray[v].x, pArray[v].y): "
-										+ "(" + nextConnection.x + ", "
-										+ nextConnection.y + ")");
+								Log.d("DEBUG", "(lastI, lastJ): " + "(" + lastI + ", " + lastJ + ")");
+								Log.d("DEBUG", "(currentI, currentJ): " + "(" + currentI + ", " + currentJ + ")");
+								Log.d("DEBUG", "(pArray[v].x, pArray[v].y): " + "(" + nextConnection.x + ", " + nextConnection.y + ")");
 								Log.d("DEBUG", "Going whichever...");
 								lastI = currentI;
 								lastJ = currentJ;
@@ -577,8 +598,7 @@ public class Grid extends BaseObject {
 	}
 
 	public boolean isAdjacent(int x1, int y1, int x2, int y2) {
-		if (((x1 + 1 == x2 || x1 - 1 == x2) && (y1 == y2))
-				|| ((y1 + 1 == y2 || y1 - 1 == y2) && (x1 == x2))) {
+		if (((x1 + 1 == x2 || x1 - 1 == x2) && (y1 == y2)) || ((y1 + 1 == y2 || y1 - 1 == y2) && (x1 == x2))) {
 			return true;
 		} else {
 			return false;
