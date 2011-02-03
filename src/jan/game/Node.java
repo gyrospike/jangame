@@ -7,7 +7,7 @@ public class Node extends BaseObject {
 
 	public Sprite mSprite;
 	public int iX, iY, saveIndex;
-	public boolean active, source, branchPoint;
+	public boolean active, source, branchPoint, loopCheck;
 
 	private Point[] targetArray;
 	private int[] targetWireTypeArray;
@@ -22,6 +22,7 @@ public class Node extends BaseObject {
 		active = false;
 		source = false;
 		branchPoint = false;
+		loopCheck = false;
 		
 		targetArray = new Point[4];
 		targetWireTypeArray = new int[4];

@@ -34,13 +34,16 @@ public class Grid extends BaseObject {
 	private Point[] pointTrace;
 	private int pointIndex = 0;
 	private FixedSizeArray<Node> circuitList = new FixedSizeArray<Node>(25);
+	private FixedSizeArray<FixedSizeArray<Point>> finalList = new FixedSizeArray<FixedSizeArray<Point>>(512);
 	private Point[] circuitArray = new Point[10];
 	private int circuitIndex;
+	private int maxBestPathLength;
 
 	public Grid(int width, int height, float nodeDim, float screenWidth, float screenHeight) {
 
 		mHeight = height;
 		mWidth = width;
+		maxBestPathLength = (mHeight * mWidth) - 1;
 		nodeDimension = nodeDim;
 
 		mNodes = new Node[width][height];
@@ -205,24 +208,23 @@ public class Grid extends BaseObject {
 
 			savePointIndex = 0;
 			circuitList.clear();
-			calcCircuit(new Point(0, 0), null);
-			if (circuitCalcDone) {
-				releaseSpark();
-			}
-			// displayPathList();
-			for (int u = 0; u < circuitList.getCount(); u++) {
-				Log.d("DEBUG", "Circuit List: (" + circuitList.get(u).iX + ", " + circuitList.get(u).iY + "), length: " + circuitList.getCount());
+
+			if (i == mWidth - 1 && j == mHeight - 1) {
+				FixedSizeArray<Point> list = new FixedSizeArray<Point>(maxBestPathLength + 1);
+				calculateCircuit(new Point(0, 0), null, list);
+				printBestList();
+				if (finalList.getCount() > 0) {
+					circuitCalcDone = true;
+				}
 			}
 
-			/*
-			 * timesSetNodes++; if (timesSetNodes > DEBUG_WIRES_BEFORE_SPARK) {
-			 * releaseSpark(); timesSetNodes = 0; }
-			 */
+			if (circuitCalcDone) {
+				//releaseSpark();
+			}
 		}
 
 		if (firstIndexI == i && firstIndexJ == j) {
 			deactivateNode(i, j);
-			// deactivateAllNodes();
 		}
 
 		nodePressed = false;
@@ -236,188 +238,120 @@ public class Grid extends BaseObject {
 		}
 	}
 
-	public void calcCircuit(Point myPoint, Point lastPoint) {
-		if (myPoint.equals(new Point(mWidth - 1, mHeight - 1))) {
-			circuitList.add(mNodes[myPoint.x][myPoint.y]);
-			Log.d("DEBUG", "HARD: Reached the End!");
-			circuitCalcDone = true;
+	public void printBestList() {
+		int smallestCount = 30;
+		int bestIndex = 0;
+		int count = 0;
+		for (int j = 0; j < finalList.getCount(); j++) {
+			count = finalList.get(j).getCount();
+			Log.d("DEBUG", "List: " + j + " had count: " + count);
+			if (count < smallestCount) {
+				smallestCount = count;
+				bestIndex = j;
+			}
+		}
+		Log.d("DEBUG", "---BEST LIST---");
+		for (int b = 0; b < finalList.get(bestIndex).getCount(); b++) {
+			circuitList.add(mNodes[finalList.get(bestIndex).get(b).x][finalList.get(bestIndex).get(b).y]);
 		}
 
-		boolean newPoint = true;
-		int len2 = circuitList.getCount();
-		if (len2 > 0) {
-			for (int r = 0; r < len2; r++) {
-				if (circuitList.get(r).iX == myPoint.x && circuitList.get(r).iY == myPoint.y) {
-					newPoint = false;
-				}
-			}
-			if (newPoint) {
-				if(!mNodes[lastPoint.x][lastPoint.y].branchPoint) {
-					mNodes[myPoint.x][myPoint.y].saveIndex = mNodes[lastPoint.x][lastPoint.y].saveIndex;
-				}
-				circuitList.add(mNodes[myPoint.x][myPoint.y]);
-				Log.d("DEBUG", "HARD: added to circuitList " + myPoint + ", length: " + circuitList.getCount() + ", saveIndex: " + mNodes[myPoint.x][myPoint.y].saveIndex);
-			}
+		for (int u = 0; u < circuitList.getCount(); u++) {
+			Log.d("DEBUG", "Circuit List: (" + circuitList.get(u).iX + ", " + circuitList.get(u).iY + "), length: " + circuitList.getCount());
+			circuitList.get(u).activate(2);
+		}
+	}
+
+	public void printList(FixedSizeArray<Point> list) {
+		for (int u = 0; u < list.getCount(); u++) {
+			Log.d("DEBUG", "List: (" + list.get(u).x + ", " + list.get(u).y + "), length: " + list.getCount());
+		}
+	}
+
+	public void calculateCircuit(Point currentPoint, Point lastPoint, FixedSizeArray<Point> list) {
+		if (currentPoint.equals(new Point(mWidth - 1, mHeight - 1))) {
+			finalList.add(list);
+			printList(list);
+			Log.d("DEBUG", "Added final point");
+		} else if (list.getCount() > maxBestPathLength) {
+			Log.d("DEBUG", "List got too big");
 		} else {
-			circuitList.add(mNodes[myPoint.x][myPoint.y]);
-		}
-
-		Point[] pArray = mNodes[myPoint.x][myPoint.y].getConnections();
-		int len = 0;
-		for (int p = 0; p < pArray.length; p++) {
-			if (!pArray[p].equals(new Point(-1, -1))) {
-				len++;
-				/*
-				 * if (!pArray[p].equals(lastPoint)) { Log.d("DEBUG", "HARD: " +
-				 * pArray[p] + " with save index: " +
-				 * mNodes[myPoint.x][myPoint.y].saveIndex);
-				 * //mNodes[pArray[p].x][pArray[p].y].saveIndex =
-				 * mNodes[myPoint.x][myPoint.y].saveIndex; }
-				 */
+			Point[] pArray = mNodes[currentPoint.x][currentPoint.y].getConnections();
+			int len = 0;
+			for (int j = 0; j < pArray.length; j++) {
+				if (!pArray[j].equals(new Point(-1, -1))) {
+					len++;
+				}
 			}
-		}
-
-		Log.d("DEBUG", "HARD: " + myPoint + " has saveIndex: " + mNodes[myPoint.x][myPoint.y].saveIndex);
-
-		if (len == 1) {
-			if (!myPoint.equals(new Point(mWidth - 1, mHeight - 1))) {
-				if (pArray[0].equals(lastPoint)) {
-					Log.d("DEBUG", "HARD: " + myPoint + " is a dead end, removing nodes with saveIndex: " + mNodes[myPoint.x][myPoint.y].saveIndex);
-					// circuitRemove(mNodes[pArray[0].x][pArray[0].y].saveIndex);
-					circuitRemove(mNodes[myPoint.x][myPoint.y].saveIndex, true);
-					checkNewDeadEnd(mNodes[myPoint.x][myPoint.y].saveIndex - 1);
+			if (len == 1) {
+				list.add(new Point(pArray[0].x, pArray[0].y));
+				if (currentPoint.equals(new Point(0, 0)) || currentPoint.equals(new Point(mWidth - 1, mHeight - 1))) {
+					calculateCircuit(pArray[0], currentPoint, list);
 				} else {
-					calcCircuit(pArray[0], myPoint);
+					Log.d("DEBUG", "Dead End at " + pArray[0]);
 				}
-			}
-		} else if (len == 2) {
-			for (int j = 0; j < len; j++) {
-				Log.d("DEBUG", "HARD: " + myPoint + " for loop index j: " + j + " is point " + pArray[j] + " that has save index: " + mNodes[pArray[j].x][pArray[j].y].saveIndex);
-				if (!pArray[j].equals(lastPoint)) {
-					if (mNodes[pArray[j].x][pArray[j].y].saveIndex == -1) {
-						Log.d("DEBUG", "HARD: len = 2, calcCircuit called on " + myPoint + ")");
-						mNodes[pArray[j].x][pArray[j].y].saveIndex = mNodes[myPoint.x][myPoint.y].saveIndex;
-						calcCircuit(pArray[j], myPoint);
-					} else {
-						Log.d("DEBUG", "HARD: " + myPoint + " tried to call circuit remove");
-						// circuitRemove(mNodes[pArray[j].x][pArray[j].y].saveIndex);
-						circuitRemove(mNodes[myPoint.x][myPoint.y].saveIndex, true);
+			} else if (len == 2) {
+				for (int k = 0; k < len; k++) {
+					if (!pArray[k].equals(lastPoint)) {
+						list.add(new Point(pArray[k].x, pArray[k].y));
+						calculateCircuit(pArray[k], currentPoint, list);
 					}
 				}
-			}
-		} else if (len > 2) {
-			mNodes[myPoint.x][myPoint.y].branchPoint = true;
-			mNodes[myPoint.x][myPoint.y].saveIndex = savePointIndex;
-			pArray = orderConnectionPreference(myPoint, lastPoint, pArray);
-			for (int j = 0; j < len; j++) {
-				if (!pArray[j].equals(lastPoint)) {
-					if (mNodes[pArray[j].x][pArray[j].y].saveIndex == -1) {
-						Log.d("DEBUG", "HARD: BRANCH POINT[" + j + "]: " + myPoint + ", lastPoint: " + lastPoint);
-						savePointIndex++;
-						mNodes[pArray[j].x][pArray[j].y].saveIndex = savePointIndex;
-						Log.d("DEBUG", "HARD: Assigning " + pArray[j] + " saveIndex: " + savePointIndex);
-						calcCircuit(pArray[j], myPoint);
-					} else {
-						Log.d("DEBUG", "HARD: calCircuit denied, didn't have right index for " + pArray[j] + " from " + myPoint + ", had: " + mNodes[pArray[j].x][pArray[j].y].saveIndex);
-					}
+			} else if (len == 3) {
+				FixedSizeArray<Point> list1 = new FixedSizeArray<Point>(maxBestPathLength + 1);
+				for (int i = 0; i < list.getCount(); i++) {
+					list1.add(list.get(i));
 				}
-			}
-		}
-	}
-
-	public void circuitRemove(int i, boolean branchPointRemove) {
-		if (i != -1) {
-			int len = circuitList.getCount();
-			for (int j = 0; j < len; j++) {
-				if (circuitList.get(j).saveIndex == i) {
-					Log.d("DEBUG", "removing (" + circuitList.get(j).iX + ", " + circuitList.get(j).iY + ")");
-					circuitList.remove(j);
-					len--;
-					j--;
-				}
-			}
-		}
-	}
-
-	public void checkNewDeadEnd(int index) {
-		if (index > -1) {
-			Log.d("DEBUG", "Checking new dead end for index: " + index);
-			for (int i = 0; i < mWidth; i++) {
-				for (int j = 0; j < mHeight; j++) {
-					if (mNodes[i][j].saveIndex == index) {
-						Log.d("DEBUG", "HARD: Got connections for point: (" + i + ", " + j + ")");
-						Point[] pArray = mNodes[i][j].getConnections();
-						int len = 0;
-						for (int h = 0; h < pArray.length; h++) {
-							if (!pArray[h].equals(new Point(-1, -1))) {
-								len++;
-							}
+				boolean once = false;
+				for (int k = 0; k < len; k++) {
+					if (!pArray[k].equals(lastPoint)) {
+						if (!once) {
+							list.add(new Point(pArray[k].x, pArray[k].y));
+							calculateCircuit(pArray[k], currentPoint, list);
 						}
-						if (len == 2) {
-							circuitRemove(index, false);
+						if (once) {
+							list1.add(new Point(pArray[k].x, pArray[k].y));
+							calculateCircuit(pArray[k], currentPoint, list1);
+						}
+						once = true;
+					}
+				}
+			} else if (len == 4) {
+				FixedSizeArray<Point> list1 = new FixedSizeArray<Point>(maxBestPathLength + 1);
+				FixedSizeArray<Point> list2 = new FixedSizeArray<Point>(maxBestPathLength + 1);
+				for (int i = 0; i < list.getCount(); i++) {
+					list1.add(list.get(i));
+					list2.add(list.get(i));
+				}
+				boolean listDone = false;
+				boolean list1Done = false;
+				boolean list2Done = false;
+				for (int k = 0; k < len; k++) {
+					if (!pArray[k].equals(lastPoint)) {
+						if (!listDone) {
+							list.add(new Point(pArray[k].x, pArray[k].y));
+							calculateCircuit(pArray[k], currentPoint, list);
+							listDone = true;
+						}
+						if (!list1Done) {
+							list1.add(new Point(pArray[k].x, pArray[k].y));
+							calculateCircuit(pArray[k], currentPoint, list1);
+							list1Done = true;
+						}
+						if (!list2Done) {
+							list2.add(new Point(pArray[k].x, pArray[k].y));
+							calculateCircuit(pArray[k], currentPoint, list2);
+							list2Done = true;
 						}
 					}
 				}
 			}
 		}
 	}
-
-	public Point[] orderConnectionPreference(Point currentPoint, Point lastPoint, Point[] pArray) {
-		boolean xPreference = false;
-		boolean yPreference = false;
-		int firstIndex = 0;
-		Point holder;
-
-		if (currentPoint != null && lastPoint != null) {
-			if (currentPoint.x == lastPoint.x) {
-				xPreference = true;
-			} else {
-				yPreference = true;
-			}
-
-			for (int i = 0; i < pArray.length; i++) {
-				if (pArray[i].x == currentPoint.x && xPreference) {
-					firstIndex = i;
-				} else if (pArray[i].y == currentPoint.y && yPreference) {
-					firstIndex = i;
-				}
-			}
-
-			holder = pArray[0];
-			pArray[0] = pArray[firstIndex];
-			pArray[firstIndex] = holder;
-		}
-		return pArray;
-	}
-
-	/*
-	 * public void checkActivePath(Point myPoint) { boolean loop = false; int
-	 * targetX = mNodes[myPoint.x][myPoint.y].getTarget().x; int targetY =
-	 * mNodes[myPoint.x][myPoint.y].getTarget().y;
-	 * 
-	 * for (int i = 0; i < pointTrace.length; i++) { Log.d("DEBUG",
-	 * "pointTrace " + i + ": " + pointTrace[i]); if (myPoint.x ==
-	 * pointTrace[i].x && myPoint.y == pointTrace[i].y) { Log.d("DEBUG",
-	 * "LOOPER: pointTrace " + i + ": " + pointTrace[i]); loop = true;
-	 * pointIndex = 0; } }
-	 * 
-	 * pointTrace[pointIndex] = new Point(myPoint.x, myPoint.y); pointIndex++;
-	 * 
-	 * Log.d("DEBUG", "Target: " + targetX + ", " + targetY);
-	 * 
-	 * if (targetX != -1 && targetY != -1) { if (!loop) {
-	 * mNodes[targetX][targetY].activate();
-	 * checkActivePath(mNodes[myPoint.x][myPoint.y].getTarget()); } else {
-	 * Log.d("DEBUG", "LOOP!!!!!"); } } else { for (int m = 0; m < mWidth *
-	 * mHeight; m++) { pointTrace[m] = new Point(-1, -1); pointIndex = 0; } } }
-	 */
 
 	public void releaseSpark() {
 		Log.d("DEBUG", "Spark Released!");
 		sparkActive = true;
-		for (int i = 0; i < circuitList.getCount(); i++) {
-			circuitList.get(i).activate(2);
-		}
+		mSpark.activate(mNodes[0][0].getX(), mNodes[0][0].getY());
 	}
 
 	public void completeSpark() {
@@ -515,75 +449,73 @@ public class Grid extends BaseObject {
 	public void update(float timeDelta, BaseObject parent) {
 		if (sparkActive) {
 			timeStep += timeDelta;
-			if (timeStep > 1000) {
+			if (timeStep > 10) {
 				timeStep = 0;
-				Log.d("DEBUG", "Time Step...");
+				// Log.d("DEBUG", "Time Step...");
 
 				Point[] pArray = mNodes[currentI][currentJ].getConnections();
+				/*
+				 * float tempX = mNodes[currentI][currentJ].getX(); float tempY
+				 * = mNodes[currentI][currentJ].getY();
+				 * mSpark.setPosition(tempX, tempY);
+				 */
 
-				float tempX = mNodes[currentI][currentJ].getX();
-				float tempY = mNodes[currentI][currentJ].getY();
-				mSpark.setPosition(tempX, tempY);
-
-				for (int v = 0; v < pArray.length; v++) {
-					Point nextConnection = pArray[v];
-					if (lastJ != nextConnection.y || lastI != nextConnection.x) {
-						chooseRandom = false;
-						if ((nextConnection.x == currentI) && (currentI == lastI)) {
-							Log.d("DEBUG", "(lastI, lastJ): " + "(" + lastI + ", " + lastJ + ")");
-							Log.d("DEBUG", "(currentI, currentJ): " + "(" + currentI + ", " + currentJ + ")");
-							Log.d("DEBUG", "(pArray[v].x, pArray[v].y): " + "(" + nextConnection.x + ", " + nextConnection.y + ")");
-							Log.d("DEBUG", "Going Straight on Y");
-							lastI = currentI;
-							lastJ = currentJ;
-							currentI = nextConnection.x;
-							currentJ = nextConnection.y;
-							v = pArray.length;
-						} else if ((nextConnection.y == currentJ) && (currentJ == lastJ)) {
-							Log.d("DEBUG", "(lastI, lastJ): " + "(" + lastI + ", " + lastJ + ")");
-							Log.d("DEBUG", "(currentI, currentJ): " + "(" + currentI + ", " + currentJ + ")");
-							Log.d("DEBUG", "(pArray[v].x, pArray[v].y): " + "(" + nextConnection.x + ", " + nextConnection.y + ")");
-							Log.d("DEBUG", "Going Straight on X");
-							lastI = currentI;
-							lastJ = currentJ;
-							currentI = nextConnection.x;
-							currentJ = nextConnection.y;
-							v = pArray.length;
-						} else {
-							chooseRandom = true;
-						}
-					}
-				}
-
-				if (chooseRandom) {
-					for (int z = 0; z < pArray.length; z++) {
-						Point nextConnection = pArray[z];
+				if (mSpark.readyForNextTarget) {
+					for (int v = 0; v < pArray.length; v++) {
+						Point nextConnection = pArray[v];
 						if (lastJ != nextConnection.y || lastI != nextConnection.x) {
-							if (nextConnection.x != -1 && nextConnection.y != -1) {
-
+							chooseRandom = false;
+							if ((nextConnection.x == currentI) && (currentI == lastI)) {
 								Log.d("DEBUG", "(lastI, lastJ): " + "(" + lastI + ", " + lastJ + ")");
 								Log.d("DEBUG", "(currentI, currentJ): " + "(" + currentI + ", " + currentJ + ")");
 								Log.d("DEBUG", "(pArray[v].x, pArray[v].y): " + "(" + nextConnection.x + ", " + nextConnection.y + ")");
-								Log.d("DEBUG", "Going whichever...");
+								Log.d("DEBUG", "Going Straight on Y");
 								lastI = currentI;
 								lastJ = currentJ;
 								currentI = nextConnection.x;
 								currentJ = nextConnection.y;
-								z = pArray.length;
+								v = pArray.length;
+							} else if ((nextConnection.y == currentJ) && (currentJ == lastJ)) {
+								Log.d("DEBUG", "(lastI, lastJ): " + "(" + lastI + ", " + lastJ + ")");
+								Log.d("DEBUG", "(currentI, currentJ): " + "(" + currentI + ", " + currentJ + ")");
+								Log.d("DEBUG", "(pArray[v].x, pArray[v].y): " + "(" + nextConnection.x + ", " + nextConnection.y + ")");
+								Log.d("DEBUG", "Going Straight on X");
+								lastI = currentI;
+								lastJ = currentJ;
+								currentI = nextConnection.x;
+								currentJ = nextConnection.y;
+								v = pArray.length;
 							} else {
-								Log.d("DEBUG", "Hit Dead End!");
-								completeSpark();
-								z = pArray.length;
+								chooseRandom = true;
 							}
 						}
 					}
-				}
 
-				if (currentI == -1 && currentJ == -1) {
-					sparkActive = false;
-				}
-				if (runTimes > 5) {
-					sparkActive = false;
+					if (chooseRandom) {
+						for (int z = 0; z < pArray.length; z++) {
+							Point nextConnection = pArray[z];
+							if (lastJ != nextConnection.y || lastI != nextConnection.x) {
+								if (nextConnection.x != -1 && nextConnection.y != -1) {
+
+									Log.d("DEBUG", "(lastI, lastJ): " + "(" + lastI + ", " + lastJ + ")");
+									Log.d("DEBUG", "(currentI, currentJ): " + "(" + currentI + ", " + currentJ + ")");
+									Log.d("DEBUG", "(pArray[v].x, pArray[v].y): " + "(" + nextConnection.x + ", " + nextConnection.y + ")");
+									Log.d("DEBUG", "Going whichever...");
+									lastI = currentI;
+									lastJ = currentJ;
+									currentI = nextConnection.x;
+									currentJ = nextConnection.y;
+									z = pArray.length;
+								} else {
+									Log.d("DEBUG", "Hit Dead End!");
+									completeSpark();
+									z = pArray.length;
+								}
+							}
+						}
+					}
+					Log.d("DEBUG", "Next target: (" + currentI + ", " + currentJ + ")");
+					mSpark.setNextTarget(mNodes[currentI][currentJ].getX(), mNodes[currentI][currentJ].getY());
 				}
 			}
 		}

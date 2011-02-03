@@ -54,9 +54,9 @@ public class Game {
 		}
 		
 		//marker is useful for showing where a certain dpi location is
-		Marker myMarker = new Marker(320, 10);
-		myMarker.mSprite.setTexture(longTermTextureLibrary.allocateTexture(R.drawable.red_box), (4.0f / pixToDpiScale), (4.0f / pixToDpiScale));
-		mGameRoot.add(myMarker);
+		//Marker myMarker = new Marker(320, 10);
+		//myMarker.mSprite.setTexture(longTermTextureLibrary.allocateTexture(R.drawable.red_box), (4.0f / pixToDpiScale), (4.0f / pixToDpiScale));
+		//mGameRoot.add(myMarker);
 		
 		mGameRoot.addGrid(mGrid);
 
