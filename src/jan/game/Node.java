@@ -6,8 +6,8 @@ import android.util.Log;
 public class Node extends BaseObject {
 
 	public Sprite mSprite;
-	public int iX, iY, saveIndex;
-	public boolean active, source, branchPoint, loopCheck;
+	public int iX, iY;
+	public boolean source, hasPower;
 
 	private Point[] targetArray;
 	private int[] targetWireTypeArray;
@@ -18,63 +18,56 @@ public class Node extends BaseObject {
 		iX = i;
 		iY = j;
 		posVector = vec;
-		
-		active = false;
+
 		source = false;
-		branchPoint = false;
-		loopCheck = false;
-		
+		hasPower = false;
+
 		targetArray = new Point[4];
 		targetWireTypeArray = new int[4];
-		
-		for(int k = 0; k < targetArray.length; k++) {
+
+		for (int k = 0; k < targetArray.length; k++) {
 			targetArray[k] = new Point(-1, -1);
 		}
-		
-		for(int l = 0; l < targetWireTypeArray.length; l++) {
+
+		for (int l = 0; l < targetWireTypeArray.length; l++) {
 			targetWireTypeArray[l] = -1;
 		}
-		
+
 		mSprite = new Sprite(1);
 		mSprite.cameraRelative = false;
 		mSprite.setPosition(posVector.x, posVector.y);
 		mSprite.currentTextureIndex = 0;
-		
-		saveIndex = -1;
-		
+
 		Log.d("DEBUG", "Node placed at: (" + i + ", " + j + ") ");
 	}
-	
+
 	public void setSource() {
 		source = true;
-		active = true;
 		mSprite.currentTextureIndex = 2;
 	}
 
 	public void setConnection(Point point, int wireType) {
-		for(int i = 0; i < targetArray.length; i++) {
-			if(targetArray[i].equals(new Point(-1, -1))) {
+		for (int i = 0; i < targetArray.length; i++) {
+			if (targetArray[i].equals(new Point(-1, -1))) {
 				targetArray[i] = point;
 				targetWireTypeArray[i] = wireType;
 				i = targetArray.length;
 			}
 		}
 	}
-	
+
 	public void setConnectionNull(int index) {
 		targetArray[index] = new Point(-1, -1);
 		targetWireTypeArray[index] = -1;
 	}
 
 	public void setConnectionsNull() {
-		for(int i = 0; i < targetArray.length; i++) {
-			if(targetArray[i].equals(new Point(-1, -1))) {
-				targetArray[i] = new Point(-1, -1);
-				targetWireTypeArray[i] = -1;
-			}
+		for (int i = 0; i < targetArray.length; i++) {
+			targetArray[i] = new Point(-1, -1);
+			targetWireTypeArray[i] = -1;
 		}
 	}
-	
+
 	public Point getConnection(int i) {
 		return targetArray[i];
 	}
@@ -82,19 +75,31 @@ public class Node extends BaseObject {
 	public Point[] getConnections() {
 		return targetArray;
 	}
-	
+
 	public int[] getWireTypes() {
 		return targetWireTypeArray;
 	}
+	
+	public void removePower() {
+		if (!source) {
+			hasPower = false;
+			mSprite.currentTextureIndex = 0;
+		}
+	}
 
 	public void activate(int level) {
-		active = true;
-		mSprite.currentTextureIndex = level;
+		if (!source) {
+			mSprite.currentTextureIndex = level;
+			hasPower = true;
+		}
 	}
 
 	public void deactivate() {
-		active = false;
-		mSprite.currentTextureIndex = 0;
+		if (!source) {
+			hasPower = false;
+			mSprite.currentTextureIndex = 0;
+			setConnectionsNull();
+		}
 	}
 
 	public float getX() {

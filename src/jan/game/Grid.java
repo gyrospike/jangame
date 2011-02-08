@@ -1,7 +1,6 @@
 package jan.game;
 
 import java.util.ArrayList;
-
 import android.graphics.Point;
 import android.util.Log;
 
@@ -17,7 +16,6 @@ public class Grid extends BaseObject {
 
 	private final float SPACING = 100.0f;
 
-	private int savePointIndex;
 	private int numWires;
 	private int mHeight, mWidth;
 	private int firstIndexI, firstIndexJ;
@@ -27,16 +25,11 @@ public class Grid extends BaseObject {
 	private int currentJ = 0;
 	private int lastI = 0;
 	private int lastJ = 0;
-	private int runTimes = 0;
-	private int timesSetNodes;
-	private boolean nothingPressed, layingWire, nodePressed, sparkActive, chooseRandom, circuitCalcDone;
+	private boolean nodePressed, sparkActive, chooseRandom, circuitCalcDone;
 
 	private Point[] pointTrace;
-	private int pointIndex = 0;
 	private FixedSizeArray<Node> circuitList = new FixedSizeArray<Node>(25);
 	private FixedSizeArray<FixedSizeArray<Point>> finalList = new FixedSizeArray<FixedSizeArray<Point>>(512);
-	private Point[] circuitArray = new Point[10];
-	private int circuitIndex;
 	private int maxBestPathLength;
 
 	public Grid(int width, int height, float nodeDim, float screenWidth, float screenHeight) {
@@ -54,8 +47,6 @@ public class Grid extends BaseObject {
 
 		sparkActive = false;
 		nodePressed = false;
-		layingWire = false;
-		nothingPressed = true;
 		numWires = 1;
 
 		float center = (SPACING * (width - 1)) + nodeDim;
@@ -135,8 +126,6 @@ public class Grid extends BaseObject {
 	public void updateWire(int x, int y) {
 		if (nodePressed) {
 
-			layingWire = true;
-
 			wireOriginX = mNodes[firstIndexI][firstIndexJ].getX() + ((x - mNodes[firstIndexI][firstIndexJ].getX()) / 2);
 			wireOriginY = mNodes[firstIndexI][firstIndexJ].getY() + ((y - mNodes[firstIndexI][firstIndexJ].getY()) / 2);
 
@@ -189,42 +178,35 @@ public class Grid extends BaseObject {
 	}
 
 	public void nodeReleased(int i, int j) {
+		Log.d("DEBUG", "Connection between: " + connectionBetween(firstIndexI, firstIndexJ, i, j));
+
+		if (firstIndexI == i && firstIndexJ == j) {
+			deactivateNode(i, j);
+		}
+
 		if (isAdjacent(firstIndexI, firstIndexJ, i, j) && !connectionBetween(firstIndexI, firstIndexJ, i, j)) {
 
-			if (!mNodes[i][j].source) {
-				mNodes[i][j].activate(1);
-			}
 			createWire(firstIndexI, firstIndexJ, i, j);
 
 			mNodes[firstIndexI][firstIndexJ].setConnection(new Point(i, j), 0);
 			mNodes[i][j].setConnection(new Point(firstIndexI, firstIndexJ), 0);
 
-			for (int u = 0; u < mWidth; u++) {
-				for (int v = 0; v < mHeight; v++) {
-					mNodes[u][v].saveIndex = -1;
-					mNodes[u][v].branchPoint = false;
-				}
-			}
+			// clearing old values in preparation for calculating the best path
+			Log.d("DEBUG", "clearPaths called from nodeReleased");
+			clearPaths();
 
-			savePointIndex = 0;
-			circuitList.clear();
-
-			if (i == mWidth - 1 && j == mHeight - 1) {
-				FixedSizeArray<Point> list = new FixedSizeArray<Point>(maxBestPathLength + 1);
-				calculateCircuit(new Point(0, 0), null, list);
-				printBestList();
-				if (finalList.getCount() > 0) {
-					circuitCalcDone = true;
-				}
+			FixedSizeArray<Point> list = new FixedSizeArray<Point>(maxBestPathLength + 1);
+			calculateCircuit(new Point(0, 0), null, list);
+			if (finalList.getCount() > 0) {
+				chooseBestPath();
+				circuitCalcDone = true;
+			} else {
+				checkPowerConnection();
 			}
 
 			if (circuitCalcDone) {
-				//releaseSpark();
+				releaseSpark();
 			}
-		}
-
-		if (firstIndexI == i && firstIndexJ == j) {
-			deactivateNode(i, j);
 		}
 
 		nodePressed = false;
@@ -238,7 +220,15 @@ public class Grid extends BaseObject {
 		}
 	}
 
-	public void printBestList() {
+	public void clearPaths() {
+		circuitList.clear();
+		for (int j = 0; j < finalList.getCount(); j++) {
+			finalList.get(j).clear();
+		}
+		finalList.clear();
+	}
+
+	public void chooseBestPath() {
 		int smallestCount = 30;
 		int bestIndex = 0;
 		int count = 0;
@@ -276,6 +266,7 @@ public class Grid extends BaseObject {
 			Log.d("DEBUG", "List got too big");
 		} else {
 			Point[] pArray = mNodes[currentPoint.x][currentPoint.y].getConnections();
+			Log.d("DEBUG", "Current " + currentPoint + " has: " + pArray[0] + ", " + pArray[1] + ", " + pArray[2] + ", " + pArray[3]);
 			int len = 0;
 			for (int j = 0; j < pArray.length; j++) {
 				if (!pArray[j].equals(new Point(-1, -1))) {
@@ -287,7 +278,7 @@ public class Grid extends BaseObject {
 				if (currentPoint.equals(new Point(0, 0)) || currentPoint.equals(new Point(mWidth - 1, mHeight - 1))) {
 					calculateCircuit(pArray[0], currentPoint, list);
 				} else {
-					Log.d("DEBUG", "Dead End at " + pArray[0]);
+					Log.d("DEBUG", "Dead End at " + currentPoint);
 				}
 			} else if (len == 2) {
 				for (int k = 0; k < len; k++) {
@@ -327,12 +318,12 @@ public class Grid extends BaseObject {
 				boolean list2Done = false;
 				for (int k = 0; k < len; k++) {
 					if (!pArray[k].equals(lastPoint)) {
-						if (!listDone) {
+						if (!listDone && list2Done && list1Done) {
 							list.add(new Point(pArray[k].x, pArray[k].y));
 							calculateCircuit(pArray[k], currentPoint, list);
 							listDone = true;
 						}
-						if (!list1Done) {
+						if (!list1Done && list2Done) {
 							list1.add(new Point(pArray[k].x, pArray[k].y));
 							calculateCircuit(pArray[k], currentPoint, list1);
 							list1Done = true;
@@ -358,21 +349,44 @@ public class Grid extends BaseObject {
 		Log.d("DEBUG", "Spark Retired!");
 		sparkActive = false;
 		mSpark.hide();
-		circuitList.clear();
+		// clearPaths();
+		// Log.d("DEBUG", "clearPaths called from completeSpark");
+	}
+
+	public void checkPowerConnection() {
+		for (int q = 0; q < mWidth; q++) {
+			for (int p = 0; p < mHeight; p++) {
+				mNodes[q][p].removePower();
+			}
+		}
+		checkNodePower(new Point(0, 0), null);
+		checkNodePower(new Point(mWidth - 1, mHeight - 1), null);
+	}
+
+	public void checkNodePower(Point myPoint, Point lastPoint) {
+		//Log.d("DEBUG", "asd: " + myPoint);
+		if (!mNodes[myPoint.x][myPoint.y].hasPower) {
+			mNodes[myPoint.x][myPoint.y].activate(1);
+			Point[] pArray = mNodes[myPoint.x][myPoint.y].getConnections();
+			for (int i = 0; i < pArray.length; i++) {
+				if (!pArray[i].equals(new Point(-1, -1)) && !pArray[i].equals(lastPoint)) {
+					checkNodePower(pArray[i], myPoint);
+				}
+			}
+		}
 	}
 
 	public void deactivateNode(int i, int j) {
-		Log.d("DEBUG", "get i, j: " + i + ", " + j);
-		if (!(i == 0 && j == 0)) {
-			mNodes[i][j].deactivate();
-		}
 		Point temp = new Point(i, j);
+
+		mNodes[i][j].deactivate();
 
 		if (i > 0) {
 			Point[] pArray = mNodes[i - 1][j].getConnections();
 			for (int m = 0; m < pArray.length; m++) {
 				if (pArray[m].equals(temp)) {
 					mNodes[i - 1][j].setConnectionNull(m);
+					Log.d("DEBUG", "node: (" + (i - 1) + ", " + j + ") set it's (" + i + ", " + j + ") node to null");
 				}
 			}
 		}
@@ -382,6 +396,7 @@ public class Grid extends BaseObject {
 			for (int m = 0; m < pArray.length; m++) {
 				if (pArray[m].equals(temp)) {
 					mNodes[i + 1][j].setConnectionNull(m);
+					Log.d("DEBUG", "node: (" + (i + 1) + ", " + j + ") set it's (" + i + ", " + j + ") node to null");
 				}
 			}
 		}
@@ -391,6 +406,7 @@ public class Grid extends BaseObject {
 			for (int m = 0; m < pArray.length; m++) {
 				if (pArray[m].equals(temp)) {
 					mNodes[i][j - 1].setConnectionNull(m);
+					Log.d("DEBUG", "node: (" + i + ", " + (j - 1) + ") set it's (" + i + ", " + j + ") node to null");
 				}
 			}
 		}
@@ -400,6 +416,7 @@ public class Grid extends BaseObject {
 			for (int m = 0; m < pArray.length; m++) {
 				if (pArray[m].equals(temp)) {
 					mNodes[i][j + 1].setConnectionNull(m);
+					Log.d("DEBUG", "node: (" + i + ", " + (j + 1) + ") set it's (" + i + ", " + j + ") node to null");
 				}
 			}
 		}
@@ -412,6 +429,8 @@ public class Grid extends BaseObject {
 				numWires--;
 			}
 		}
+
+		checkPowerConnection();
 	}
 
 	public void checkNodePress(int x, int y) {
@@ -451,14 +470,8 @@ public class Grid extends BaseObject {
 			timeStep += timeDelta;
 			if (timeStep > 10) {
 				timeStep = 0;
-				// Log.d("DEBUG", "Time Step...");
 
 				Point[] pArray = mNodes[currentI][currentJ].getConnections();
-				/*
-				 * float tempX = mNodes[currentI][currentJ].getX(); float tempY
-				 * = mNodes[currentI][currentJ].getY();
-				 * mSpark.setPosition(tempX, tempY);
-				 */
 
 				if (mSpark.readyForNextTarget) {
 					for (int v = 0; v < pArray.length; v++) {
@@ -495,8 +508,7 @@ public class Grid extends BaseObject {
 						for (int z = 0; z < pArray.length; z++) {
 							Point nextConnection = pArray[z];
 							if (lastJ != nextConnection.y || lastI != nextConnection.x) {
-								if (nextConnection.x != -1 && nextConnection.y != -1) {
-
+								if (nextConnection.x != -1 || nextConnection.y != -1) {
 									Log.d("DEBUG", "(lastI, lastJ): " + "(" + lastI + ", " + lastJ + ")");
 									Log.d("DEBUG", "(currentI, currentJ): " + "(" + currentI + ", " + currentJ + ")");
 									Log.d("DEBUG", "(pArray[v].x, pArray[v].y): " + "(" + nextConnection.x + ", " + nextConnection.y + ")");
@@ -514,8 +526,15 @@ public class Grid extends BaseObject {
 							}
 						}
 					}
+
+					if (currentI == mWidth - 1 && currentJ == mHeight - 1) {
+						sparkActive = false;
+						// clearPaths();
+						// Log.d("DEBUG", "clearPaths called from update");
+					}
+
 					Log.d("DEBUG", "Next target: (" + currentI + ", " + currentJ + ")");
-					mSpark.setNextTarget(mNodes[currentI][currentJ].getX(), mNodes[currentI][currentJ].getY());
+					mSpark.setNextTarget(mNodes[currentI][currentJ].getX(), mNodes[currentI][currentJ].getY(), sparkActive);
 				}
 			}
 		}
