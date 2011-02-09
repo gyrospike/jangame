@@ -1,4 +1,4 @@
-package jan.game;
+package org.alchemicstudio;
 
 public final class Vector2 {
     public float x;

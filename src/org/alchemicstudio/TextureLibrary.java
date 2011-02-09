@@ -1,4 +1,4 @@
-package jan.game;
+package org.alchemicstudio;
 import java.io.IOException;
 import java.io.InputStream;
 

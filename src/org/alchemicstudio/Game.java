@@ -1,4 +1,4 @@
-package jan.game;
+package org.alchemicstudio;
 
 import android.content.Context;
 import android.util.DisplayMetrics;
@@ -34,7 +34,7 @@ public class Game {
 		TextureLibrary longTermTextureLibrary = new TextureLibrary();
 		BaseObject.sSystemRegistry.longTermTextureLibrary = longTermTextureLibrary;
 		
-		Grid mGrid = new Grid(3, 5, (32.0f / pixToDpiScale), screenWidth, screenHeight);
+		Grid mGrid = new Grid(4, 5, 80, (32.0f / pixToDpiScale), screenWidth, screenHeight);
 		
 		mGrid.mSpark.mSprite.setTexture(longTermTextureLibrary.allocateTexture(R.drawable.spark), (32.0f / pixToDpiScale), (32.0f / pixToDpiScale));
 		mGameRoot.add(mGrid.mSpark);
@@ -48,7 +48,7 @@ public class Game {
 			}
 		}
 		
-		for(int i = 0; i < mGrid.MAX_WIRE_SEGMENTS; i++) {
+		for(int i = 0; i < mGrid.maxWireSegments; i++) {
 			mGrid.mWire[i].mSprite.setTexture(longTermTextureLibrary.allocateTexture(R.drawable.wire_segment), (16.0f / pixToDpiScale), (4.0f / pixToDpiScale));
 			mGameRoot.add(mGrid.mWire[i]);
 		}

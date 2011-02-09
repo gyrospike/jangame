@@ -1,4 +1,4 @@
-package jan.game;
+package org.alchemicstudio;
 
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
@@ -6,8 +6,9 @@ import java.nio.FloatBuffer;
 import java.util.Comparator;
 import javax.microedition.khronos.opengles.GL10;
 
+import org.alchemicstudio.Texture;
+
 import android.util.Log;
-import jan.game.Texture;
 
 public class Sprite {
 	

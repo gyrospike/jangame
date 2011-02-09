@@ -1,4 +1,4 @@
-package jan.game;
+package org.alchemicstudio;
 
 import javax.microedition.khronos.opengles.GL10;
 import javax.microedition.khronos.opengles.GL11;

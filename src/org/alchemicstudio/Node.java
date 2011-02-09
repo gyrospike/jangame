@@ -1,4 +1,4 @@
-package jan.game;
+package org.alchemicstudio;
 
 import android.graphics.Point;
 import android.util.Log;

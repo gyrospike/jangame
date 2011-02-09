@@ -1,4 +1,4 @@
-package jan.game;
+package org.alchemicstudio;
 
 import android.content.Context;
 import android.opengl.GLSurfaceView;

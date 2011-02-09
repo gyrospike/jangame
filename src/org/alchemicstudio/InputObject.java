@@ -1,4 +1,4 @@
-package jan.game;
+package org.alchemicstudio;
 
 
 import java.util.concurrent.ArrayBlockingQueue;

@@ -1,4 +1,4 @@
-package jan.game;
+package org.alchemicstudio;
 
 /**
  * Simple container class for textures.  Serves as a mapping between Android resource ids and

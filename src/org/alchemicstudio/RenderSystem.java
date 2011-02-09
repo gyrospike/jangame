@@ -1,6 +1,6 @@
-package jan.game;
+package org.alchemicstudio;
 
-import jan.game.Sprite.PriorityComparator;
+import org.alchemicstudio.Sprite.PriorityComparator;
 
 import android.util.Log;
 

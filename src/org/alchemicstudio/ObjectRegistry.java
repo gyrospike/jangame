@@ -1,4 +1,4 @@
-package jan.game;
+package org.alchemicstudio;
 
 public class ObjectRegistry extends BaseObject {
 
