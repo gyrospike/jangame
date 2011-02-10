@@ -31,6 +31,7 @@ public class GameManager extends BaseObject {
 		for (int i = 0; i < particleArray.length; i++) {
 			mObjects.add(particleArray[i]);
 		}
+		gameGrid.setParticles(particleArray);
 	}
 
 	public void createParticle(int x, int y) {

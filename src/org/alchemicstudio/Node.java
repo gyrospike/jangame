@@ -59,6 +59,19 @@ public class Node extends BaseObject {
 	public void setConnectionNull(int index) {
 		targetArray[index] = new Point(-1, -1);
 		targetWireTypeArray[index] = -1;
+		int nullIndex = -1;
+		for(int i = 0; i < targetArray.length; i++) {
+			if(nullIndex != -1 && targetArray[i].x != -1) {
+				targetArray[nullIndex] = targetArray[i];
+				targetWireTypeArray[nullIndex] = targetWireTypeArray[i];
+				targetArray[i] = new Point(-1, -1);
+				targetWireTypeArray[i] = -1;
+			}
+			if(targetArray[i].x == -1) {
+				nullIndex = i;
+			}
+		}
+		Log.d("DEBUG", "After running setConnectionNull: " + targetArray[0] + ", " + targetArray[1] + ", " + targetArray[2] + ", " + targetArray[3]);
 	}
 
 	public void setConnectionsNull() {
@@ -99,6 +112,7 @@ public class Node extends BaseObject {
 			hasPower = false;
 			mSprite.currentTextureIndex = 0;
 			setConnectionsNull();
+			
 		}
 	}
 

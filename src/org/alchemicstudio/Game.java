@@ -60,8 +60,7 @@ public class Game {
 		
 		mGameRoot.addGrid(mGrid);
 
-		/*
-		Particle[] particleArray = new Particle[400];
+		Particle[] particleArray = new Particle[20];
 
 		for (int i = 0; i < particleArray.length; i++) {
 			particleArray[i] = new Particle();
@@ -70,15 +69,14 @@ public class Game {
 		for (int j = 0; j < particleArray.length; j++) {
 			if ((j % 2) == 0) {
 				particleArray[j].mSprite.setTexture(longTermTextureLibrary.
-						allocateTexture(R.drawable.red_box), 4 / pixToDpiScale, 4 / pixToDpiScale);
+						allocateTexture(R.drawable.white_box), 4 / pixToDpiScale, 4 / pixToDpiScale);
 			} else {
 				particleArray[j].mSprite.setTexture(longTermTextureLibrary.
-						allocateTexture(R.drawable.blue_box), 4 / pixToDpiScale, 4 / pixToDpiScale);
+						allocateTexture(R.drawable.yellow_box), 4 / pixToDpiScale, 4 / pixToDpiScale);
 			}
 		}
 
 		mGameRoot.setParticleArray(particleArray);
-		*/
 
 		mGameThread = new GameThread(mSurfaceView.getRenderer());
 		mGameThread.setGameRoot(mGameRoot);

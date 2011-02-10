@@ -7,7 +7,7 @@ import android.util.Log;
 public class Particle extends BaseObject {
 
 	//need to find a cleaner solution to dealing with acceleration, tiny little values to combat high update speed? lame.
-	private static final float GRAVITY = 0.0001f;
+	private static final float GRAVITY = 0.0002f;
 
 	public Sprite mSprite;
 
@@ -34,8 +34,8 @@ public class Particle extends BaseObject {
 		lifeSpan = r.nextFloat() * 8000.0f;
 		lifeRemaining = lifeSpan;
 
-		velocity_X = (r.nextFloat() - 0.5f) * 0.1f;
-		velocity_Y = (r.nextFloat() - 0.5f) * 0.1f;
+		velocity_X = (r.nextFloat() - 0.5f) * 0.3f;
+		velocity_Y = (r.nextFloat() - 0.5f) * 0.3f;
 
 		Log.d("DEBUG", "Particle created at: (" + x + ", " + y + ") with velocity: (" + velocity_X + ", " + velocity_Y + ")");
 	}

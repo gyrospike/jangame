@@ -23,6 +23,18 @@ public class Spark extends BaseObject {
 	public void hide() {
 		mSprite.setPosition(-32.0f, -32.0f);
 		active = false;
+		needsDirections = false;
+		readyForNextTarget = false;
+		gridActive = true;
+		lastRun = false;
+		xDir = 0;
+		yDir = 0;
+		xDirNow = 0;
+		yDirNow = 0;
+		targetX = 0.0f;
+		targetY = 0.0f;
+		targetXNow = 0.0f;
+		targetYNow = 0.0f;
 		Log.d("DEBUG", "Spark deactivated!");
 	}
 
@@ -85,12 +97,20 @@ public class Spark extends BaseObject {
 		if(!gridActive) {
 			lastRun = true;
 		}
+		
+		Log.d("DEBUG", "refreshTarget Called");
+		Log.d("DEBUG", "xDirNow: " + xDirNow);
+		Log.d("DEBUG", "yDirNow: " + yDirNow);
+		Log.d("DEBUG", "targetXNow: " + targetXNow);
+		Log.d("DEBUG", "targetYNow: " + targetYNow);
 	}
 
 	@Override
 	public void update(float timeDelta, BaseObject parent) {
 		RenderSystem system = sSystemRegistry.renderSystem;
 		if (active) {
+			
+			velocity += 0.02f;
 			
 			float distance = 0;
 			if(xDirNow != 0) {
@@ -101,7 +121,6 @@ public class Spark extends BaseObject {
 			//Log.d("DEBUG", "distance: " + distance);
 			
 			if ((distance == 0) || (xDirNow == 0 && yDirNow == 0)) {
-				Log.d("DEBUG", "needs directions");
 				needsDirections = true;
 			}
 			
