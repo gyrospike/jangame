@@ -18,7 +18,7 @@ public class Spark extends BaseObject {
 		active = false;
 		readyForNextTarget = false;
 		lastRun = false;
-		//here's a useless comment!
+		//here's a useless comment!, and again!
 	}
 
 	public void hide() {
