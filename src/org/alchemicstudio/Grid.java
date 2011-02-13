@@ -16,17 +16,27 @@ public class Grid extends BaseObject {
 
 	private int mSpacing;
 	private int numWires;
-	private int mHeight, mWidth;
-	private int currentI, currentJ;
-	private int lastI, lastJ;
-	private int firstIndexI, firstIndexJ;
+	private int mHeight;
+	private int mWidth;
+	private int currentI;
+	private int currentJ;
+	private int lastI;
+	private int lastJ;
+	private int firstIndexI;
+	private int firstIndexJ;
 	private int maxBestPathLength;
 	private int particleIndex;
 
-	private float xSideBuffer, ySideBuffer, wireOriginX, wireOriginY;
+	private float xSideBuffer;
+	private float ySideBuffer;
+	private float wireOriginX;
+	private float wireOriginY;
 	private float timeStep;
 
-	private boolean nodePressed, sparkActive, chooseRandom, circuitCalcDone;
+	private boolean nodePressed;
+	private boolean sparkActive;
+	private boolean chooseRandom;
+	private boolean circuitCalcDone;
 
 	private FixedSizeArray<Node> circuitList = new FixedSizeArray<Node>(25);
 	private FixedSizeArray<FixedSizeArray<Point>> finalList = new FixedSizeArray<FixedSizeArray<Point>>(512);
@@ -533,20 +543,20 @@ public class Grid extends BaseObject {
 						if (lastJ != nextConnection.y || lastI != nextConnection.x) {
 							chooseRandom = false;
 							if ((nextConnection.x == currentI) && (currentI == lastI)) {
-								Log.d("DEBUG", "(lastI, lastJ): " + "(" + lastI + ", " + lastJ + ")");
-								Log.d("DEBUG", "(currentI, currentJ): " + "(" + currentI + ", " + currentJ + ")");
-								Log.d("DEBUG", "(pArray[v].x, pArray[v].y): " + "(" + nextConnection.x + ", " + nextConnection.y + ")");
-								Log.d("DEBUG", "Going Straight on Y");
+								Log.d("DEBUG", "---Grid Update: (lastI, lastJ): " + "(" + lastI + ", " + lastJ + ")");
+								Log.d("DEBUG", "---Grid Update: (currentI, currentJ): " + "(" + currentI + ", " + currentJ + ")");
+								Log.d("DEBUG", "---Grid Update: (pArray[v].x, pArray[v].y): " + "(" + nextConnection.x + ", " + nextConnection.y + ")");
+								Log.d("DEBUG", "---Grid Update: Going Straight on Y");
 								lastI = currentI;
 								lastJ = currentJ;
 								currentI = nextConnection.x;
 								currentJ = nextConnection.y;
 								v = pArray.length;
 							} else if ((nextConnection.y == currentJ) && (currentJ == lastJ)) {
-								Log.d("DEBUG", "(lastI, lastJ): " + "(" + lastI + ", " + lastJ + ")");
-								Log.d("DEBUG", "(currentI, currentJ): " + "(" + currentI + ", " + currentJ + ")");
-								Log.d("DEBUG", "(pArray[v].x, pArray[v].y): " + "(" + nextConnection.x + ", " + nextConnection.y + ")");
-								Log.d("DEBUG", "Going Straight on X");
+								Log.d("DEBUG", "---Grid Update: (lastI, lastJ): " + "(" + lastI + ", " + lastJ + ")");
+								Log.d("DEBUG", "---Grid Update: (currentI, currentJ): " + "(" + currentI + ", " + currentJ + ")");
+								Log.d("DEBUG", "---Grid Update: (pArray[v].x, pArray[v].y): " + "(" + nextConnection.x + ", " + nextConnection.y + ")");
+								Log.d("DEBUG", "---Grid Update: Going Straight on X");
 								lastI = currentI;
 								lastJ = currentJ;
 								currentI = nextConnection.x;
@@ -564,10 +574,10 @@ public class Grid extends BaseObject {
 							Point nextConnection = pArray[z];
 							if (lastJ != nextConnection.y || lastI != nextConnection.x) {
 								if (nextConnection.x != -1 || nextConnection.y != -1) {
-									Log.d("DEBUG", "(lastI, lastJ): " + "(" + lastI + ", " + lastJ + ")");
-									Log.d("DEBUG", "(currentI, currentJ): " + "(" + currentI + ", " + currentJ + ")");
-									Log.d("DEBUG", "(pArray[v].x, pArray[v].y): " + "(" + nextConnection.x + ", " + nextConnection.y + ")");
-									Log.d("DEBUG", "Going whichever...");
+									Log.d("DEBUG", "---Grid Update: (lastI, lastJ): " + "(" + lastI + ", " + lastJ + ")");
+									Log.d("DEBUG", "---Grid Update: (currentI, currentJ): " + "(" + currentI + ", " + currentJ + ")");
+									Log.d("DEBUG", "---Grid Update: (pArray[v].x, pArray[v].y): " + "(" + nextConnection.x + ", " + nextConnection.y + ")");
+									Log.d("DEBUG", "---Grid Update: Going whichever...");
 									lastI = currentI;
 									lastJ = currentJ;
 									currentI = nextConnection.x;
@@ -578,17 +588,18 @@ public class Grid extends BaseObject {
 							}
 						}
 						if(noOptions) {
-							Log.d("DEBUG", "Hit Dead End!");
+							Log.d("DEBUG", "---Grid Update: Hit Dead End!");
 							sparkActive = false;
 						}
 					}
 					if ((currentI == mWidth - 1 && currentJ == mHeight - 1) || (currentI == 0 && currentJ == 0) ) {
+						//Log.d("DEBUG", "currentI, currentJ: " + currentI + ", " + currentJ);
 						sparkActive = false;
 						// clearPaths();
 						// Log.d("DEBUG", "clearPaths called from update");
 					}
-					Log.d("DEBUG", "Next target: (" + currentI + ", " + currentJ + ")");
-					mSpark.setNextTarget(mNodes[currentI][currentJ].getX(), mNodes[currentI][currentJ].getY(), sparkActive);
+					Log.d("DEBUG", "---Grid Update: Next target: (" + currentI + ", " + currentJ + ")");
+					mSpark.setNextTarget(mNodes[currentI][currentJ].getX(), mNodes[currentI][currentJ].getY(), !sparkActive);
 				}
 			}
 		} else {

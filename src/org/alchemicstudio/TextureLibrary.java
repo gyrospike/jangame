@@ -171,9 +171,8 @@ public class TextureLibrary extends BaseObject {
             mCropWorkspace[2] = bitmap.getWidth();
             mCropWorkspace[3] = -bitmap.getHeight();
 
-            ((GL11) gl).glTexParameteriv(GL10.GL_TEXTURE_2D, GL11Ext.GL_TEXTURE_CROP_RECT_OES,
-                            mCropWorkspace, 0);
-                            */
+            ((GL11) gl).glTexParameteriv(GL10.GL_TEXTURE_2D, GL11Ext.GL_TEXTURE_CROP_RECT_OES, mCropWorkspace, 0);
+            */ 
 
             texture.name = textureName;
             texture.width = bitmap.getWidth();

@@ -112,7 +112,6 @@ public class Node extends BaseObject {
 			hasPower = false;
 			mSprite.currentTextureIndex = 0;
 			setConnectionsNull();
-			
 		}
 	}
 
