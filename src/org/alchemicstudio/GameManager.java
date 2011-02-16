@@ -12,7 +12,6 @@ public class GameManager extends BaseObject {
 
 	public GameManager() {
 		super();
-		TextBox tBox = new TextBox();
 	}
 
 	@Override

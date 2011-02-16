@@ -41,10 +41,10 @@ public class Sprite {
 		};
 
 		float[] texture = { 
-				1.0f, 1.0f, //
-				1.0f, 0.0f, //
-				0.0f, 0.0f, //
 				0.0f, 1.0f, //
+				0.0f, 0.0f, //
+				1.0f, 0.0f, //
+				1.0f, 1.0f, //
 		};
 		
 		mTexture = new Texture[3];
