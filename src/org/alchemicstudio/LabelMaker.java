@@ -1,7 +1,5 @@
 package org.alchemicstudio;
 
-import java.util.ArrayList;
-
 import javax.microedition.khronos.opengles.GL10;
 import javax.microedition.khronos.opengles.GL11;
 import javax.microedition.khronos.opengles.GL11Ext;
@@ -15,26 +13,26 @@ import android.opengl.GLUtils;
 
 public class LabelMaker {
 
-	private int mStrikeWidth;
-	private int mStrikeHeight;
-	private int mTextureID;
-
-	private Bitmap mBitmap;
-	private Canvas mCanvas;
-	private Paint mClearPaint;
-
-	private float mTexelWidth; // Convert texel to U
-	private float mTexelHeight; // Convert texel to V
-	private int mU;
-	private int mV;
-	private int mLineHeight;
-	private FixedSizeArray<Label> mLabels = new FixedSizeArray<Label>(2);
-
 	private static final int STATE_NEW = 0;
 	private static final int STATE_INITIALIZED = 1;
 	private static final int STATE_ADDING = 2;
 	private static final int STATE_DRAWING = 3;
+
+	private float mTexelWidth; // Convert texel to U
+	private float mTexelHeight; // Convert texel to V
+	
+	private int mStrikeWidth;
+	private int mStrikeHeight;
+	private int mTextureID;
+	private int mU;
+	private int mV;
+	private int mLineHeight;
 	private int mState;
+	
+	private Bitmap mBitmap;
+	private Canvas mCanvas;
+	
+	private FixedSizeArray<Label> mLabels = new FixedSizeArray<Label>(2);
 
 	public LabelMaker(int strikeWidth, int strikeHeight) {
 		mStrikeWidth = strikeWidth;
@@ -49,18 +47,13 @@ public class LabelMaker {
 		gl.glBindTexture(GL10.GL_TEXTURE_2D, mTextureID);
 
 		// Use Nearest for performance.
-		gl.glTexParameterf(GL10.GL_TEXTURE_2D, GL10.GL_TEXTURE_MIN_FILTER,
-				GL10.GL_NEAREST);
-		gl.glTexParameterf(GL10.GL_TEXTURE_2D, GL10.GL_TEXTURE_MAG_FILTER,
-				GL10.GL_NEAREST);
+		gl.glTexParameterf(GL10.GL_TEXTURE_2D, GL10.GL_TEXTURE_MIN_FILTER, GL10.GL_NEAREST);
+		gl.glTexParameterf(GL10.GL_TEXTURE_2D, GL10.GL_TEXTURE_MAG_FILTER, GL10.GL_NEAREST);
 
-		gl.glTexParameterf(GL10.GL_TEXTURE_2D, GL10.GL_TEXTURE_WRAP_S,
-				GL10.GL_CLAMP_TO_EDGE);
-		gl.glTexParameterf(GL10.GL_TEXTURE_2D, GL10.GL_TEXTURE_WRAP_T,
-				GL10.GL_CLAMP_TO_EDGE);
+		gl.glTexParameterf(GL10.GL_TEXTURE_2D, GL10.GL_TEXTURE_WRAP_S, GL10.GL_CLAMP_TO_EDGE);
+		gl.glTexParameterf(GL10.GL_TEXTURE_2D, GL10.GL_TEXTURE_WRAP_T, GL10.GL_CLAMP_TO_EDGE);
 
-		gl.glTexEnvf(GL10.GL_TEXTURE_ENV, GL10.GL_TEXTURE_ENV_MODE,
-				GL10.GL_REPLACE);
+		gl.glTexEnvf(GL10.GL_TEXTURE_ENV, GL10.GL_TEXTURE_ENV_MODE, GL10.GL_REPLACE);
 	}
 
 	public void beginAdding(GL10 gl) {
@@ -90,63 +83,22 @@ public class LabelMaker {
         return mLabels.get(labelID).width;
     }
 
-    /**
-     * Get the height in pixels of a given label.
-     *
-     * @param labelID
-     * @return the height in pixels
-     */
     public float getHeight(int labelID) {
         return mLabels.get(labelID).height;
     }
 
-	/**
-	 * Call to add a label
-	 * 
-	 * @param gl
-	 * @param text
-	 *            the text of the label
-	 * @param textPaint
-	 *            the paint of the label
-	 * @return the id of the label, used to measure and draw the label
-	 */
 	public int add(GL10 gl, String text, Paint textPaint) {
 		return add(gl, null, text, textPaint);
 	}
 
-	/**
-	 * Call to add a label
-	 * 
-	 * @param gl
-	 * @param text
-	 *            the text of the label
-	 * @param textPaint
-	 *            the paint of the label
-	 * @return the id of the label, used to measure and draw the label
-	 */
 	public int add(GL10 gl, Drawable background, String text, Paint textPaint) {
 		return add(gl, background, text, textPaint, 0, 0);
 	}
 
-	/**
-	 * Call to add a label
-	 * 
-	 * @return the id of the label, used to measure and draw the label
-	 */
 	public int add(GL10 gl, Drawable drawable, int minWidth, int minHeight) {
 		return add(gl, drawable, null, null, minWidth, minHeight);
 	}
 
-	/**
-	 * Call to add a label
-	 * 
-	 * @param gl
-	 * @param text
-	 *            the text of the label
-	 * @param textPaint
-	 *            the paint of the label
-	 * @return the id of the label, used to measure and draw the label
-	 */
 	public int add(GL10 gl, Drawable background, String text, Paint textPaint,
 			int minWidth, int minHeight) {
 		checkState(STATE_ADDING, STATE_ADDING);
@@ -257,20 +209,18 @@ public class LabelMaker {
         gl.glPushMatrix();
         gl.glLoadIdentity();
         // Magic offsets to promote consistent rasterization.
-        gl.glTranslatef(0.375f, 0.375f, 0.0f);
+        //gl.glTranslatef(0.375f, 0.375f, 0.0f);
     }
 	
 	public void draw(GL10 gl, float x, float y, int labelID) {
         checkState(STATE_DRAWING, STATE_DRAWING);
         gl.glPushMatrix();
-        float snappedX = (float) Math.floor(x);
-        float snappedY = (float) Math.floor(y);
-        gl.glTranslatef(snappedX, snappedY, 0.0f);
+        
         Label label = mLabels.get(labelID);
         gl.glEnable(GL10.GL_TEXTURE_2D);
+        
         ((GL11)gl).glTexParameteriv(GL10.GL_TEXTURE_2D, GL11Ext.GL_TEXTURE_CROP_RECT_OES, label.mCrop, 0);
-        ((GL11Ext)gl).glDrawTexiOES(0, 0, 0, (int) label.width, (int) label.height);
-        //((GL11Ext)gl).glDrawTexiOES((int) snappedX, (int) snappedY, 0, (int) label.width, (int) label.height);
+        ((GL11Ext)gl).glDrawTexfOES(x, y, 0, label.width, label.height);
         gl.glPopMatrix();
     }
 	
@@ -283,11 +233,6 @@ public class LabelMaker {
         gl.glPopMatrix();
     }
 
-	/**
-	 * Call to end adding labels. Must be called before drawing starts.
-	 * 
-	 * @param gl
-	 */
 	public void endAdding(GL10 gl) {
 		checkState(STATE_ADDING, STATE_INITIALIZED);
 		gl.glBindTexture(GL10.GL_TEXTURE_2D, mTextureID);
@@ -306,6 +251,13 @@ public class LabelMaker {
 	}
 	
 	private static class Label {
+		
+		public TextGrid grid;
+        public float width;
+        public float height;
+        public float baseline;
+        public int[] mCrop;
+        
         public Label(TextGrid grid, float width, float height, float baseLine,
                 int cropU, int cropV, int cropW, int cropH) {
             this.grid = grid;
@@ -319,11 +271,5 @@ public class LabelMaker {
             crop[3] = cropH;
             mCrop = crop;
         }
-
-        public TextGrid grid;
-        public float width;
-        public float height;
-        public float baseline;
-        public int[] mCrop;
     }
 }

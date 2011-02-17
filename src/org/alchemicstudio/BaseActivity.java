@@ -3,6 +3,7 @@ package org.alchemicstudio;
 import java.util.concurrent.ArrayBlockingQueue;
 
 import android.app.Activity;
+import android.graphics.Typeface;
 import android.opengl.GLSurfaceView;
 import android.os.Bundle;
 import android.util.DisplayMetrics;

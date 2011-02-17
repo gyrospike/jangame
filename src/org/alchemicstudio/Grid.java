@@ -9,9 +9,10 @@ public class Grid extends BaseObject {
 	public int maxWireSegments;
 
 	public Spark mSpark;
+	public float currentSparkVelocity;
 	public Node[][] mNodes;
 	public Wire[] mWire;
-	
+
 	private final static int SPARKS_PER_TOUCH = 5;
 
 	private int mSpacing;
@@ -27,6 +28,7 @@ public class Grid extends BaseObject {
 	private int maxBestPathLength;
 	private int particleIndex;
 
+	private float mScreenWidth;
 	private float xSideBuffer;
 	private float ySideBuffer;
 	private float wireOriginX;
@@ -47,8 +49,9 @@ public class Grid extends BaseObject {
 		mWidth = width;
 		mSpacing = spacing;
 		maxBestPathLength = (mHeight * mWidth) - 1;
-		maxWireSegments = (mWidth - 1) * mWidth * (mHeight - 1);
+		maxWireSegments = (mWidth - 1) * mWidth * (mHeight - 1) + 2;
 		nodeDimension = nodeDim;
+		mScreenWidth = screenWidth;
 
 		mNodes = new Node[width][height];
 		mWire = new Wire[maxWireSegments];
@@ -68,10 +71,14 @@ public class Grid extends BaseObject {
 
 		float center2 = (mSpacing * (height - 1)) + nodeDim;
 		ySideBuffer = (screenHeight - (center2)) / 2.0f;
-		
+
 		for (int i = 0; i < mWidth; i++) {
 			for (int j = 0; j < mHeight; j++) {
-				mNodes[i][j] = new Node(i, j, new Vector2(xSideBuffer + (mSpacing * i) + (nodeDimension / 2), ySideBuffer + (mSpacing * j)));
+				if ((i == mWidth - 2 && j == mHeight - 1) || (i == mWidth - 1 && j == mHeight - 2)) {
+					mNodes[i][j] = new Node(i, j, new Vector2(xSideBuffer + (mSpacing * i) + (nodeDimension / 2), ySideBuffer + (mSpacing * j)), 1);
+				} else {
+					mNodes[i][j] = new Node(i, j, new Vector2(xSideBuffer + (mSpacing * i) + (nodeDimension / 2), ySideBuffer + (mSpacing * j)), 0);
+				}
 				Log.d("DEBUG", "Node placed at X: " + (xSideBuffer + (mSpacing * i)));
 			}
 		}
@@ -83,10 +90,13 @@ public class Grid extends BaseObject {
 			mWire[k] = new Wire();
 			mWire[k].mSprite.setScale(0.0f, 0.0f);
 		}
+
+		createWire(0, 0, 0, 0, true);
+		createWire(mWidth - 1, mHeight - 1, 0, 0, true);
 	}
-	
+
 	public void initialize() {
-		
+
 	}
 
 	public void nodePressed(int i, int j) {
@@ -111,10 +121,10 @@ public class Grid extends BaseObject {
 			mWire[0].mSprite.setRotation((float) angle);
 		}
 	}
-	
-	public void createParticle(int x, int y) {
+
+	public void createParticle(int x, int y, int type) {
 		if (particleArray != null) {
-			for(int i = 0; i < SPARKS_PER_TOUCH; i++) {
+			for (int i = 0; i < type; i++) {
 				particleArray[particleIndex].createParticle(x, y);
 				particleIndex++;
 				if (particleIndex > particleArray.length - 1)
@@ -123,13 +133,27 @@ public class Grid extends BaseObject {
 		}
 	}
 
-	public void createWire(int ai, int aj, int bi, int bj) {
+	public void createWire(int ai, int aj, int bi, int bj, boolean offScreenWire) {
 		if (numWires < maxWireSegments) {
 
 			float ax = mNodes[ai][aj].getX();
 			float ay = mNodes[ai][aj].getY();
-			float bx = mNodes[bi][bj].getX();
-			float by = mNodes[bi][bj].getY();
+
+			float bx = 0.0f;
+			float by = 0.0f;
+
+			if (offScreenWire) {
+				if (ai == 0 && aj == 0) {
+					bx = 0.0f;
+					by = ay;
+				} else {
+					bx = mScreenWidth;
+					by = ay;
+				}
+			} else {
+				bx = mNodes[bi][bj].getX();
+				by = mNodes[bi][bj].getY();
+			}
 
 			float x = ax + ((bx - ax) / 2);
 			float y = ay + ((by - ay) / 2);
@@ -138,6 +162,9 @@ public class Grid extends BaseObject {
 
 			for (int i = 1; i < maxWireSegments; i++) {
 				if (mWire[i].mSprite.xScale == 0.0f && mWire[i].mSprite.yScale == 0.0f) {
+					if (offScreenWire) {
+						mWire[i].permanent = true;
+					}
 					mWire[i].mSprite.setPosition(x, y);
 					mWire[i].mSprite.setScale(1.0f, distance * 2 / 9);
 					mWire[i].mSprite.setRotation((float) angle);
@@ -167,7 +194,7 @@ public class Grid extends BaseObject {
 		clearPaths();
 
 		FixedSizeArray<Point> list = new FixedSizeArray<Point>(maxBestPathLength + 1);
-		calculateCircuit(new Point(0, 0), null, list);
+		calculateCircuit(new Point(0, 0), new Point(-1, 0), list);
 		checkPowerConnection();
 		if (finalList.getCount() > 0) {
 			chooseBestPath();
@@ -184,7 +211,7 @@ public class Grid extends BaseObject {
 
 		if (firstIndexI == i && firstIndexJ == j) {
 			deactivateNode(i, j);
-			createParticle((int)mNodes[i][j].getX(), (int)mNodes[i][j].getY());
+			createParticle((int) mNodes[i][j].getX(), (int) mNodes[i][j].getY(), SPARKS_PER_TOUCH);
 		}
 
 		if ((firstIndexI == i && firstIndexJ != j) || (firstIndexI != i && firstIndexJ == j)) {
@@ -192,26 +219,26 @@ public class Grid extends BaseObject {
 				int difJ = Math.abs(firstIndexJ - j);
 				int smallerJ = Math.min(j, firstIndexJ);
 				for (int p = 1; p <= difJ; p++) {
-					if (!connectionBetween(i, smallerJ + p, i, smallerJ + p - 1)) {
-						createWire(i, smallerJ + p, i, smallerJ + p - 1);
+					if (!connectionBetween(i, smallerJ + p, i, smallerJ + p - 1) && !mNodes[i][smallerJ + p].hasMaxConnections() 
+							&& !mNodes[i][smallerJ + p - 1].hasMaxConnections()) {
+						
+						createWire(i, smallerJ + p, i, smallerJ + p - 1, false);
 						mNodes[i][smallerJ + p].setConnection(new Point(i, smallerJ + p - 1), 0);
 						mNodes[i][smallerJ + p - 1].setConnection(new Point(i, smallerJ + p), 0);
-
 						checkCircuit();
-
 					}
 				}
 			} else if (firstIndexJ == j) {
 				int difI = Math.abs(firstIndexI - i);
 				int smallerI = Math.min(i, firstIndexI);
 				for (int p = 1; p <= difI; p++) {
-					if (!connectionBetween(smallerI + p, j, smallerI + p - 1, j)) {
-						createWire(smallerI + p, j, smallerI + p - 1, j);
+					if (!connectionBetween(smallerI + p, j, smallerI + p - 1, j) && !mNodes[smallerI + p][j].hasMaxConnections()
+							&& !mNodes[smallerI + p - 1][j].hasMaxConnections()) {
+						
+						createWire(smallerI + p, j, smallerI + p - 1, j, false);
 						mNodes[smallerI + p][j].setConnection(new Point(smallerI + p - 1, j), 0);
 						mNodes[smallerI + p - 1][j].setConnection(new Point(smallerI + p, j), 0);
-
 						checkCircuit();
-
 					}
 				}
 			}
@@ -489,7 +516,7 @@ public class Grid extends BaseObject {
 		}
 
 		for (int k = 0; k < maxWireSegments; k++) {
-			if ((mWire[k].targetNode.x == i && mWire[k].targetNode.y == j) || (mWire[k].originNode.x == i && mWire[k].originNode.y == j)) {
+			if (((mWire[k].targetNode.x == i && mWire[k].targetNode.y == j) || (mWire[k].originNode.x == i && mWire[k].originNode.y == j)) && !mWire[k].permanent) {
 				mWire[k].setTarget(-1, -1);
 				mWire[k].setOrigin(-1, -1);
 				mWire[k].mSprite.setScale(0.0f, 0.0f);
@@ -539,6 +566,7 @@ public class Grid extends BaseObject {
 				timeStep = 0;
 
 				Point[] pArray = mNodes[currentI][currentJ].getConnections();
+				currentSparkVelocity = mSpark.velocity;
 
 				if (mSpark.readyForNextTarget) {
 					for (int v = 0; v < pArray.length; v++) {
@@ -584,33 +612,37 @@ public class Grid extends BaseObject {
 									lastI = currentI;
 									lastJ = currentJ;
 									currentI = nextConnection.x;
-									currentJ = nextConnection.y; 
+									currentJ = nextConnection.y;
 									z = pArray.length;
 									noOptions = false;
 								}
 							}
 						}
-						if(noOptions) {
+						if (noOptions) {
 							Log.d("DEBUG", "---Grid Update: Hit Dead End!");
 							sparkActive = false;
 						}
 					}
-					if ((currentI == mWidth - 1 && currentJ == mHeight - 1) || (currentI == 0 && currentJ == 0) ) {
-						//Log.d("DEBUG", "currentI, currentJ: " + currentI + ", " + currentJ);
+					if ((currentI == mWidth - 1 && currentJ == mHeight - 1) || (currentI == 0 && currentJ == 0)) {
 						sparkActive = false;
-						// clearPaths();
-						// Log.d("DEBUG", "clearPaths called from update");
 					}
 					Log.d("DEBUG", "---Grid Update: Next target: (" + currentI + ", " + currentJ + ")");
-					mSpark.setNextTarget(mNodes[currentI][currentJ].getX(), mNodes[currentI][currentJ].getY(), !sparkActive);
+					mSpark.setNextTarget(mNodes[currentI][currentJ].getX(), mNodes[currentI][currentJ].getY(), mNodes[lastI][lastJ].speedLimit, !sparkActive);
 				}
 			}
 		} else {
 			currentI = 0;
 			currentJ = 0;
+			lastI = 0;
+			lastJ = 0;
+		}
+		
+		if(mSpark.explode) {
+			createParticle((int) mSpark.explodeX, (int)  mSpark.explodeY, 15);
+			mSpark.explode = false;
 		}
 	}
-	
+
 	public void setParticles(Particle[] pArray) {
 		particleArray = pArray;
 	}

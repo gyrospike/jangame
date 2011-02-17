@@ -5,7 +5,9 @@ import javax.microedition.khronos.egl.EGLConfig;
 import javax.microedition.khronos.opengles.GL10;
 
 import android.content.Context;
+import android.content.res.AssetManager;
 import android.graphics.Paint;
+import android.graphics.Typeface;
 import android.opengl.GLSurfaceView.Renderer;
 import android.util.Log;
 
@@ -25,20 +27,24 @@ public class GameRenderer implements Renderer {
 	
 	private LabelMaker mLabels;
 	private int mLabelSpark;
+	private int mLabelGate;
 	private Paint mLabelPaint;
-	private float[] mScratch = new float[8];
-	private String renderString;
+	private String sparkSpeedString;
+	private String gateSpeedString;
+	private AssetManager am;
 
 	public GameRenderer(Context context) {
 		mContext = context;
 		mDrawLock = new Object();
 		mDrawQueueChanged = false;
+		
+		Typeface myFont = Typeface.createFromAsset(context.getAssets(), "fonts/AGENCYR.TTF");
 
 		mLabelPaint = new Paint();
+		mLabelPaint.setTypeface(myFont);
 		mLabelPaint.setTextSize(24);
 		mLabelPaint.setAntiAlias(true);
 		mLabelPaint.setARGB(0xff, 0x00, 0x00, 0x00);
-		renderString = "Spark Speed: ";
 	}
 
 	public void onSurfaceCreated(GL10 gl, EGLConfig config) {
@@ -108,22 +114,6 @@ public class GameRenderer implements Renderer {
 		gl.glPopMatrix();
 	}
 
-	private void drawLabel(GL10 gl, int triangleVertex, int labelId) {
-		float x = 0;
-		float y = 0;
-		mScratch[0] = x;
-		mScratch[1] = y;
-		mScratch[2] = 0.0f;
-		mScratch[3] = 1.0f;
-		float sx = mScratch[4];
-		float sy = mScratch[5];
-		float height = mLabels.getHeight(labelId);
-		float width = mLabels.getWidth(labelId);
-		float tx = sx - width * 0.5f;
-		float ty = sy - height * 0.5f;
-		mLabels.draw(gl, tx, ty, labelId);
-	}
-
 	public void onDrawFrame(GL10 gl) {
 
 		gl.glClear(GL10.GL_COLOR_BUFFER_BIT | GL10.GL_DEPTH_BUFFER_BIT);
@@ -174,14 +164,17 @@ public class GameRenderer implements Renderer {
 		
 		viewPerspective(gl);
 		
-		renderString = "Spark Speed: " + sparkVelocity;
+		sparkSpeedString = "Spark Speed: " + sparkVelocity;
+		gateSpeedString = "Gate Speed: 50.00";
 		
 		mLabels.beginAdding(gl);
-		mLabelSpark = mLabels.add(gl, renderString, mLabelPaint);
+		mLabelSpark = mLabels.add(gl, sparkSpeedString, mLabelPaint);
+		mLabelGate = mLabels.add(gl, gateSpeedString, mLabelPaint);
 		mLabels.endAdding(gl);
 		
 		mLabels.beginDrawing(gl, mWidth, mHeight);
-		drawLabel(gl, 1, mLabelSpark);
+		mLabels.draw(gl, 0, 0, mLabelSpark);
+		mLabels.draw(gl, 0, 30, mLabelGate);
 		mLabels.endDrawing(gl);
 	}
 

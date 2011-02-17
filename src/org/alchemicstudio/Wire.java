@@ -7,6 +7,7 @@ public class Wire extends BaseObject {
 	public Sprite mSprite;
 	public Point targetNode, originNode;
 	public boolean active;
+	public boolean permanent;
 
 	private RenderSystem system = sSystemRegistry.renderSystem;
 	

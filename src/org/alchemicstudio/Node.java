@@ -8,16 +8,29 @@ public class Node extends BaseObject {
 	public Sprite mSprite;
 	public int iX, iY;
 	public boolean source, hasPower;
-
+	public float speedLimit;
+	
 	private Point[] targetArray;
+	private int maxConnections;
 	private int[] targetWireTypeArray;
 	private Vector2 posVector;
 	private RenderSystem system = sSystemRegistry.renderSystem;
 
-	public Node(int i, int j, Vector2 vec) {
+	public Node(int i, int j, Vector2 vec, int type) {
 		iX = i;
 		iY = j;
 		posVector = vec;
+		if(type==0) {
+			speedLimit = 0.0f;
+		} else if(type==1) {
+			speedLimit = 50.0f;
+		}
+		
+		if(iX==0 && iY==0) {
+			maxConnections = 1;
+		} else {
+			maxConnections = 4;
+		}
 
 		source = false;
 		hasPower = false;
@@ -79,6 +92,24 @@ public class Node extends BaseObject {
 			targetArray[i] = new Point(-1, -1);
 			targetWireTypeArray[i] = -1;
 		}
+	}
+	
+	public boolean hasMaxConnections() {
+		if(getNumConnections() >= maxConnections) {
+			return true;
+		} else {
+			return false;
+		}
+	}
+	
+	public int getNumConnections() {
+		int len = 0;
+		for(int i = 0; i < targetArray.length; i++) {
+			if(!targetArray[i].equals(new Point(-1, -1))) {
+				len++;
+			}
+		}
+		return len;
 	}
 
 	public Point getConnection(int i) {

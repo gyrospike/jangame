@@ -10,8 +10,12 @@ public class Spark extends BaseObject {
 	public boolean readyForNextTarget;
 	public float velocity;
 	
+	public boolean explode;
+	public float explodeX;
+	public float explodeY;
+
 	private final float MAX_VELOCITY = 100.0f;
-	
+
 	private float posX;
 	private float posY;
 	private float targetX;
@@ -19,7 +23,8 @@ public class Spark extends BaseObject {
 	private float nextTargetX;
 	private float nextTargetY;
 	private float acceleration;
-	
+	private float gateVelocity;
+
 	private int xDir;
 	private int yDir;
 	private int nextXDir;
@@ -27,12 +32,20 @@ public class Spark extends BaseObject {
 	private boolean done;
 	private boolean lastTarget;
 	private RenderSystem system;
-	
 
 	public Spark() {
 		mSprite = new Sprite(2);
+		explode = false;
+		active = false;
 		hide();
 		system = sSystemRegistry.renderSystem;
+	}
+	
+	public void explode() {
+		explodeX = posX;
+		explodeY = posY;
+		Log.d("DEBUG", "explodeX, explodeY: " + explodeX + ", " + explodeY);
+		explode = true;
 	}
 
 	public void hide() {
@@ -46,6 +59,7 @@ public class Spark extends BaseObject {
 		yDir = 0;
 		targetX = 0.0f;
 		targetY = 0.0f;
+		gateVelocity = 0.0f;
 		Log.d("DEBUG", "Spark deactivated!");
 	}
 
@@ -69,13 +83,15 @@ public class Spark extends BaseObject {
 		Log.d("DEBUG", "Spark activated!");
 	}
 
-	public void setNextTarget(float x, float y, boolean last) {
+	public void setNextTarget(float x, float y, float newGateVelocity, boolean last) {
 		Log.d("DEBUG", "Setting Next Target... ");
 		nextTargetX = x;
 		nextTargetY = y;
+		gateVelocity = newGateVelocity;
 		lastTarget = last;
-		//Log.d("DEBUG", "targetX, targetY: " + targetX + ", " + targetY);
-		//Log.d("DEBUG", "nextTargetX, nextTargetY: " + nextTargetX + ", " + nextTargetY);
+		// Log.d("DEBUG", "targetX, targetY: " + targetX + ", " + targetY);
+		// Log.d("DEBUG", "nextTargetX, nextTargetY: " + nextTargetX + ", " +
+		// nextTargetY);
 
 		if (targetX == nextTargetX) {
 			nextXDir = 0;
@@ -94,7 +110,8 @@ public class Spark extends BaseObject {
 			}
 		}
 
-		//Log.d("DEBUG", "So, nextXDir, nextYDir: " + nextXDir + ", " + nextYDir);
+		// Log.d("DEBUG", "So, nextXDir, nextYDir: " + nextXDir + ", " +
+		// nextYDir);
 
 		readyForNextTarget = false;
 	}
@@ -102,27 +119,37 @@ public class Spark extends BaseObject {
 	private void refreshTarget() {
 		if (!done) {
 			Log.d("DEBUG", "Refreshing Target...");
-			targetX = nextTargetX;
-			targetY = nextTargetY;
-			xDir = nextXDir;
-			yDir = nextYDir;
-			readyForNextTarget = true;
+			if (velocity >= gateVelocity) {
+				targetX = nextTargetX;
+				targetY = nextTargetY;
+				xDir = nextXDir;
+				yDir = nextYDir;
+				readyForNextTarget = true;
+			} else {
+				Log.d("DEBUG", "Not fast enough, velocity: " + velocity + ", gate velocity: " + gateVelocity);
+				explode();
+				hide();
+			}
 		} else {
+			Log.d("DEBUG", "about to hide");
+			explode();
 			hide();
 		}
 		if (lastTarget) {
 			done = true;
 		}
-		//Log.d("DEBUG", "target refreshed, xDir, yDir: " + xDir + ", " + yDir);
+		// Log.d("DEBUG", "target refreshed, xDir, yDir: " + xDir + ", " +
+		// yDir);
 	}
 
 	@Override
 	public void update(float timeDelta, BaseObject parent) {
 		if (active) {
-			
-			//scaling timeDelta so that it won't increase or decrease the speeds too much
-			timeDelta = timeDelta/100;
-			
+
+			// scaling timeDelta so that it won't increase or decrease the
+			// speeds too much
+			timeDelta = timeDelta / 100;
+
 			float distance = 0.0f;
 
 			if (xDir == -1) {
@@ -136,8 +163,9 @@ public class Spark extends BaseObject {
 			}
 
 			if (distance <= 0 || (xDir == 0 && yDir == 0)) {
-				//Log.d("DEBUG", "update: xDir, yDir: " + xDir + ", " + yDir);
-				//Log.d("DEBUG", "update: distance: " + distance);
+				// Log.d("DEBUG", "update: xDir, yDir: " + xDir + ", " + yDir);
+				// Log.d("DEBUG", "update: distance: " + distance);
+				Log.d("DEBUG", "targetX, targetY: " + targetX + ", " + targetY);
 				posX = targetX;
 				posY = targetY;
 				refreshTarget();
@@ -151,7 +179,7 @@ public class Spark extends BaseObject {
 					posY += (velocity * yDir * timeDelta);
 				}
 			}
-			if(velocity<MAX_VELOCITY) {
+			if (velocity < MAX_VELOCITY) {
 				velocity += acceleration * timeDelta;
 			}
 			mSprite.setPosition(posX, posY);
