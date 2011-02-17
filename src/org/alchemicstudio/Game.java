@@ -84,6 +84,7 @@ public class Game {
 	}
 
 	public void start() {
+		mGameRoot.beginGame();
 		mGame = new Thread(mGameThread);
 		mGame.setName("Game");
 		mGame.start();

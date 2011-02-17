@@ -28,7 +28,7 @@ public class LabelMaker {
 	private int mU;
 	private int mV;
 	private int mLineHeight;
-	private ArrayList<Label> mLabels = new ArrayList<Label>();
+	private FixedSizeArray<Label> mLabels = new FixedSizeArray<Label>(2);
 
 	private static final int STATE_NEW = 0;
 	private static final int STATE_INITIALIZED = 1;
@@ -239,7 +239,7 @@ public class LabelMaker {
 		mLineHeight = lineHeight;
 		mLabels.add(new Label(grid, width, height, ascent, u, v + height,
 				width, -height));
-		return mLabels.size() - 1;
+		return mLabels.getCount() - 1;
 	}
 	
 	public void beginDrawing(GL10 gl, float viewWidth, float viewHeight) {
@@ -268,10 +268,9 @@ public class LabelMaker {
         gl.glTranslatef(snappedX, snappedY, 0.0f);
         Label label = mLabels.get(labelID);
         gl.glEnable(GL10.GL_TEXTURE_2D);
-        ((GL11)gl).glTexParameteriv(GL10.GL_TEXTURE_2D,
-                GL11Ext.GL_TEXTURE_CROP_RECT_OES, label.mCrop, 0);
-        ((GL11Ext)gl).glDrawTexiOES((int) snappedX, (int) snappedY, 0,
-                (int) label.width, (int) label.height);
+        ((GL11)gl).glTexParameteriv(GL10.GL_TEXTURE_2D, GL11Ext.GL_TEXTURE_CROP_RECT_OES, label.mCrop, 0);
+        ((GL11Ext)gl).glDrawTexiOES(0, 0, 0, (int) label.width, (int) label.height);
+        //((GL11Ext)gl).glDrawTexiOES((int) snappedX, (int) snappedY, 0, (int) label.width, (int) label.height);
         gl.glPopMatrix();
     }
 	

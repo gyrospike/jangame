@@ -75,6 +75,8 @@ class GameThread implements Runnable {
 					mLastTime = time;
 					processInput();
 					gameManager.update(timeDelta, null);
+					//this is a temporary fix, there should be a better way to pass this sort of data to the renderer
+					mRenderer.sparkVelocity = Math.round((100.0f * gameManager.gameGrid.mSpark.velocity))/100.0f;
 					BaseObject.sSystemRegistry.renderSystem.sendUpdates(mRenderer);
 				}
 

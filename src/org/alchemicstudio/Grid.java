@@ -43,7 +43,6 @@ public class Grid extends BaseObject {
 	private Particle[] particleArray;
 
 	public Grid(int width, int height, int spacing, float nodeDim, float screenWidth, float screenHeight) {
-
 		mHeight = height;
 		mWidth = width;
 		mSpacing = spacing;
@@ -69,10 +68,10 @@ public class Grid extends BaseObject {
 
 		float center2 = (mSpacing * (height - 1)) + nodeDim;
 		ySideBuffer = (screenHeight - (center2)) / 2.0f;
-
-		for (int i = 0; i < width; i++) {
-			for (int j = 0; j < height; j++) {
-				mNodes[i][j] = new Node(i, j, new Vector2(xSideBuffer + (mSpacing * i) + (nodeDim / 2), ySideBuffer + (mSpacing * j)));
+		
+		for (int i = 0; i < mWidth; i++) {
+			for (int j = 0; j < mHeight; j++) {
+				mNodes[i][j] = new Node(i, j, new Vector2(xSideBuffer + (mSpacing * i) + (nodeDimension / 2), ySideBuffer + (mSpacing * j)));
 				Log.d("DEBUG", "Node placed at X: " + (xSideBuffer + (mSpacing * i)));
 			}
 		}
@@ -84,6 +83,10 @@ public class Grid extends BaseObject {
 			mWire[k] = new Wire();
 			mWire[k].mSprite.setScale(0.0f, 0.0f);
 		}
+	}
+	
+	public void initialize() {
+		
 	}
 
 	public void nodePressed(int i, int j) {

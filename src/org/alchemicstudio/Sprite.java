@@ -8,6 +8,7 @@ import javax.microedition.khronos.opengles.GL10;
 
 import org.alchemicstudio.Texture;
 
+import android.content.res.AssetManager;
 import android.util.Log;
 
 public class Sprite {

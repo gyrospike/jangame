@@ -13,6 +13,10 @@ public class GameManager extends BaseObject {
 	public GameManager() {
 		super();
 	}
+	
+	public void beginGame() {
+		gameGrid.initialize();
+	}
 
 	@Override
 	public void update(float timeDelta, BaseObject parent) {

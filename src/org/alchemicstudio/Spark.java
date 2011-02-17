@@ -8,6 +8,7 @@ public class Spark extends BaseObject {
 
 	public boolean active;
 	public boolean readyForNextTarget;
+	public float velocity;
 	
 	private final float MAX_VELOCITY = 100.0f;
 	
@@ -17,7 +18,6 @@ public class Spark extends BaseObject {
 	private float targetY;
 	private float nextTargetX;
 	private float nextTargetY;
-	private float velocity;
 	private float acceleration;
 	
 	private int xDir;
