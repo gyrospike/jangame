@@ -49,7 +49,7 @@ public class GameManager extends BaseObject {
 
 	public void add(BaseObject object) {
 		mObjects.add(object);
-		Log.d("DEBUG", "Object added: " + mObjects.getCount());
+		//Log.d("DEBUG", "Object added: " + mObjects.getCount());
 	}
 
 	public void addGrid(BaseObject object) {

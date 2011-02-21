@@ -6,8 +6,10 @@ import android.util.Log;
 public class Node extends BaseObject {
 
 	public Sprite mSprite;
+	public int type;
 	public int iX, iY;
-	public boolean source, hasPower;
+	public boolean source; 
+	public boolean hasPower;
 	public float speedLimit;
 	
 	private Point[] targetArray;
@@ -16,15 +18,10 @@ public class Node extends BaseObject {
 	private Vector2 posVector;
 	private RenderSystem system = sSystemRegistry.renderSystem;
 
-	public Node(int i, int j, Vector2 vec, int type) {
+	public Node(int i, int j, Vector2 vec) {
 		iX = i;
 		iY = j;
 		posVector = vec;
-		if(type==0) {
-			speedLimit = 0.0f;
-		} else if(type==1) {
-			speedLimit = 50.0f;
-		}
 		
 		if(iX==0 && iY==0) {
 			maxConnections = 1;
@@ -51,7 +48,7 @@ public class Node extends BaseObject {
 		mSprite.setPosition(posVector.x, posVector.y);
 		mSprite.currentTextureIndex = 0;
 
-		Log.d("DEBUG", "Node placed at: (" + i + ", " + j + ") ");
+		//Log.d("DEBUG", "Node placed at: (" + i + ", " + j + ") ");
 	}
 
 	public void setSource() {

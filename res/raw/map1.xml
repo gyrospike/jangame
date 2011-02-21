@@ -1,0 +1,18 @@
+<?xml version="1.0" ?>
+<MAP NUMBER="1" WIDTH="5" HEIGHT="5" SPACING="80">
+	<NODE I="0" J="0">
+  		<STATS TYPE="1" SPEED="0" SOURCE="true"/>
+  	</NODE>
+  	<NODE I="4" J="4">
+  		<STATS TYPE="1" SPEED="0" SOURCE="true"/>
+  	</NODE>
+  	<NODE I="4" J="3">
+  		<STATS TYPE="2" SPEED="50" SOURCE="false"/>
+  	</NODE>
+  	<NODE I="3" J="4">
+  		<STATS TYPE="2" SPEED="50" SOURCE="false"/>
+  	</NODE>
+  	<NODE I="1" J="4">
+  		<STATS TYPE="2" SPEED="50" SOURCE="false"/>
+  	</NODE>
+</MAP>

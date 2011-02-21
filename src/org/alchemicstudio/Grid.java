@@ -14,6 +14,7 @@ public class Grid extends BaseObject {
 	public Wire[] mWire;
 
 	private final static int SPARKS_PER_TOUCH = 5;
+	private final static float WIRE_SCALER = (10.0f / 27.0f);
 
 	private int mSpacing;
 	private int numWires;
@@ -74,17 +75,9 @@ public class Grid extends BaseObject {
 
 		for (int i = 0; i < mWidth; i++) {
 			for (int j = 0; j < mHeight; j++) {
-				if ((i == mWidth - 2 && j == mHeight - 1) || (i == mWidth - 1 && j == mHeight - 2)) {
-					mNodes[i][j] = new Node(i, j, new Vector2(xSideBuffer + (mSpacing * i) + (nodeDimension / 2), ySideBuffer + (mSpacing * j)), 1);
-				} else {
-					mNodes[i][j] = new Node(i, j, new Vector2(xSideBuffer + (mSpacing * i) + (nodeDimension / 2), ySideBuffer + (mSpacing * j)), 0);
-				}
-				Log.d("DEBUG", "Node placed at X: " + (xSideBuffer + (mSpacing * i)));
+				mNodes[i][j] = new Node(i, j, new Vector2(xSideBuffer + (mSpacing * i) + (nodeDimension / 2), ySideBuffer + (mSpacing * j)));
 			}
 		}
-
-		mNodes[0][0].setSource();
-		mNodes[mWidth - 1][mHeight - 1].setSource();
 
 		for (int k = 0; k < maxWireSegments; k++) {
 			mWire[k] = new Wire();
@@ -109,15 +102,24 @@ public class Grid extends BaseObject {
 	public void updateWire(int x, int y) {
 		if (nodePressed) {
 
-			wireOriginX = mNodes[firstIndexI][firstIndexJ].getX() + ((x - mNodes[firstIndexI][firstIndexJ].getX()) / 2);
-			wireOriginY = mNodes[firstIndexI][firstIndexJ].getY() + ((y - mNodes[firstIndexI][firstIndexJ].getY()) / 2);
+			Node tempNode = mNodes[firstIndexI][firstIndexJ];
+			wireOriginX = tempNode.getX() + ((x - tempNode.getX()) / 2);
+			wireOriginY = tempNode.getY() + ((y - tempNode.getY()) / 2);
 
 			double angle = (Math.PI / 2) + Math.atan((mNodes[firstIndexI][firstIndexJ].getY() - y) / (x - mNodes[firstIndexI][firstIndexJ].getX()));
 			Vector2 newPoint = new Vector2(x, y);
 			float distance = newPoint.distance(new Vector2(wireOriginX, wireOriginY));
 			// Log.d("DEBUG", "angle: " + angle + ", distance: " + distance);
 			mWire[0].mSprite.setPosition(wireOriginX, wireOriginY);
-			mWire[0].mSprite.setScale(1.0f, distance * 3 / 9);
+			mWire[0].mSprite.setScale(1.0f, distance * WIRE_SCALER); // really
+																		// don't
+																		// understand
+																		// why I
+																		// need
+																		// this
+																		// value,
+																		// about
+																		// 1/3
 			mWire[0].mSprite.setRotation((float) angle);
 		}
 	}
@@ -219,9 +221,8 @@ public class Grid extends BaseObject {
 				int difJ = Math.abs(firstIndexJ - j);
 				int smallerJ = Math.min(j, firstIndexJ);
 				for (int p = 1; p <= difJ; p++) {
-					if (!connectionBetween(i, smallerJ + p, i, smallerJ + p - 1) && !mNodes[i][smallerJ + p].hasMaxConnections() 
-							&& !mNodes[i][smallerJ + p - 1].hasMaxConnections()) {
-						
+					if (!connectionBetween(i, smallerJ + p, i, smallerJ + p - 1) && !mNodes[i][smallerJ + p].hasMaxConnections() && !mNodes[i][smallerJ + p - 1].hasMaxConnections()) {
+
 						createWire(i, smallerJ + p, i, smallerJ + p - 1, false);
 						mNodes[i][smallerJ + p].setConnection(new Point(i, smallerJ + p - 1), 0);
 						mNodes[i][smallerJ + p - 1].setConnection(new Point(i, smallerJ + p), 0);
@@ -232,9 +233,8 @@ public class Grid extends BaseObject {
 				int difI = Math.abs(firstIndexI - i);
 				int smallerI = Math.min(i, firstIndexI);
 				for (int p = 1; p <= difI; p++) {
-					if (!connectionBetween(smallerI + p, j, smallerI + p - 1, j) && !mNodes[smallerI + p][j].hasMaxConnections()
-							&& !mNodes[smallerI + p - 1][j].hasMaxConnections()) {
-						
+					if (!connectionBetween(smallerI + p, j, smallerI + p - 1, j) && !mNodes[smallerI + p][j].hasMaxConnections() && !mNodes[smallerI + p - 1][j].hasMaxConnections()) {
+
 						createWire(smallerI + p, j, smallerI + p - 1, j, false);
 						mNodes[smallerI + p][j].setConnection(new Point(smallerI + p - 1, j), 0);
 						mNodes[smallerI + p - 1][j].setConnection(new Point(smallerI + p, j), 0);
@@ -636,9 +636,9 @@ public class Grid extends BaseObject {
 			lastI = 0;
 			lastJ = 0;
 		}
-		
-		if(mSpark.explode) {
-			createParticle((int) mSpark.explodeX, (int)  mSpark.explodeY, 15);
+
+		if (mSpark.explode) {
+			createParticle((int) mSpark.explodeX, (int) mSpark.explodeY, 15);
 			mSpark.explode = false;
 		}
 	}
