@@ -26,7 +26,7 @@ public class Game {
 		mGameRoot = new GameManager();
 	}
 
-	public void bootstrap(Context context) {
+	public void bootstrap(Context context, int mapNumber) {
 
 		BaseObject.sSystemRegistry.openGLSystem = new OpenGLSystem(null);
 
@@ -57,8 +57,7 @@ public class Game {
 			 * 
 			 * sp.parse(new InputSource(isr), myExampleHandler);
 			 */
-
-			sp.parse(context.getResources().openRawResource(R.raw.map2), myXMLHandler);
+			sp.parse(context.getResources().openRawResource(mapNumber), myXMLHandler);
 
 			parsedMapData = myXMLHandler.getParsedData();
 

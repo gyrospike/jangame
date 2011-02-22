@@ -31,13 +31,20 @@ public class BaseActivity extends Activity {
 		getWindowManager().getDefaultDisplay().getMetrics(metrics);
 		Log.d("DEBUG", "Real dpi: " + metrics.densityDpi);
 		Log.d("DEBUG", "screen dimensions in dpi: " + metrics.widthPixels + " x " + metrics.heightPixels);
+		
+		int mapNumber = 0;
+		Bundle extras = getIntent().getExtras(); 
+		if(extras !=null)
+		{
+			mapNumber = extras.getInt("mapNumber");
+		}
 
 		mGLView = new OGLSurfaceView(this);
 		setContentView(mGLView);
 
 		mGame = new Game(metrics.densityDpi, metrics.widthPixels, metrics.heightPixels);
 		mGame.setSurfaceView((OGLSurfaceView) mGLView);
-		mGame.bootstrap(this);
+		mGame.bootstrap(this, mapNumber);
 
 		gameThread = mGame.getGameThread();
 		createInputObjectPool();
@@ -49,7 +56,8 @@ public class BaseActivity extends Activity {
         mGame.pause();
         mGLView.onPause();
         //instructs renderer to invalidate all textures so that they can be reloaded onResume
-        gameThread.getRenderer().onPause();
+        //some sort of bug exists if you switch between activities too fast, need to lock input down during loading
+        //gameThread.getRenderer().onPause();
 		Log.d("DEBUG", "Game paused");
 	}
 	

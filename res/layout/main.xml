@@ -1,12 +1,35 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical"
-    android:layout_width="fill_parent"
-    android:layout_height="fill_parent"
-    >
-<TextView  
-    android:layout_width="fill_parent" 
-    android:layout_height="wrap_content" 
-    android:text="@string/hello"
-    />
-</LinearLayout>
+
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+	android:orientation="vertical" android:layout_width="fill_parent"
+	android:layout_height="fill_parent" android:background="@drawable/menu_background">
+
+	<TableLayout android:id="@+id/TableLayout01"
+		android:layout_height="wrap_content" android:layout_width="fill_parent">
+
+		<TableRow android:id="@+id/TableRow01" android:layout_width="fill_parent"
+			android:layout_height="wrap_content" android:gravity="center"
+			android:layout_marginTop="200dip">
+
+			<Button android:id="@+id/Button01" android:background="@drawable/map1_button"
+				android:layout_column="1" android:layout_margin="10dip" />
+
+			<Button android:id="@+id/Button02" android:background="@drawable/map2_button"
+				android:layout_margin="10dip" />
+
+		</TableRow>
+
+		<TableRow android:id="@+id/TableRow02" android:layout_width="fill_parent"
+			android:layout_height="wrap_content" android:gravity="center">
+
+			<Button android:id="@+id/Button03" android:background="@drawable/map2_button"
+				android:layout_column="1" android:layout_margin="10dip" />
+
+			<Button android:id="@+id/Button04" android:background="@drawable/map1_button"
+				android:layout_margin="10dip" />
+
+		</TableRow>
+
+	</TableLayout>
+
+</RelativeLayout>
