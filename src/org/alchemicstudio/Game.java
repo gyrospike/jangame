@@ -15,6 +15,7 @@ public class Game {
 	private float pixToDpiScale;
 	private int screenWidth;
 	private int screenHeight;
+	private boolean mRunning;
 
 	public Game(int screenScale, int sWidth, int sHeight) {
 		// gives a scalar to adjust for different screen resolutions so that
@@ -127,18 +128,45 @@ public class Game {
 
 		mGameThread = new GameThread(mSurfaceView.getRenderer());
 		mGameThread.setGameRoot(mGameRoot);
+		mGameRoot.beginGame();
 		start();
 	}
 
 	public void start() {
-		mGameRoot.beginGame();
-		mGame = new Thread(mGameThread);
-		mGame.setName("Game");
-		mGame.start();
+		if (!mRunning) {
+			assert mGame == null;
+			// Now's a good time to run the GC.
+			Runtime r = Runtime.getRuntime();
+			r.gc();
+			mGame = new Thread(mGameThread);
+			mGame.setName("Game");
+			mGame.start();
+			mRunning = true;
+		} else {
+			mGameThread.resumeGame();
+		}
+	}
+
+	public void stop() {
+		if (mRunning) {
+			if (mGameThread.getPaused()) {
+				mGameThread.resumeGame();
+			}
+			mGameThread.stopGame();
+			try {
+				mGame.join();
+			} catch (InterruptedException e) {
+				mGame.interrupt();
+			}
+			mGame = null;
+			mRunning = false;
+		}
 	}
 
 	public void pause() {
-		mGameThread.pauseGame();
+		if (mRunning) {
+			mGameThread.pauseGame();
+		}
 	}
 
 	public void resume() {

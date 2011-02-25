@@ -8,6 +8,7 @@ import android.opengl.GLSurfaceView;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.MotionEvent;
 import android.view.Window;
 import android.view.WindowManager;
@@ -17,7 +18,7 @@ public class BaseActivity extends Activity {
 	private static final int INPUT_QUEUE_SIZE = 32;
 	private ArrayBlockingQueue<InputObject> inputObjectPool;
 	private GameThread gameThread;
-	private GLSurfaceView mGLView;
+	private OGLSurfaceView mGLView;
 	private Game mGame;
 
 	@Override
@@ -34,7 +35,7 @@ public class BaseActivity extends Activity {
 		
 		int mapNumber = 0;
 		Bundle extras = getIntent().getExtras(); 
-		if(extras !=null)
+		if(extras !=null && getIntent().hasExtra("mapNumber"))
 		{
 			mapNumber = extras.getInt("mapNumber");
 		}
@@ -57,18 +58,29 @@ public class BaseActivity extends Activity {
         mGLView.onPause();
         //instructs renderer to invalidate all textures so that they can be reloaded onResume
         //some sort of bug exists if you switch between activities too fast, need to lock input down during loading
-        //gameThread.getRenderer().onPause();
+        gameThread.getRenderer().onPause();
 		Log.d("DEBUG", "Game paused");
 	}
 	
 	@Override
 	protected void onResume() {
 		super.onResume();
-        mGame.resume();
+		mGame.resume();
+        //mGame.onResume(this, false);
         mGLView.onResume();
         Log.d("DEBUG", "Game resumed");
 	}
-
+	
+	public boolean onKeyDown(int keyCode, KeyEvent event) {
+		if (keyCode == KeyEvent.KEYCODE_BACK)
+	    {
+			finish();
+	        mGame.stop();
+	        return true;
+	    }
+		return false;
+	}
+	
 	@Override
 	public boolean onTouchEvent(MotionEvent event) {
 		// we only care about down actions in this game.

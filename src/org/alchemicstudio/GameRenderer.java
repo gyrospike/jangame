@@ -31,7 +31,6 @@ public class GameRenderer implements Renderer {
 	private Paint mLabelPaint;
 	private String sparkSpeedString;
 	private String gateSpeedString;
-	private AssetManager am;
 
 	public GameRenderer(Context context) {
 		mContext = context;
@@ -228,4 +227,8 @@ public class GameRenderer implements Renderer {
 
 	public synchronized void waitDrawingComplete() {
 	}
+	
+	  public void setContext(Context newContext) {
+	        mContext = newContext;
+	    }
 }
