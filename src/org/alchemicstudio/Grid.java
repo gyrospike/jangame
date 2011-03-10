@@ -38,6 +38,7 @@ public class Grid extends BaseObject {
 
 	private boolean nodePressed;
 	private boolean sparkActive;
+	private boolean sparkReset;
 	private boolean chooseRandom;
 	private boolean circuitCalcDone;
 
@@ -195,9 +196,12 @@ public class Grid extends BaseObject {
 		Log.d("DEBUG", "clearPaths called from nodeReleased");
 		clearPaths();
 
+		checkPowerConnection();
+		
+		//the below code chunk calculates the most efficient path through the gird, ironically with an extremely inefficient method
+		/*
 		FixedSizeArray<Point> list = new FixedSizeArray<Point>(maxBestPathLength + 1);
 		calculateCircuit(new Point(0, 0), new Point(-1, 0), list);
-		checkPowerConnection();
 		if (finalList.getCount() > 0) {
 			chooseBestPath();
 			circuitCalcDone = true;
@@ -206,6 +210,7 @@ public class Grid extends BaseObject {
 			releaseSpark();
 			circuitCalcDone = false;
 		}
+		*/
 	}
 
 	public void nodeReleased(int i, int j) {
@@ -214,9 +219,7 @@ public class Grid extends BaseObject {
 		if (firstIndexI == i && firstIndexJ == j) {
 			deactivateNode(i, j);
 			createParticle((int) mNodes[i][j].getX(), (int) mNodes[i][j].getY(), SPARKS_PER_TOUCH);
-		}
-
-		if ((firstIndexI == i && firstIndexJ != j) || (firstIndexI != i && firstIndexJ == j)) {
+		} else if ((firstIndexI == i && firstIndexJ != j) || (firstIndexI != i && firstIndexJ == j)) {
 			if (firstIndexI == i) {
 				int difJ = Math.abs(firstIndexJ - j);
 				int smallerJ = Math.min(j, firstIndexJ);
@@ -243,7 +246,6 @@ public class Grid extends BaseObject {
 				}
 			}
 		}
-
 		nodePressed = false;
 	}
 
@@ -282,7 +284,7 @@ public class Grid extends BaseObject {
 
 		for (int u = 0; u < circuitList.getCount(); u++) {
 			Log.d("DEBUG", "Circuit List: (" + circuitList.get(u).iX + ", " + circuitList.get(u).iY + "), length: " + circuitList.getCount());
-			circuitList.get(u).activate(2);
+			circuitList.get(u).activate(2, 0);
 		}
 	}
 
@@ -436,6 +438,7 @@ public class Grid extends BaseObject {
 		if (!mSpark.active) {
 			Log.d("DEBUG", "Spark Released!");
 			sparkActive = true;
+			sparkReset = false;
 			mSpark.activate(mNodes[0][0].getX(), mNodes[0][0].getY());
 		}
 	}
@@ -454,19 +457,22 @@ public class Grid extends BaseObject {
 				mNodes[q][p].removePower();
 			}
 		}
-		checkNodePower(new Point(0, 0), null);
-		checkNodePower(new Point(mWidth - 1, mHeight - 1), null);
+		checkNodePower(new Point(0, 0), null, 1);
+		checkNodePower(new Point(mWidth - 1, mHeight - 1), null, 2);
 	}
 
-	private void checkNodePower(Point myPoint, Point lastPoint) {
+	private void checkNodePower(Point myPoint, Point lastPoint, int key) {
 		if (!mNodes[myPoint.x][myPoint.y].hasPower) {
-			mNodes[myPoint.x][myPoint.y].activate(1);
+			mNodes[myPoint.x][myPoint.y].activate(1, key);
 			Point[] pArray = mNodes[myPoint.x][myPoint.y].getConnections();
 			for (int i = 0; i < pArray.length; i++) {
 				if (!pArray[i].equals(new Point(-1, -1)) && !pArray[i].equals(lastPoint)) {
-					checkNodePower(pArray[i], myPoint);
+					checkNodePower(pArray[i], myPoint, key);
 				}
 			}
+		} else if(mNodes[myPoint.x][myPoint.y].sourceKey != key){
+			Log.d("DEBUG", "There's a connection!");
+			releaseSpark();
 		}
 	}
 
@@ -560,6 +566,9 @@ public class Grid extends BaseObject {
 
 	@Override
 	public void update(float timeDelta, BaseObject parent) {
+		if(!mSpark.active) {
+			sparkActive = false;
+		}
 		if (sparkActive) {
 			timeStep += timeDelta;
 			if (timeStep > 10) {
@@ -630,11 +639,12 @@ public class Grid extends BaseObject {
 					mSpark.setNextTarget(mNodes[currentI][currentJ].getX(), mNodes[currentI][currentJ].getY(), mNodes[lastI][lastJ].speedLimit, !sparkActive);
 				}
 			}
-		} else {
+		} else if(!sparkReset){
 			currentI = 0;
 			currentJ = 0;
 			lastI = 0;
 			lastJ = 0;
+			sparkReset = true;
 		}
 
 		if (mSpark.explode) {

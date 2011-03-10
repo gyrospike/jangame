@@ -3,6 +3,7 @@ package org.alchemicstudio;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
@@ -59,6 +60,80 @@ public class Menu extends Activity {
 				startActivity(StartGameIntent);
 			}
 		});
+		
+		Button Map5 = (Button) findViewById(R.id.Button05);
+		Map5.setOnClickListener(new OnClickListener() {
+
+			public void onClick(View v) {
+				Intent StartGameIntent = new Intent(Menu.this, BaseActivity.class);
+				StartGameIntent.putExtra("mapNumber", R.raw.map1);
+				startActivity(StartGameIntent);
+			}
+		});
+		
+		Button Map6 = (Button) findViewById(R.id.Button06);
+		Map6.setOnClickListener(new OnClickListener() {
+
+			public void onClick(View v) {
+				Intent StartGameIntent = new Intent(Menu.this, BaseActivity.class);
+				StartGameIntent.putExtra("mapNumber", R.raw.map2);
+				startActivity(StartGameIntent);
+			}
+		});
+		
+		Button Map7 = (Button) findViewById(R.id.Button07);
+		Map7.setOnClickListener(new OnClickListener() {
+
+			public void onClick(View v) {
+				Intent StartGameIntent = new Intent(Menu.this, BaseActivity.class);
+				StartGameIntent.putExtra("mapNumber", R.raw.map2);
+				startActivity(StartGameIntent);
+			}
+		});
+		
+		Button Map8 = (Button) findViewById(R.id.Button08);
+		Map8.setOnClickListener(new OnClickListener() {
+
+			public void onClick(View v) {
+				Intent StartGameIntent = new Intent(Menu.this, BaseActivity.class);
+				StartGameIntent.putExtra("mapNumber", R.raw.map1);
+				startActivity(StartGameIntent);
+			}
+		});
+		
+		Button Map9 = (Button) findViewById(R.id.Button09);
+		Map9.setOnClickListener(new OnClickListener() {
+
+			public void onClick(View v) {
+				Intent StartGameIntent = new Intent(Menu.this, BaseActivity.class);
+				StartGameIntent.putExtra("mapNumber", R.raw.map2);
+				startActivity(StartGameIntent);
+			}
+		});
+		
+		Button Map10 = (Button) findViewById(R.id.Button10);
+		Map10.setOnClickListener(new OnClickListener() {
+
+			public void onClick(View v) {
+				Intent StartGameIntent = new Intent(Menu.this, BaseActivity.class);
+				StartGameIntent.putExtra("mapNumber", R.raw.map1);
+				startActivity(StartGameIntent);
+			}
+		});
+	}
+	
+	@Override
+	protected void onPause() {
+		super.onPause();
+       
+		Log.d("DEBUG", "Menu paused");
+	}
+	
+	@Override
+	protected void onResume() {
+		super.onResume();
+		
+        Log.d("DEBUG", "Menu resumed");
 	}
 
 }

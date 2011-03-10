@@ -11,6 +11,7 @@ public class Node extends BaseObject {
 	public boolean source; 
 	public boolean hasPower;
 	public float speedLimit;
+	public int sourceKey;
 	
 	private Point[] targetArray;
 	private int maxConnections;
@@ -128,8 +129,9 @@ public class Node extends BaseObject {
 		}
 	}
 
-	public void activate(int level) {
+	public void activate(int level, int key) {
 		if (!source) {
+			sourceKey = key;
 			mSprite.currentTextureIndex = level;
 			hasPower = true;
 		}

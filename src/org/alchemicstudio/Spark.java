@@ -59,6 +59,8 @@ public class Spark extends BaseObject {
 		yDir = 0;
 		targetX = 0.0f;
 		targetY = 0.0f;
+		nextTargetX = 0.0f;
+		nextTargetY = 0.0f;
 		gateVelocity = 0.0f;
 		Log.d("DEBUG", "Spark deactivated!");
 	}
