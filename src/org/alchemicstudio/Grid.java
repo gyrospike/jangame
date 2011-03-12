@@ -45,8 +45,12 @@ public class Grid extends BaseObject {
 	private FixedSizeArray<Node> circuitList = new FixedSizeArray<Node>(25);
 	private FixedSizeArray<FixedSizeArray<Point>> finalList = new FixedSizeArray<FixedSizeArray<Point>>(512);
 	private Particle[] particleArray;
-
+	
+	private TextBox sampleTextBox;
+	private RenderSystem system;
+	
 	public Grid(int width, int height, int spacing, float nodeDim, float screenWidth, float screenHeight) {
+		system = sSystemRegistry.renderSystem;
 		mHeight = height;
 		mWidth = width;
 		mSpacing = spacing;
@@ -87,6 +91,8 @@ public class Grid extends BaseObject {
 
 		createWire(0, 0, 0, 0, true);
 		createWire(mWidth - 1, mHeight - 1, 0, 0, true);
+		
+		sampleTextBox = new TextBox(0, 0, "Hello");
 	}
 
 	public void initialize() {
@@ -566,6 +572,10 @@ public class Grid extends BaseObject {
 
 	@Override
 	public void update(float timeDelta, BaseObject parent) {
+		sampleTextBox.theText = "Spark Speed: " + Math.round((100.0f * mSpark.velocity))/100.0f;
+		
+		system.scheduleForWrite(sampleTextBox);
+		
 		if(!mSpark.active) {
 			sparkActive = false;
 		}

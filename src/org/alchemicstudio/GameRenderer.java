@@ -15,6 +15,7 @@ public class GameRenderer implements Renderer {
 
 	private Context mContext;
 	private FixedSizeArray<Sprite> spriteList;
+	private FixedSizeArray<TextBox> textBoxList;
 	private float originX, originY;
 	private float xCamera, yCamera;
 	private boolean setOrigin = false;
@@ -22,15 +23,9 @@ public class GameRenderer implements Renderer {
 	private boolean mDrawQueueChanged;
 	private int mHeight;
 	private int mWidth;
-
-	public float sparkVelocity;
 	
 	private LabelMaker mLabels;
-	private int mLabelSpark;
-	private int mLabelGate;
 	private Paint mLabelPaint;
-	private String sparkSpeedString;
-	private String gateSpeedString;
 
 	public GameRenderer(Context context) {
 		mContext = context;
@@ -145,11 +140,6 @@ public class GameRenderer implements Renderer {
 						Sprite currentSprite = (Sprite) objectArray[i];
 						x = currentSprite.xOffset;
 						y = currentSprite.yOffset;
-						/*
-						 * if (spriteArray[i].cameraRelative) { x = (x +
-						 * xCamera) + (mWidth/2); y = (y + yCamera) +
-						 * (mHeight/2); }
-						 */
 						currentSprite.draw(gl, 0, x, y);
 					}
 				}
@@ -163,18 +153,17 @@ public class GameRenderer implements Renderer {
 		
 		viewPerspective(gl);
 		
-		sparkSpeedString = "Spark Speed: " + sparkVelocity;
-		gateSpeedString = "Gate Speed: 50.00";
+		for(int h = 0; h < textBoxList.getCount(); h++) {
+			mLabels.beginAdding(gl);
+			textBoxList.get(h).index = mLabels.add(gl, textBoxList.get(h).theText, mLabelPaint);
+			mLabels.endAdding(gl);
+		}
 		
-		mLabels.beginAdding(gl);
-		mLabelSpark = mLabels.add(gl, sparkSpeedString, mLabelPaint);
-		mLabelGate = mLabels.add(gl, gateSpeedString, mLabelPaint);
-		mLabels.endAdding(gl);
-		
-		mLabels.beginDrawing(gl, mWidth, mHeight);
-		mLabels.draw(gl, 0, 0, mLabelSpark);
-		mLabels.draw(gl, 0, 30, mLabelGate);
-		mLabels.endDrawing(gl);
+		for(int g = 0; g < textBoxList.getCount(); g++) {
+			mLabels.beginDrawing(gl, mWidth, mHeight);
+			mLabels.draw(gl, textBoxList.get(g).posX, textBoxList.get(g).posY, textBoxList.get(g).index);
+			mLabels.endDrawing(gl);
+		}
 	}
 
 	public void loadTextures(GL10 gl, TextureLibrary library) {
@@ -189,6 +178,14 @@ public class GameRenderer implements Renderer {
 
 	public synchronized void setDrawQuadQueue(FixedSizeArray<Sprite> sList) {
 		spriteList = sList;
+		synchronized (mDrawLock) {
+			mDrawQueueChanged = true;
+			mDrawLock.notify();
+		}
+	}
+	
+	public synchronized void setTextBoxQueue(FixedSizeArray<TextBox> tList) {
+		textBoxList = tList;
 		synchronized (mDrawLock) {
 			mDrawQueueChanged = true;
 			mDrawLock.notify();
