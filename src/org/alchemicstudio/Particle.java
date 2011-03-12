@@ -22,7 +22,7 @@ public class Particle extends BaseObject {
 	private float velocity_Y;
 
 	public Particle() {
-		mSprite = new Sprite(0);
+		mSprite = new Sprite(0, 1);
 	}
 
 	public void createParticle(int x, int y) {

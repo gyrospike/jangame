@@ -44,7 +44,7 @@ public class Node extends BaseObject {
 			targetWireTypeArray[l] = -1;
 		}
 
-		mSprite = new Sprite(1);
+		mSprite = new Sprite(1, 3);
 		mSprite.cameraRelative = false;
 		mSprite.setPosition(posVector.x, posVector.y);
 		mSprite.currentTextureIndex = 0;

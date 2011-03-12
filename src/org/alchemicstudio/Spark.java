@@ -34,7 +34,7 @@ public class Spark extends BaseObject {
 	private RenderSystem system;
 
 	public Spark() {
-		mSprite = new Sprite(2);
+		mSprite = new Sprite(2, 1);
 		explode = false;
 		active = false;
 		hide();

@@ -10,8 +10,9 @@
 			android:layout_width="fill_parent" android:layout_height="fill_parent" />
 	</FrameLayout>
 
-	<HorizontalScrollView android:layout_width="fill_parent"
-		android:layout_marginTop="150dip" android:layout_height="310dip"
+	<HorizontalScrollView android:id="@+id/ScrollView01"
+		android:layout_width="fill_parent" android:layout_marginTop="150dip"
+		android:layout_height="310dip"
 		android:scrollbarAlwaysDrawHorizontalTrack="false">
 		<TableLayout android:id="@+id/TableLayout01"
 			android:layout_height="wrap_content" android:layout_width="fill_parent">

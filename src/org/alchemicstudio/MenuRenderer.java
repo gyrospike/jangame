@@ -28,11 +28,13 @@ public class MenuRenderer implements Renderer {
 		TextureLibrary longTermTextureLibrary = new TextureLibrary();
 		BaseObject.sSystemRegistry.longTermTextureLibrary = longTermTextureLibrary;
 		
-		currentSprite = new Sprite(0);
-		currentSprite.setTexture(longTermTextureLibrary.allocateTexture(R.drawable.grey_gate_node), 32 / pixToDpiScale, 32 / pixToDpiScale);
+		currentSprite = new Sprite(0, 3, 300);
+		currentSprite.setTextureFrame(longTermTextureLibrary.allocateTexture(R.drawable.grey_gate_node), 32 / pixToDpiScale, 32 / pixToDpiScale);
+		currentSprite.setTextureFrame(longTermTextureLibrary.allocateTexture(R.drawable.yellow_gate_node), 32 / pixToDpiScale, 32 / pixToDpiScale);
+		currentSprite.setTextureFrame(longTermTextureLibrary.allocateTexture(R.drawable.green_gate_node), 32 / pixToDpiScale, 32 / pixToDpiScale);
 		
-		backgroundSprite = new Sprite(0);
-		backgroundSprite.setTexture(longTermTextureLibrary.allocateTexture(R.drawable.robo), 128 / pixToDpiScale, 128 / pixToDpiScale);
+		backgroundSprite = new Sprite(0, 1);
+		backgroundSprite.setTextureFrame(longTermTextureLibrary.allocateTexture(R.drawable.robo), 128 / pixToDpiScale, 128 / pixToDpiScale);
 	}
 
 	public void onSurfaceCreated(GL10 gl, EGLConfig config) {
@@ -101,7 +103,7 @@ public class MenuRenderer implements Renderer {
 		viewOrtho(gl, mWidth, mHeight);
 
 		synchronized (this) {
-			currentSprite.draw(gl, 0, 0, 0);
+			currentSprite.draw(gl, 0, 32, -32);
 			backgroundSprite.draw(gl, 0, 64 * pixToDpiScale, -854 + (64 * pixToDpiScale));
 		}
 

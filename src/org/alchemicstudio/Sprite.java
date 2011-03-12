@@ -9,52 +9,64 @@ import javax.microedition.khronos.opengles.GL10;
 import org.alchemicstudio.Texture;
 
 import android.content.res.AssetManager;
+import android.os.SystemClock;
 import android.util.Log;
 
 public class Sprite {
-	
+
 	public float xOffset;
 	public float yOffset;
 	public float rotation;
 	public boolean cameraRelative;
 	public int currentTextureIndex;
 	public float xScale, yScale;
-	
+
 	private Texture[] mTexture;
 	private int textureIndex;
 	private int mPriority;
 	private FloatBuffer vertexBuffer;
 	private FloatBuffer textureBuffer;
 	private ByteBuffer indexBuffer;
-	
+
 	private float widthScale;
 	private float heightScale;
 	private float opacity;
 
-	public Sprite(int priority) {
+	private long mLastTime;
+	private long mTime;
+	private int framesPerMillisecond;
+
+	public Sprite(int priority, int frames, int fpms) {
+		framesPerMillisecond = fpms;
+		init(priority, frames);
+	}
+
+	public Sprite(int priority, int frames) {
+		init(priority, frames);
+	}
+
+	private void init(int priority, int frames) {
 		byte[] indices = { 1, 0, 2, 3 };
 
-		float[] vertices = {
-				-1.0f, -1.0f, // 0 bottom left
+		float[] vertices = { -1.0f, -1.0f, // 0 bottom left
 				-1.0f, 1.0f, // 1 top left
 				1.0f, 1.0f, // 2 top right
 				1.0f, -1.0f, // 3 bottom right
 		};
 
-		float[] texture = { 
-				0.0f, 1.0f, //
+		float[] texture = { 0.0f, 1.0f, //
 				0.0f, 0.0f, //
 				1.0f, 0.0f, //
 				1.0f, 1.0f, //
 		};
-		
-		mTexture = new Texture[3];
+
+		mTexture = new Texture[frames];
 		currentTextureIndex = 0;
 		opacity = 1.0f;
 		mPriority = priority;
 		xScale = 1.0f;
 		yScale = 1.0f;
-		
+
 		ByteBuffer byteBuf = ByteBuffer.allocateDirect(vertices.length * 4);
 		byteBuf.order(ByteOrder.nativeOrder());
 		vertexBuffer = byteBuf.asFloatBuffer();
@@ -71,25 +83,25 @@ public class Sprite {
 		indexBuffer.put(indices);
 		indexBuffer.position(0);
 	}
-	
+
 	public void setPosition(float x, float y) {
 		xOffset = x;
 		yOffset = -y;
 	}
-	
+
 	public void setOpacity(float value) {
 		opacity = value;
 	}
-	
+
 	public void setScale(float x, float y) {
 		xScale = x;
 		yScale = y;
 	}
-	
+
 	public void setRotation(float angle) {
-		rotation = (float)(180 * (angle / Math.PI));
+		rotation = (float) (180 * (angle / Math.PI));
 	}
-	
+
 	public Vector2 getPosition() {
 		return new Vector2(xOffset, yOffset);
 	}
@@ -98,7 +110,7 @@ public class Sprite {
 		return mPriority;
 	}
 
-	public void setTexture(Texture texture, float width, float height) {
+	public void setTextureFrame(Texture texture, float width, float height) {
 		mTexture[textureIndex] = texture;
 		widthScale = width;
 		heightScale = height;
@@ -106,22 +118,32 @@ public class Sprite {
 	}
 
 	public void draw(GL10 gl, float angle, float x, float y) {
+		if (framesPerMillisecond != 0) {
+			mTime = SystemClock.uptimeMillis();
+			final long timeDelta = mTime - mLastTime;
+
+			if (timeDelta > framesPerMillisecond) {
+				mLastTime = mTime;
+				currentTextureIndex++;
+				if (currentTextureIndex >= textureIndex)
+					currentTextureIndex = 0;
+			}
+		}
+
 		gl.glBindTexture(GL10.GL_TEXTURE_2D, mTexture[currentTextureIndex].name);
 		gl.glEnableClientState(GL10.GL_VERTEX_ARRAY);
 		gl.glEnableClientState(GL10.GL_TEXTURE_COORD_ARRAY);
 		gl.glVertexPointer(2, GL10.GL_FLOAT, 0, vertexBuffer);
 		gl.glTexCoordPointer(2, GL10.GL_FLOAT, 0, textureBuffer);
-		
+
 		gl.glColor4f(opacity, opacity, opacity, opacity);
 		gl.glTranslatef(x, y, 0);
 		gl.glRotatef(rotation, 0, 0, 1);
 		gl.glScalef(widthScale * xScale, heightScale * yScale, 0);
-		
-		//gl.glTranslatef(widthScale/2, heightScale/2, 0);
-		
+
 		gl.glDrawElements(GL10.GL_TRIANGLE_STRIP, 4, GL10.GL_UNSIGNED_BYTE, indexBuffer);
 		gl.glLoadIdentity();
-		
+
 		gl.glDisableClientState(GL10.GL_VERTEX_ARRAY);
 		gl.glDisableClientState(GL10.GL_TEXTURE_COORD_ARRAY);
 	}

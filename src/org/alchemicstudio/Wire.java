@@ -13,7 +13,7 @@ public class Wire extends BaseObject {
 	
 	public Wire(){
 		active = false;
-		mSprite = new Sprite(0);
+		mSprite = new Sprite(0, 1);
 		targetNode = new Point(-1, -1);
 		originNode = new Point(-1, -1);
 	}

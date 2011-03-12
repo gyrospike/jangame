@@ -13,7 +13,7 @@ public class Body extends BaseObject {
 	private boolean originRotate;
 	
 	public Body(int x, int y, float rot) {
-		mSprite = new Sprite(0);
+		mSprite = new Sprite(0, 1);
 		originRotate = false;
 		rotationInc = rot;
 		mSprite.setPosition(x, y);

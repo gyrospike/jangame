@@ -9,6 +9,8 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.view.View.OnClickListener;
 import android.widget.Button;
+import android.widget.HorizontalScrollView;
+import android.widget.ScrollView;
 
 public class Menu extends Activity {
 	/** Called when the activity is first created. */
@@ -20,6 +22,11 @@ public class Menu extends Activity {
 		getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
 		
 		setContentView(R.layout.main);
+		
+		HorizontalScrollView sView = (HorizontalScrollView)findViewById(R.id.ScrollView01);
+		//Hide the Scollbar
+        sView.setVerticalScrollBarEnabled(false);
+        sView.setHorizontalScrollBarEnabled(false);
 
 		Button Map1 = (Button) findViewById(R.id.Button01);
 		Map1.setOnClickListener(new OnClickListener() {

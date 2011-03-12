@@ -33,7 +33,7 @@ public class RenderSystem extends BaseObject {
 		// priorities, prevents background from being drawn over nodes
 		spriteList[currentBufferIndex].sort(false);
 
-		renderer.setDrawQueue(spriteList[currentBufferIndex]);
+		renderer.setDrawQuadQueue(spriteList[currentBufferIndex]);
 		
 		final int lastQueue = (currentBufferIndex == 0) ? DRAW_QUEUE_COUNT - 1 : currentBufferIndex - 1;
 		
@@ -51,7 +51,7 @@ public class RenderSystem extends BaseObject {
 	
 	/* Empties all draw queues and disconnects the game thread from the renderer. */
     public void emptyQueues(GameRenderer renderer) {
-        renderer.setDrawQueue(null); 
+        renderer.setDrawQuadQueue(null); 
         for (int x = 0; x < DRAW_QUEUE_COUNT; x++) {
             //mRenderQueues[x].commitUpdates();
             FixedSizeArray<Sprite> objects = spriteList[x];

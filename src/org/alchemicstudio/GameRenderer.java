@@ -187,7 +187,7 @@ public class GameRenderer implements Renderer {
 		library.invalidateAll();
 	}
 
-	public synchronized void setDrawQueue(FixedSizeArray<Sprite> sList) {
+	public synchronized void setDrawQuadQueue(FixedSizeArray<Sprite> sList) {
 		spriteList = sList;
 		synchronized (mDrawLock) {
 			mDrawQueueChanged = true;

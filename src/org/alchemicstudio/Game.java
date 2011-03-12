@@ -50,8 +50,6 @@ public class Game {
 			// This code is used for accessing online XMLs
 			/*
 			 * 
-			 * 
-			 * 
 			 * InputStreamReader isr = new InputStreamReader( new
 			 * URL("http://www.anddev.org/images/tut/basic/parsingxml/example.xml"
 			 * ).openStream() );
@@ -68,7 +66,7 @@ public class Game {
 
 		Grid mGrid = new Grid(parsedMapData.mapWidth, parsedMapData.mapHeight, parsedMapData.mapSpacing, (32.0f / pixToDpiScale), screenWidth, screenHeight);
 
-		mGrid.mSpark.mSprite.setTexture(longTermTextureLibrary.allocateTexture(R.drawable.spark), (32.0f / pixToDpiScale), (32.0f / pixToDpiScale));
+		mGrid.mSpark.mSprite.setTextureFrame(longTermTextureLibrary.allocateTexture(R.drawable.spark), (32.0f / pixToDpiScale), (32.0f / pixToDpiScale));
 		mGameRoot.add(mGrid.mSpark);
 
 		for (int k = 0; k < parsedMapData.specialNodes.getCount(); k++) {
@@ -85,20 +83,20 @@ public class Game {
 		for (int i = 0; i < mGrid.getWidth(); i++) {
 			for (int j = 0; j < mGrid.getHeight(); j++) {
 				if (mGrid.mNodes[i][j].type == 2) {
-					mGrid.mNodes[i][j].mSprite.setTexture(longTermTextureLibrary.allocateTexture(R.drawable.grey_gate_node), 32 / pixToDpiScale, 32 / pixToDpiScale);
-					mGrid.mNodes[i][j].mSprite.setTexture(longTermTextureLibrary.allocateTexture(R.drawable.yellow_gate_node), 32 / pixToDpiScale, 32 / pixToDpiScale);
-					mGrid.mNodes[i][j].mSprite.setTexture(longTermTextureLibrary.allocateTexture(R.drawable.green_gate_node), 32 / pixToDpiScale, 32 / pixToDpiScale);
+					mGrid.mNodes[i][j].mSprite.setTextureFrame(longTermTextureLibrary.allocateTexture(R.drawable.grey_gate_node), 32 / pixToDpiScale, 32 / pixToDpiScale);
+					mGrid.mNodes[i][j].mSprite.setTextureFrame(longTermTextureLibrary.allocateTexture(R.drawable.yellow_gate_node), 32 / pixToDpiScale, 32 / pixToDpiScale);
+					mGrid.mNodes[i][j].mSprite.setTextureFrame(longTermTextureLibrary.allocateTexture(R.drawable.green_gate_node), 32 / pixToDpiScale, 32 / pixToDpiScale);
 				} else {
-					mGrid.mNodes[i][j].mSprite.setTexture(longTermTextureLibrary.allocateTexture(R.drawable.grey_node), 32 / pixToDpiScale, 32 / pixToDpiScale);
-					mGrid.mNodes[i][j].mSprite.setTexture(longTermTextureLibrary.allocateTexture(R.drawable.yellow_node), 32 / pixToDpiScale, 32 / pixToDpiScale);
-					mGrid.mNodes[i][j].mSprite.setTexture(longTermTextureLibrary.allocateTexture(R.drawable.green_node), 32 / pixToDpiScale, 32 / pixToDpiScale);
+					mGrid.mNodes[i][j].mSprite.setTextureFrame(longTermTextureLibrary.allocateTexture(R.drawable.grey_node), 32 / pixToDpiScale, 32 / pixToDpiScale);
+					mGrid.mNodes[i][j].mSprite.setTextureFrame(longTermTextureLibrary.allocateTexture(R.drawable.yellow_node), 32 / pixToDpiScale, 32 / pixToDpiScale);
+					mGrid.mNodes[i][j].mSprite.setTextureFrame(longTermTextureLibrary.allocateTexture(R.drawable.green_node), 32 / pixToDpiScale, 32 / pixToDpiScale);
 				}
 				mGameRoot.add(mGrid.mNodes[i][j]);
 			}
 		}
 
 		for (int i = 0; i < mGrid.maxWireSegments; i++) {
-			mGrid.mWire[i].mSprite.setTexture(longTermTextureLibrary.allocateTexture(R.drawable.wire_segment), (16.0f / pixToDpiScale), (4.0f / pixToDpiScale));
+			mGrid.mWire[i].mSprite.setTextureFrame(longTermTextureLibrary.allocateTexture(R.drawable.wire_segment), (16.0f / pixToDpiScale), (4.0f / pixToDpiScale));
 			mGameRoot.add(mGrid.mWire[i]);
 		}
 
@@ -118,9 +116,9 @@ public class Game {
 
 		for (int j = 0; j < particleArray.length; j++) {
 			if ((j % 2) == 0) {
-				particleArray[j].mSprite.setTexture(longTermTextureLibrary.allocateTexture(R.drawable.white_box), 4 / pixToDpiScale, 4 / pixToDpiScale);
+				particleArray[j].mSprite.setTextureFrame(longTermTextureLibrary.allocateTexture(R.drawable.white_box), 4 / pixToDpiScale, 4 / pixToDpiScale);
 			} else {
-				particleArray[j].mSprite.setTexture(longTermTextureLibrary.allocateTexture(R.drawable.yellow_box), 4 / pixToDpiScale, 4 / pixToDpiScale);
+				particleArray[j].mSprite.setTextureFrame(longTermTextureLibrary.allocateTexture(R.drawable.yellow_box), 4 / pixToDpiScale, 4 / pixToDpiScale);
 			}
 		}
 
