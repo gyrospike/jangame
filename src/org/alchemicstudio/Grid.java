@@ -14,7 +14,7 @@ public class Grid extends BaseObject {
 	public Wire[] mWire;
 
 	private final static int SPARKS_PER_TOUCH = 5;
-	private final static float WIRE_SCALER = (10.0f / 27.0f);
+	private final static float WIRE_SCALAR = (10.0f / 27.0f);
 
 	private int mSpacing;
 	private int numWires;
@@ -118,15 +118,7 @@ public class Grid extends BaseObject {
 			float distance = newPoint.distance(new Vector2(wireOriginX, wireOriginY));
 			// Log.d("DEBUG", "angle: " + angle + ", distance: " + distance);
 			mWire[0].mSprite.setPosition(wireOriginX, wireOriginY);
-			mWire[0].mSprite.setScale(1.0f, distance * WIRE_SCALER); // really
-																		// don't
-																		// understand
-																		// why I
-																		// need
-																		// this
-																		// value,
-																		// about
-																		// 1/3
+			mWire[0].mSprite.setScale(1.0f, distance * WIRE_SCALAR);
 			mWire[0].mSprite.setRotation((float) angle);
 		}
 	}
@@ -175,7 +167,7 @@ public class Grid extends BaseObject {
 						mWire[i].permanent = true;
 					}
 					mWire[i].mSprite.setPosition(x, y);
-					mWire[i].mSprite.setScale(1.0f, distance * 2 / 9);
+					mWire[i].mSprite.setScale(1.0f, distance * WIRE_SCALAR);
 					mWire[i].mSprite.setRotation((float) angle);
 					mWire[i].setOrigin(ai, aj);
 					mWire[i].setTarget(bi, bj);

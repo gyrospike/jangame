@@ -14,8 +14,19 @@ public class MenuRenderer implements Renderer {
 	private int mHeight;
 	private int mWidth;
 	
-	private Sprite currentSprite;
-	private Sprite backgroundSprite;
+	private Marker myMarker;
+	private Sprite roboSprite;
+	private Sprite backgroundHeadSprite;
+	private Sprite backgroundBaseSprite;
+	private Sprite redGearSprite;
+	private Sprite yellowGearSprite;
+	private Sprite pinkGearSprite;
+	private Sprite craneSprite;
+	private Sprite menuPipeSprite1;
+	private Sprite menuPipeSprite2;
+	private Sprite menuPipeSprite3;
+	
+	private float angle;
 	
 	private float pixToDpiScale;
 
@@ -24,17 +35,54 @@ public class MenuRenderer implements Renderer {
 		
 		final DisplayMetrics metrics = context.getResources().getDisplayMetrics();
 		pixToDpiScale = metrics.densityDpi / 160.0f;
+		Log.d("DEBUG", "density: " + metrics.densityDpi);
+		Log.d("DEBUG", "metrics: " + pixToDpiScale);
 		
 		TextureLibrary longTermTextureLibrary = new TextureLibrary();
 		BaseObject.sSystemRegistry.longTermTextureLibrary = longTermTextureLibrary;
 		
-		currentSprite = new Sprite(0, 3, 300);
-		currentSprite.setTextureFrame(longTermTextureLibrary.allocateTexture(R.drawable.grey_gate_node), 32 / pixToDpiScale, 32 / pixToDpiScale);
-		currentSprite.setTextureFrame(longTermTextureLibrary.allocateTexture(R.drawable.yellow_gate_node), 32 / pixToDpiScale, 32 / pixToDpiScale);
-		currentSprite.setTextureFrame(longTermTextureLibrary.allocateTexture(R.drawable.green_gate_node), 32 / pixToDpiScale, 32 / pixToDpiScale);
+		roboSprite = new Sprite(0, 4, 300);
+		roboSprite.setTextureFrame(longTermTextureLibrary.allocateTexture(R.drawable.gold1), 50.0f, 64.0f);
+		roboSprite.setTextureFrame(longTermTextureLibrary.allocateTexture(R.drawable.gold2), 50.0f, 64.0f);
+		roboSprite.setTextureFrame(longTermTextureLibrary.allocateTexture(R.drawable.gold3), 50.0f, 64.0f);
+		roboSprite.setTextureFrame(longTermTextureLibrary.allocateTexture(R.drawable.gold4), 50.0f, 64.0f);
 		
-		backgroundSprite = new Sprite(0, 1);
-		backgroundSprite.setTextureFrame(longTermTextureLibrary.allocateTexture(R.drawable.robo), 128 / pixToDpiScale, 128 / pixToDpiScale);
+		backgroundHeadSprite = new Sprite(0, 1);
+		backgroundHeadSprite.setTextureFrame(longTermTextureLibrary.allocateTexture(R.drawable.bg_head), 480.0f, 480.0f);
+		
+		backgroundBaseSprite = new Sprite(0, 1);
+		backgroundBaseSprite.setTextureFrame(longTermTextureLibrary.allocateTexture(R.drawable.bg_base), 480.0f, 480.0f);
+		
+		menuPipeSprite1 = new Sprite(0, 1);
+		menuPipeSprite1.setTextureFrame(longTermTextureLibrary.allocateTexture(R.drawable.menu_pipe), 32.0f, 32.0f);
+		menuPipeSprite1.setScale(15, 1);
+		menuPipeSprite1.modTex(6.0f);
+		
+		menuPipeSprite2 = new Sprite(0, 1);
+		menuPipeSprite2.setTextureFrame(longTermTextureLibrary.allocateTexture(R.drawable.menu_pipe), 32.0f, 32.0f);
+		menuPipeSprite2.setScale(15, 1);
+		menuPipeSprite2.modTex(6.0f);
+		
+		menuPipeSprite3 = new Sprite(0, 1);
+		menuPipeSprite3.setTextureFrame(longTermTextureLibrary.allocateTexture(R.drawable.menu_pipe), 32.0f, 32.0f);
+		menuPipeSprite3.setScale(15, 1);
+		menuPipeSprite3.modTex(6.0f);
+		
+		redGearSprite = new Sprite(0, 1);
+		redGearSprite.setTextureFrame(longTermTextureLibrary.allocateTexture(R.drawable.red_gear), 52.0f, 52.0f);
+		
+		yellowGearSprite = new Sprite(0, 1);
+		yellowGearSprite.setTextureFrame(longTermTextureLibrary.allocateTexture(R.drawable.yellow_gear), 32.0f, 32.0f);
+		
+		pinkGearSprite = new Sprite(0, 1);
+		pinkGearSprite.setTextureFrame(longTermTextureLibrary.allocateTexture(R.drawable.pink_gear), 58.0f, 58.0f);
+		
+		craneSprite = new Sprite(0, 1);
+		craneSprite.setTextureFrame(longTermTextureLibrary.allocateTexture(R.drawable.crane), 100.0f, 120.0f);
+		
+		// marker is useful for showing where a certain dpi location is
+		//myMarker = new Marker(10, 10);
+		//myMarker.mSprite.setTextureFrame(longTermTextureLibrary.allocateTexture(R.drawable.red_box),(4.0f / pixToDpiScale), (4.0f / pixToDpiScale));
 	}
 
 	public void onSurfaceCreated(GL10 gl, EGLConfig config) {
@@ -61,37 +109,35 @@ public class MenuRenderer implements Renderer {
 		mWidth = width;
 		mHeight = height;
 
-		Log.d("DEBUG", "screen dimsensions, dpi: " + mWidth + ", " + mHeight);
-		int newWidth = (width * 240 / 160);
-		int newHeight = (height * 240 / 160);
-		Log.d("DEBUG", "screen dimsensions, pix: " + newWidth + ", " + newHeight);
+		Log.d("DEBUG", "menu screen dimsensions, dpi: " + mWidth + ", " + mHeight);
+		//int newWidth = (width * 240 / 160);
+		//int newHeight = (height * 240 / 160);
+		//Log.d("DEBUG", "menu screen dimsensions, pix: " + newWidth + ", " + newHeight);
 
 		gl.glViewport(0, 0, width, height);
 		gl.glMatrixMode(GL10.GL_PROJECTION);
 		gl.glLoadIdentity();
-		// GLU.gluPerspective(gl, 45.0f, (float)width / (float)height, 0.1f,
-		// 100.0f);
 		gl.glMatrixMode(GL10.GL_MODELVIEW);
 		gl.glLoadIdentity();
 	}
 
 	private void viewOrtho(GL10 gl, int w, int h) {
 		gl.glEnable(GL10.GL_BLEND);
-		gl.glMatrixMode(gl.GL_PROJECTION);
+		gl.glMatrixMode(GL10.GL_PROJECTION);
 		gl.glPushMatrix();
 		gl.glLoadIdentity();
 		gl.glOrthof(0, w, -h, 0, -1, 1);
-		// Log.d("DEBUG", "w, h: " + w + ", " + h);
-		gl.glMatrixMode(gl.GL_MODELVIEW);
+		//Log.d("DEBUG", "w, h: " + w + ", " + h);
+		gl.glMatrixMode(GL10.GL_MODELVIEW);
 		gl.glPushMatrix();
 		gl.glLoadIdentity();
 	}
 
 	private void viewPerspective(GL10 gl) {
 		gl.glDisable(GL10.GL_BLEND);
-		gl.glMatrixMode(gl.GL_PROJECTION);
+		gl.glMatrixMode(GL10.GL_PROJECTION);
 		gl.glPopMatrix();
-		gl.glMatrixMode(gl.GL_MODELVIEW);
+		gl.glMatrixMode(GL10.GL_MODELVIEW);
 		gl.glPopMatrix();
 	}
 
@@ -103,8 +149,21 @@ public class MenuRenderer implements Renderer {
 		viewOrtho(gl, mWidth, mHeight);
 
 		synchronized (this) {
-			currentSprite.draw(gl, 0, 32, -32);
-			backgroundSprite.draw(gl, 0, 64 * pixToDpiScale, -854 + (64 * pixToDpiScale));
+			
+			//draws from bottom left corner
+			menuPipeSprite1.draw(gl, 0, 0, -304);
+			menuPipeSprite1.draw(gl, 0, 0, -462);
+			menuPipeSprite1.draw(gl, 0, 0, -620);
+			backgroundHeadSprite.draw(gl, 0, 0, -480);
+			backgroundBaseSprite.draw(gl, 0, 0, -854);
+			roboSprite.draw(gl, 0, 392, -168);
+			redGearSprite.draw(gl, -angle/3, 25, -830);
+			yellowGearSprite.draw(gl, angle, 8, -792);
+			pinkGearSprite.draw(gl, angle/2, 410, -830);
+			craneSprite.draw(gl, 0, 350, -843);
+			
+			angle ++;
+			//myMarker.mSprite.draw(gl, 0, 359, -130);
 		}
 
 		viewPerspective(gl);

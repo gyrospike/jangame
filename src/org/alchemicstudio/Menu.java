@@ -23,10 +23,18 @@ public class Menu extends Activity {
 		
 		setContentView(R.layout.main);
 		
-		HorizontalScrollView sView = (HorizontalScrollView)findViewById(R.id.ScrollView01);
+		HorizontalScrollView sView1 = (HorizontalScrollView)findViewById(R.id.ScrollView01);
 		//Hide the Scollbar
-        sView.setVerticalScrollBarEnabled(false);
-        sView.setHorizontalScrollBarEnabled(false);
+        sView1.setVerticalScrollBarEnabled(false);
+        sView1.setHorizontalScrollBarEnabled(false);
+        
+        HorizontalScrollView sView2 = (HorizontalScrollView)findViewById(R.id.ScrollView02);
+        sView2.setVerticalScrollBarEnabled(false);
+        sView2.setHorizontalScrollBarEnabled(false);
+        
+        HorizontalScrollView sView3 = (HorizontalScrollView)findViewById(R.id.ScrollView03);
+        sView3.setVerticalScrollBarEnabled(false);
+        sView3.setHorizontalScrollBarEnabled(false);
 
 		Button Map1 = (Button) findViewById(R.id.Button01);
 		Map1.setOnClickListener(new OnClickListener() {
@@ -113,13 +121,33 @@ public class Menu extends Activity {
 
 			public void onClick(View v) {
 				Intent StartGameIntent = new Intent(Menu.this, BaseActivity.class);
-				StartGameIntent.putExtra("mapNumber", R.raw.map2);
+				StartGameIntent.putExtra("mapNumber", R.raw.map1);
 				startActivity(StartGameIntent);
 			}
 		});
 		
 		Button Map10 = (Button) findViewById(R.id.Button10);
 		Map10.setOnClickListener(new OnClickListener() {
+
+			public void onClick(View v) {
+				Intent StartGameIntent = new Intent(Menu.this, BaseActivity.class);
+				StartGameIntent.putExtra("mapNumber", R.raw.map2);
+				startActivity(StartGameIntent);
+			}
+		});
+		
+		Button Map11 = (Button) findViewById(R.id.Button11);
+		Map11.setOnClickListener(new OnClickListener() {
+
+			public void onClick(View v) {
+				Intent StartGameIntent = new Intent(Menu.this, BaseActivity.class);
+				StartGameIntent.putExtra("mapNumber", R.raw.map2);
+				startActivity(StartGameIntent);
+			}
+		});
+		
+		Button Map12 = (Button) findViewById(R.id.Button12);
+		Map12.setOnClickListener(new OnClickListener() {
 
 			public void onClick(View v) {
 				Intent StartGameIntent = new Intent(Menu.this, BaseActivity.class);

@@ -1,6 +1,5 @@
 package org.alchemicstudio;
 
-
 import javax.microedition.khronos.egl.EGLConfig;
 import javax.microedition.khronos.opengles.GL10;
 
@@ -23,7 +22,7 @@ public class GameRenderer implements Renderer {
 	private boolean mDrawQueueChanged;
 	private int mHeight;
 	private int mWidth;
-	
+
 	private LabelMaker mLabels;
 	private Paint mLabelPaint;
 
@@ -31,7 +30,7 @@ public class GameRenderer implements Renderer {
 		mContext = context;
 		mDrawLock = new Object();
 		mDrawQueueChanged = false;
-		
+
 		Typeface myFont = Typeface.createFromAsset(context.getAssets(), "fonts/AGENCYR.TTF");
 
 		mLabelPaint = new Paint();
@@ -56,7 +55,7 @@ public class GameRenderer implements Renderer {
 		gl.glEnable(GL10.GL_DEPTH_TEST);
 		gl.glDepthFunc(GL10.GL_LEQUAL);
 		gl.glHint(GL10.GL_PERSPECTIVE_CORRECTION_HINT, GL10.GL_NICEST);
-		
+
 		if (mLabels != null) {
 			mLabels.shutdown(gl);
 		} else {
@@ -73,38 +72,32 @@ public class GameRenderer implements Renderer {
 		mWidth = width;
 		mHeight = height;
 
-		Log.d("DEBUG", "screen dimsensions, dpi: " + mWidth + ", " + mHeight);
-		int newWidth = (width * 240 / 160);
-		int newHeight = (height * 240 / 160);
-		Log.d("DEBUG", "screen dimsensions, pix: " + newWidth + ", "
-				+ newHeight);
+		Log.d("DEBUG", "game screen dimsensions, dpi: " + mWidth + ", " + mHeight);
 
 		gl.glViewport(0, 0, width, height);
 		gl.glMatrixMode(GL10.GL_PROJECTION);
 		gl.glLoadIdentity();
-		// GLU.gluPerspective(gl, 45.0f, (float)width / (float)height, 0.1f,
-		// 100.0f);
 		gl.glMatrixMode(GL10.GL_MODELVIEW);
 		gl.glLoadIdentity();
 	}
 
 	private void viewOrtho(GL10 gl, int w, int h) {
 		gl.glEnable(GL10.GL_BLEND);
-		gl.glMatrixMode(gl.GL_PROJECTION);
+		gl.glMatrixMode(GL10.GL_PROJECTION);
 		gl.glPushMatrix();
 		gl.glLoadIdentity();
 		gl.glOrthof(0, w, -h, 0, -1, 1);
 		// Log.d("DEBUG", "w, h: " + w + ", " + h);
-		gl.glMatrixMode(gl.GL_MODELVIEW);
+		gl.glMatrixMode(GL10.GL_MODELVIEW);
 		gl.glPushMatrix();
 		gl.glLoadIdentity();
 	}
 
 	private void viewPerspective(GL10 gl) {
 		gl.glDisable(GL10.GL_BLEND);
-		gl.glMatrixMode(gl.GL_PROJECTION);
+		gl.glMatrixMode(GL10.GL_PROJECTION);
 		gl.glPopMatrix();
-		gl.glMatrixMode(gl.GL_MODELVIEW);
+		gl.glMatrixMode(GL10.GL_MODELVIEW);
 		gl.glPopMatrix();
 	}
 
@@ -150,19 +143,21 @@ public class GameRenderer implements Renderer {
 				gl.glClear(GL10.GL_COLOR_BUFFER_BIT | GL10.GL_DEPTH_BUFFER_BIT);
 			}
 		}
-		
+
 		viewPerspective(gl);
-		
-		for(int h = 0; h < textBoxList.getCount(); h++) {
-			mLabels.beginAdding(gl);
-			textBoxList.get(h).index = mLabels.add(gl, textBoxList.get(h).theText, mLabelPaint);
-			mLabels.endAdding(gl);
-		}
-		
-		for(int g = 0; g < textBoxList.getCount(); g++) {
-			mLabels.beginDrawing(gl, mWidth, mHeight);
-			mLabels.draw(gl, textBoxList.get(g).posX, textBoxList.get(g).posY, textBoxList.get(g).index);
-			mLabels.endDrawing(gl);
+
+		if (textBoxList.getCount() > 0) {
+			for (int h = 0; h < textBoxList.getCount(); h++) {
+				mLabels.beginAdding(gl);
+				textBoxList.get(h).index = mLabels.add(gl, textBoxList.get(h).theText, mLabelPaint);
+				mLabels.endAdding(gl);
+			}
+
+			for (int g = 0; g < textBoxList.getCount(); g++) {
+				mLabels.beginDrawing(gl, mWidth, mHeight);
+				mLabels.draw(gl, textBoxList.get(g).posX, textBoxList.get(g).posY, textBoxList.get(g).index);
+				mLabels.endDrawing(gl);
+			}
 		}
 	}
 
@@ -183,7 +178,7 @@ public class GameRenderer implements Renderer {
 			mDrawLock.notify();
 		}
 	}
-	
+
 	public synchronized void setTextBoxQueue(FixedSizeArray<TextBox> tList) {
 		textBoxList = tList;
 		synchronized (mDrawLock) {
@@ -224,8 +219,8 @@ public class GameRenderer implements Renderer {
 
 	public synchronized void waitDrawingComplete() {
 	}
-	
-	  public void setContext(Context newContext) {
-	        mContext = newContext;
-	    }
+
+	public void setContext(Context newContext) {
+		mContext = newContext;
+	}
 }

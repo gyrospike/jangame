@@ -12,16 +12,11 @@ public class Game {
 	private GameManager mGameRoot;
 	private ParsedDataSet parsedMapData;
 
-	private float pixToDpiScale;
 	private int screenWidth;
 	private int screenHeight;
 	private boolean mRunning;
 
-	public Game(int screenScale, int sWidth, int sHeight) {
-		// gives a scalar to adjust for different screen resolutions so that
-		// sprites are scaled 1:1 to their pixels
-		// NOTE: this is NOT a good / permanent solution
-		pixToDpiScale = screenScale / 160.0f;
+	public Game(int sWidth, int sHeight) {
 		screenWidth = sWidth;
 		screenHeight = sHeight;
 		mGameRoot = new GameManager();
@@ -64,9 +59,10 @@ public class Game {
 			Log.e("DEBUG", "QueryError", e);
 		}
 
-		Grid mGrid = new Grid(parsedMapData.mapWidth, parsedMapData.mapHeight, parsedMapData.mapSpacing, (32.0f / pixToDpiScale), screenWidth, screenHeight);
+		//(32 / pixToDPI) = 43 width when actually drawn to screen, meaning it is doubled from 32/1.5 = 21.333
+		Grid mGrid = new Grid(parsedMapData.mapWidth, parsedMapData.mapHeight, parsedMapData.mapSpacing, 32.0f, screenWidth, screenHeight);
 
-		mGrid.mSpark.mSprite.setTextureFrame(longTermTextureLibrary.allocateTexture(R.drawable.spark), (32.0f / pixToDpiScale), (32.0f / pixToDpiScale));
+		mGrid.mSpark.mSprite.setTextureFrame(longTermTextureLibrary.allocateTexture(R.drawable.spark), 32.0f, 32.0f);
 		mGameRoot.add(mGrid.mSpark);
 
 		for (int k = 0; k < parsedMapData.specialNodes.getCount(); k++) {
@@ -83,29 +79,23 @@ public class Game {
 		for (int i = 0; i < mGrid.getWidth(); i++) {
 			for (int j = 0; j < mGrid.getHeight(); j++) {
 				if (mGrid.mNodes[i][j].type == 2) {
-					mGrid.mNodes[i][j].mSprite.setTextureFrame(longTermTextureLibrary.allocateTexture(R.drawable.grey_gate_node), 32 / pixToDpiScale, 32 / pixToDpiScale);
-					mGrid.mNodes[i][j].mSprite.setTextureFrame(longTermTextureLibrary.allocateTexture(R.drawable.yellow_gate_node), 32 / pixToDpiScale, 32 / pixToDpiScale);
-					mGrid.mNodes[i][j].mSprite.setTextureFrame(longTermTextureLibrary.allocateTexture(R.drawable.green_gate_node), 32 / pixToDpiScale, 32 / pixToDpiScale);
+					mGrid.mNodes[i][j].mSprite.setTextureFrame(longTermTextureLibrary.allocateTexture(R.drawable.grey_gate_node), 32.0f, 32.0f);
+					mGrid.mNodes[i][j].mSprite.setTextureFrame(longTermTextureLibrary.allocateTexture(R.drawable.yellow_gate_node), 32.0f, 32.0f);
+					mGrid.mNodes[i][j].mSprite.setTextureFrame(longTermTextureLibrary.allocateTexture(R.drawable.green_gate_node), 32.0f, 32.0f);
 				} else {
-					mGrid.mNodes[i][j].mSprite.setTextureFrame(longTermTextureLibrary.allocateTexture(R.drawable.grey_node), 32 / pixToDpiScale, 32 / pixToDpiScale);
-					mGrid.mNodes[i][j].mSprite.setTextureFrame(longTermTextureLibrary.allocateTexture(R.drawable.yellow_node), 32 / pixToDpiScale, 32 / pixToDpiScale);
-					mGrid.mNodes[i][j].mSprite.setTextureFrame(longTermTextureLibrary.allocateTexture(R.drawable.green_node), 32 / pixToDpiScale, 32 / pixToDpiScale);
+					mGrid.mNodes[i][j].mSprite.setTextureFrame(longTermTextureLibrary.allocateTexture(R.drawable.grey_node), 32.0f, 32.0f);
+					mGrid.mNodes[i][j].mSprite.setTextureFrame(longTermTextureLibrary.allocateTexture(R.drawable.yellow_node), 32.0f, 32.0f);
+					mGrid.mNodes[i][j].mSprite.setTextureFrame(longTermTextureLibrary.allocateTexture(R.drawable.green_node), 32.0f, 32.0f);
 				}
 				mGameRoot.add(mGrid.mNodes[i][j]);
 			}
 		}
 
 		for (int i = 0; i < mGrid.maxWireSegments; i++) {
-			mGrid.mWire[i].mSprite.setTextureFrame(longTermTextureLibrary.allocateTexture(R.drawable.wire_segment), (16.0f / pixToDpiScale), (4.0f / pixToDpiScale));
+			mGrid.mWire[i].mSprite.setTextureFrame(longTermTextureLibrary.allocateTexture(R.drawable.wire_segment), 16.0f, 4.0f);
 			mGameRoot.add(mGrid.mWire[i]);
 		}
-
-		// marker is useful for showing where a certain dpi location is
-		// Marker myMarker = new Marker(320, 10);
-		// myMarker.mSprite.setTexture(longTermTextureLibrary.allocateTexture(R.drawable.red_box),
-		// (4.0f / pixToDpiScale), (4.0f / pixToDpiScale));
-		// mGameRoot.add(myMarker);
-
+		
 		mGameRoot.addGrid(mGrid);
 
 		Particle[] particleArray = new Particle[20];
@@ -116,14 +106,21 @@ public class Game {
 
 		for (int j = 0; j < particleArray.length; j++) {
 			if ((j % 2) == 0) {
-				particleArray[j].mSprite.setTextureFrame(longTermTextureLibrary.allocateTexture(R.drawable.white_box), 4 / pixToDpiScale, 4 / pixToDpiScale);
+				particleArray[j].mSprite.setTextureFrame(longTermTextureLibrary.allocateTexture(R.drawable.white_box), 4 , 4);
 			} else {
-				particleArray[j].mSprite.setTextureFrame(longTermTextureLibrary.allocateTexture(R.drawable.yellow_box), 4 / pixToDpiScale, 4 / pixToDpiScale);
+				particleArray[j].mSprite.setTextureFrame(longTermTextureLibrary.allocateTexture(R.drawable.yellow_box), 4, 4);
 			}
 		}
 
 		mGameRoot.setParticleArray(particleArray);
-
+		
+		Marker myMarker = new Marker(103, 230);
+		Marker myMarker2 = new Marker(60, 230);
+		myMarker.mSprite.setTextureFrame(longTermTextureLibrary.allocateTexture(R.drawable.red_box),4.0f, 4.0f);
+		myMarker2.mSprite.setTextureFrame(longTermTextureLibrary.allocateTexture(R.drawable.red_box),4.0f, 4.0f );
+		mGameRoot.add(myMarker);
+		mGameRoot.add(myMarker2);
+		
 		mGameThread = new GameThread(mSurfaceView.getRenderer());
 		mGameThread.setGameRoot(mGameRoot);
 		mGameRoot.beginGame();

@@ -43,7 +43,7 @@ public class BaseActivity extends Activity {
 		mGLView = new OGLSurfaceView(this);
 		setContentView(mGLView);
 
-		mGame = new Game(metrics.densityDpi, metrics.widthPixels, metrics.heightPixels);
+		mGame = new Game(metrics.widthPixels, metrics.heightPixels);
 		mGame.setSurfaceView((OGLSurfaceView) mGLView);
 		mGame.bootstrap(this, mapNumber);
 

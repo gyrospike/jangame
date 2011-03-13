@@ -47,18 +47,27 @@ public class Sprite {
 
 	private void init(int priority, int frames) {
 		byte[] indices = { 1, 0, 2, 3 };
-
-		float[] vertices = { -1.0f, -1.0f, // 0 bottom left
-				-1.0f, 1.0f, // 1 top left
+		
+		float[] vertices = { 0.0f, 0.0f, // 0 bottom left
+				0.0f, 1.0f, // 1 top left
 				1.0f, 1.0f, // 2 top right
-				1.0f, -1.0f, // 3 bottom right
+				1.0f, 0.0f, // 3 bottom right
 		};
-
+		
 		float[] texture = { 0.0f, 1.0f, //
 				0.0f, 0.0f, //
 				1.0f, 0.0f, //
 				1.0f, 1.0f, //
 		};
+		
+		
+		/*
+		I changed my texture coordinate to the following:
+
+			Code: var texCoords = new Float32Array( // [ 1, 1, 0, 1, 0, 0, 1, 0]
+			[ 100, 100, -100, 100, -100, -100, 100, -100]
+			);
+		*/
 
 		mTexture = new Texture[frames];
 		currentTextureIndex = 0;
@@ -82,6 +91,21 @@ public class Sprite {
 		indexBuffer = ByteBuffer.allocateDirect(indices.length);
 		indexBuffer.put(indices);
 		indexBuffer.position(0);
+	}
+	
+	public void modTex(float scale) {
+		float[] texture = { 0.0f, 1.0f, //
+				0.0f, 0.0f, //
+				scale, 0.0f, //
+				scale, 1.0f, //
+		};
+		
+		ByteBuffer byteBuf = ByteBuffer.allocateDirect(texture.length * 4);
+		byteBuf.order(ByteOrder.nativeOrder());
+		textureBuffer = byteBuf.asFloatBuffer();
+		textureBuffer.put(texture);
+		textureBuffer.position(0);
+		
 	}
 
 	public void setPosition(float x, float y) {
@@ -138,7 +162,13 @@ public class Sprite {
 
 		gl.glColor4f(opacity, opacity, opacity, opacity);
 		gl.glTranslatef(x, y, 0);
-		gl.glRotatef(rotation, 0, 0, 1);
+		
+		//translate the gl object to the center of the image, rotate, then go back -> this helps in thinking about opengl 
+		//as a sort of camera moving around looking at objects as opposed to objects moving around
+		gl.glTranslatef(widthScale/2, heightScale/2, 0);
+		gl.glRotatef(rotation + angle, 0, 0, 1);
+		gl.glTranslatef(-widthScale/2, -heightScale/2, 0);
+		
 		gl.glScalef(widthScale * xScale, heightScale * yScale, 0);
 
 		gl.glDrawElements(GL10.GL_TRIANGLE_STRIP, 4, GL10.GL_UNSIGNED_BYTE, indexBuffer);
