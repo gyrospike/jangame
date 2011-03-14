@@ -146,11 +146,11 @@ public class Node extends BaseObject {
 	}
 
 	public float getX() {
-		return posVector.x + 16.0f;
+		return posVector.x;
 	}
 
 	public float getY() {
-		return posVector.y + 16.0f;
+		return posVector.y;
 	}
 
 	@Override

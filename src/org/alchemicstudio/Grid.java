@@ -14,7 +14,7 @@ public class Grid extends BaseObject {
 	public Wire[] mWire;
 
 	private final static int SPARKS_PER_TOUCH = 5;
-	private final static float WIRE_SCALAR = (10.0f / 27.0f);
+	private final static float WIRE_SCALAR = (7.0f / 27.0f);
 
 	private int mSpacing;
 	private int numWires;
@@ -71,16 +71,13 @@ public class Grid extends BaseObject {
 		currentJ = 0;
 		lastI = 0;
 		lastJ = 0;
-
-		float center = (mSpacing * (width - 1)) + nodeDim;
-		xSideBuffer = (screenWidth - (center)) / 2.0f;
-
-		float center2 = (mSpacing * (height - 1)) + nodeDim;
-		ySideBuffer = (screenHeight - (center2)) / 2.0f;
+		
+		xSideBuffer = (screenWidth - ((width*nodeDim) + ((width-1)*mSpacing)))/2;
+		ySideBuffer = (screenHeight - ((height*nodeDim) + ((height-1)*mSpacing)))/2;
 
 		for (int i = 0; i < mWidth; i++) {
 			for (int j = 0; j < mHeight; j++) {
-				mNodes[i][j] = new Node(i, j, new Vector2(xSideBuffer + (mSpacing * i) + (nodeDimension / 2), ySideBuffer + (mSpacing * j)));
+				mNodes[i][j] = new Node(i, j, new Vector2(xSideBuffer + ((mSpacing + nodeDimension) * i), ySideBuffer + ((mSpacing + nodeDimension) * j)));
 			}
 		}
 
@@ -90,7 +87,7 @@ public class Grid extends BaseObject {
 		}
 
 		createWire(0, 0, 0, 0, true);
-		createWire(mWidth - 1, mHeight - 1, 0, 0, true);
+		createWire(0, 0, mWidth - 1, mHeight - 1, true);
 		
 		sampleTextBox = new TextBox(0, 0, "Hello");
 	}
@@ -110,13 +107,17 @@ public class Grid extends BaseObject {
 		if (nodePressed) {
 
 			Node tempNode = mNodes[firstIndexI][firstIndexJ];
-			wireOriginX = tempNode.getX() + ((x - tempNode.getX()) / 2);
-			wireOriginY = tempNode.getY() + ((y - tempNode.getY()) / 2);
-
-			double angle = (Math.PI / 2) + Math.atan((mNodes[firstIndexI][firstIndexJ].getY() - y) / (x - mNodes[firstIndexI][firstIndexJ].getX()));
 			Vector2 newPoint = new Vector2(x, y);
+			
+			wireOriginX = tempNode.getX()+ 8.0f;
+			wireOriginY = tempNode.getY() - 16.0f;
+			
+			double angle= Math.atan((newPoint.y - wireOriginY)/(wireOriginX - newPoint.x)) - (Math.PI / 2);
+			//.02 tolerance stops the angle from exploding to infinity and the wire switching signs
+			if((newPoint.x - wireOriginX) <= .02) angle += Math.PI;
+			
 			float distance = newPoint.distance(new Vector2(wireOriginX, wireOriginY));
-			// Log.d("DEBUG", "angle: " + angle + ", distance: " + distance);
+			
 			mWire[0].mSprite.setPosition(wireOriginX, wireOriginY);
 			mWire[0].mSprite.setScale(1.0f, distance * WIRE_SCALAR);
 			mWire[0].mSprite.setRotation((float) angle);
@@ -136,43 +137,43 @@ public class Grid extends BaseObject {
 
 	public void createWire(int ai, int aj, int bi, int bj, boolean offScreenWire) {
 		if (numWires < maxWireSegments) {
+			
+			float ax = mNodes[ai][aj].getX() + 8.0f;
+			float ay = mNodes[ai][aj].getY() - 16.0f;
 
-			float ax = mNodes[ai][aj].getX();
-			float ay = mNodes[ai][aj].getY();
-
-			float bx = 0.0f;
-			float by = 0.0f;
+			float bx = mNodes[bi][bj].getX() + 8.0f;
+			float by = mNodes[bi][bj].getY() - 16.0f;
 
 			if (offScreenWire) {
-				if (ai == 0 && aj == 0) {
-					bx = 0.0f;
-					by = ay;
+				if (bi == 0 && bj == 0) {
+					ax = -8.0f;
+					ay = by;
 				} else {
-					bx = mScreenWidth;
-					by = ay;
+					ax = mScreenWidth;
+					ay = by;
 				}
 			} else {
-				bx = mNodes[bi][bj].getX();
-				by = mNodes[bi][bj].getY();
+				bx = mNodes[bi][bj].getX() + 8.0f;
+				by = mNodes[bi][bj].getY() - 16.0f;
 			}
-
-			float x = ax + ((bx - ax) / 2);
-			float y = ay + ((by - ay) / 2);
-			float distance = new Vector2(ax, ay).distance(new Vector2(bx, by));
-			double angle = (Math.PI / 2) + Math.atan((ay - by) / (ax - bx));
+			
+			float distance = Math.abs(new Vector2(bx, by).distance(new Vector2(ax, ay)));
+			
+			double angle= Math.atan((by - ay)/(ax - bx)) - (Math.PI / 2);
+			if((ax-bx) < 0) angle += Math.PI;
 
 			for (int i = 1; i < maxWireSegments; i++) {
 				if (mWire[i].mSprite.xScale == 0.0f && mWire[i].mSprite.yScale == 0.0f) {
 					if (offScreenWire) {
 						mWire[i].permanent = true;
 					}
-					mWire[i].mSprite.setPosition(x, y);
+					mWire[i].mSprite.setPosition(bx, by);
 					mWire[i].mSprite.setScale(1.0f, distance * WIRE_SCALAR);
 					mWire[i].mSprite.setRotation((float) angle);
-					mWire[i].setOrigin(ai, aj);
-					mWire[i].setTarget(bi, bj);
+					mWire[i].setOrigin(bi, bj);
+					mWire[i].setTarget(ai, aj);
 					numWires++;
-					Log.d("DEBUG", "Wire " + i + " created between: (" + ai + ", " + aj + ") and (" + bi + ", " + bj + ")");
+					Log.d("DEBUG", "Wire " + i + " created between: old (" + bi + ", " + bj + ") and new (" + ai + ", " + aj + ")");
 					i = maxWireSegments;
 				}
 			}
@@ -216,7 +217,7 @@ public class Grid extends BaseObject {
 
 		if (firstIndexI == i && firstIndexJ == j) {
 			deactivateNode(i, j);
-			createParticle((int) mNodes[i][j].getX(), (int) mNodes[i][j].getY(), SPARKS_PER_TOUCH);
+			createParticle((int) (mNodes[i][j].getX() + 16.0f), (int) (mNodes[i][j].getY() - 16.0f), SPARKS_PER_TOUCH);
 		} else if ((firstIndexI == i && firstIndexJ != j) || (firstIndexI != i && firstIndexJ == j)) {
 			if (firstIndexI == i) {
 				int difJ = Math.abs(firstIndexJ - j);
@@ -543,8 +544,14 @@ public class Grid extends BaseObject {
 	}
 
 	public Point checkNodeTouch(int x, int y) {
-		int xIndex = Math.round((x - (nodeDimension / 2) - xSideBuffer) / mSpacing);
-		int yIndex = Math.round((y - (nodeDimension / 2) - ySideBuffer) / mSpacing);
+		Log.d("DEBUG", "x, y : " + x + ", " + y);
+		Log.d("DEBUG", "mSpacing : " + mSpacing);
+		Log.d("DEBUG", "xSideBuffer, ySideBuffer : " + xSideBuffer + ", " + ySideBuffer);
+		int xIndex = (int) Math.round((x - xSideBuffer) / (mSpacing + 32));
+		int yIndex = (int) Math.round((y - ySideBuffer) / (mSpacing + 32));
+		//int xIndex = Math.round((x + (nodeDimension/2) - xSideBuffer) / mSpacing);
+		//int yIndex = Math.round((y + (nodeDimension/2) - ySideBuffer) / mSpacing);
+		Log.d("DEBUG", "xIndex, yIndex : " + xIndex + ", " + yIndex);
 
 		if (xIndex < 0) {
 			xIndex = 0;

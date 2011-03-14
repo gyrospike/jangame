@@ -42,8 +42,8 @@ public class Spark extends BaseObject {
 	}
 	
 	public void explode() {
-		explodeX = posX;
-		explodeY = posY;
+		explodeX = posX + 16.0f;
+		explodeY = posY - 16.0f;
 		Log.d("DEBUG", "explodeX, explodeY: " + explodeX + ", " + explodeY);
 		explode = true;
 	}

@@ -59,15 +59,6 @@ public class Sprite {
 				1.0f, 0.0f, //
 				1.0f, 1.0f, //
 		};
-		
-		
-		/*
-		I changed my texture coordinate to the following:
-
-			Code: var texCoords = new Float32Array( // [ 1, 1, 0, 1, 0, 0, 1, 0]
-			[ 100, 100, -100, 100, -100, -100, 100, -100]
-			);
-		*/
 
 		mTexture = new Texture[frames];
 		currentTextureIndex = 0;

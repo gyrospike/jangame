@@ -31,7 +31,8 @@ public class GameRenderer implements Renderer {
 		mDrawLock = new Object();
 		mDrawQueueChanged = false;
 
-		Typeface myFont = Typeface.createFromAsset(context.getAssets(), "fonts/AGENCYR.TTF");
+		Typeface myFont = Typeface.createFromAsset(context.getAssets(),
+				"fonts/AGENCYR.TTF");
 
 		mLabelPaint = new Paint();
 		mLabelPaint.setTypeface(myFont);
@@ -72,7 +73,8 @@ public class GameRenderer implements Renderer {
 		mWidth = width;
 		mHeight = height;
 
-		Log.d("DEBUG", "game screen dimsensions, dpi: " + mWidth + ", " + mHeight);
+		Log.d("DEBUG", "game screen dimsensions, dpi: " + mWidth + ", "
+				+ mHeight);
 
 		gl.glViewport(0, 0, width, height);
 		gl.glMatrixMode(GL10.GL_PROJECTION);
@@ -146,18 +148,26 @@ public class GameRenderer implements Renderer {
 
 		viewPerspective(gl);
 
-		if (textBoxList.getCount() > 0) {
+		if (textBoxList != null) {
 			for (int h = 0; h < textBoxList.getCount(); h++) {
-				mLabels.beginAdding(gl);
-				textBoxList.get(h).index = mLabels.add(gl, textBoxList.get(h).theText, mLabelPaint);
-				mLabels.endAdding(gl);
+				if (textBoxList.get(h) != null) {
+					mLabels.beginAdding(gl);
+					textBoxList.get(h).index = mLabels.add(gl,
+							textBoxList.get(h).theText, mLabelPaint);
+					mLabels.endAdding(gl);
+				}
 			}
 
 			for (int g = 0; g < textBoxList.getCount(); g++) {
-				mLabels.beginDrawing(gl, mWidth, mHeight);
-				mLabels.draw(gl, textBoxList.get(g).posX, textBoxList.get(g).posY, textBoxList.get(g).index);
-				mLabels.endDrawing(gl);
+				if (textBoxList.get(g) != null) {
+					mLabels.beginDrawing(gl, mWidth, mHeight);
+					mLabels.draw(gl, textBoxList.get(g).posX,
+							textBoxList.get(g).posY, textBoxList.get(g).index);
+					mLabels.endDrawing(gl);
+				}
 			}
+		} else if (textBoxList == null) {
+			gl.glClear(GL10.GL_COLOR_BUFFER_BIT | GL10.GL_DEPTH_BUFFER_BIT);
 		}
 	}
 

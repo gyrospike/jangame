@@ -151,16 +151,16 @@ public class MenuRenderer implements Renderer {
 		synchronized (this) {
 			
 			//draws from bottom left corner
-			menuPipeSprite1.draw(gl, 0, 0, -304);
-			menuPipeSprite1.draw(gl, 0, 0, -462);
-			menuPipeSprite1.draw(gl, 0, 0, -620);
+			menuPipeSprite1.draw(gl, 0, 0, -264);
+			menuPipeSprite1.draw(gl, 0, 0, -422);
+			menuPipeSprite1.draw(gl, 0, 0, -578);
 			backgroundHeadSprite.draw(gl, 0, 0, -480);
 			backgroundBaseSprite.draw(gl, 0, 0, -854);
 			roboSprite.draw(gl, 0, 392, -168);
 			redGearSprite.draw(gl, -angle/3, 25, -830);
 			yellowGearSprite.draw(gl, angle, 8, -792);
 			pinkGearSprite.draw(gl, angle/2, 410, -830);
-			craneSprite.draw(gl, 0, 350, -843);
+			craneSprite.draw(gl, 0, 340, -843);
 			
 			angle ++;
 			//myMarker.mSprite.draw(gl, 0, 359, -130);

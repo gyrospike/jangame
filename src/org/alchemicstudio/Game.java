@@ -114,12 +114,14 @@ public class Game {
 
 		mGameRoot.setParticleArray(particleArray);
 		
+		/*
 		Marker myMarker = new Marker(103, 230);
 		Marker myMarker2 = new Marker(60, 230);
 		myMarker.mSprite.setTextureFrame(longTermTextureLibrary.allocateTexture(R.drawable.red_box),4.0f, 4.0f);
 		myMarker2.mSprite.setTextureFrame(longTermTextureLibrary.allocateTexture(R.drawable.red_box),4.0f, 4.0f );
 		mGameRoot.add(myMarker);
 		mGameRoot.add(myMarker2);
+		*/
 		
 		mGameThread = new GameThread(mSurfaceView.getRenderer());
 		mGameThread.setGameRoot(mGameRoot);

@@ -1,9 +1,9 @@
 <?xml version="1.0" ?>
-<MAP NUMBER="1" WIDTH="3" HEIGHT="3" SPACING="200">
+<MAP NUMBER="1" WIDTH="4" HEIGHT="6" SPACING="70">
 	<NODE I="0" J="0">
   		<STATS TYPE="1" SPEED="0" SOURCE="true"/>
   	</NODE>
-  	<NODE I="2" J="2">
+  	<NODE I="3" J="5">
   		<STATS TYPE="1" SPEED="0" SOURCE="true"/>
   	</NODE>
 </MAP>
