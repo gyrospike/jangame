@@ -8,4 +8,3 @@
 		android:drawable="@drawable/map2_pressed" />
 	<item android:drawable="@drawable/levelbox1" />
 </selector>
-

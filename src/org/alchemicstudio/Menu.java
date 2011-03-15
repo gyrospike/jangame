@@ -1,9 +1,14 @@
 package org.alchemicstudio;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
+import android.graphics.Canvas;
+import android.graphics.drawable.ShapeDrawable;
+import android.graphics.drawable.shapes.OvalShape;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
@@ -36,6 +41,10 @@ public class Menu extends Activity {
         sView3.setVerticalScrollBarEnabled(false);
         sView3.setHorizontalScrollBarEnabled(false);
 
+        //MenuItem guy = findItem(R.id.yellow_gear_1);
+        //Log.d("DEBUG", "id: " + guy.getItemId());
+        //guy.setVisible(false);
+        
 		Button Map1 = (Button) findViewById(R.id.Button01);
 		Map1.setOnClickListener(new OnClickListener() {
 
@@ -155,6 +164,21 @@ public class Menu extends Activity {
 				startActivity(StartGameIntent);
 			}
 		});
+	}
+	
+	public class CustomDrawableView extends View {
+		private ShapeDrawable mDrawable;
+		 
+		public CustomDrawableView(Context context) {
+			super(context);
+			  mDrawable = new ShapeDrawable(new OvalShape());
+		        mDrawable.getPaint().setColor(0xff74AC23);
+		        mDrawable.setBounds(0, 0, 100, 100);
+		    }
+
+		    protected void onDraw(Canvas canvas) {
+		        mDrawable.draw(canvas);
+		    }
 	}
 	
 	@Override
