@@ -20,16 +20,16 @@
 			<TableRow android:id="@+id/TableRow01" android:layout_width="fill_parent"
 				android:layout_height="wrap_content" android:gravity="center">
 
-				<Button android:id="@+id/Button01" android:background="@drawable/map1_button"
+				<Button android:id="@+id/Button01" android:background="@layout/level01_button"
 					android:layout_column="1" android:layout_margin="10dip" />
 
-				<Button android:id="@+id/Button02" android:background="@drawable/map1_button"
+				<Button android:id="@+id/Button02" android:background="@layout/level02_button"
 					android:layout_margin="10dip" />
 
-				<Button android:id="@+id/Button03" android:background="@drawable/map1_button"
+				<Button android:id="@+id/Button03" android:background="@layout/level03_button"
 					android:layout_margin="10dip" />
 
-				<Button android:id="@+id/Button04" android:background="@drawable/map1_button"
+				<Button android:id="@+id/Button04" android:background="@layout/level04_button"
 					android:layout_margin="10dip" />
 
 			</TableRow>
@@ -46,16 +46,16 @@
 			<TableRow android:id="@+id/TableRow01" android:layout_width="fill_parent"
 				android:layout_height="wrap_content" android:gravity="center">
 
-				<Button android:id="@+id/Button05" android:background="@drawable/map1_button"
+				<Button android:id="@+id/Button05" android:background="@layout/level11_button"
 					android:layout_column="1" android:layout_margin="10dip" />
 
-				<Button android:id="@+id/Button06" android:background="@drawable/map1_button"
+				<Button android:id="@+id/Button06" android:background="@layout/level12_button"
 					android:layout_margin="10dip" />
 
-				<Button android:id="@+id/Button07" android:background="@drawable/map1_button"
+				<Button android:id="@+id/Button07" android:background="@layout/level13_button"
 					android:layout_margin="10dip" />
 
-				<Button android:id="@+id/Button08" android:background="@drawable/map1_button"
+				<Button android:id="@+id/Button08" android:background="@layout/level14_button"
 					android:layout_margin="10dip" />
 
 			</TableRow>
@@ -72,16 +72,16 @@
 			<TableRow android:id="@+id/TableRow01" android:layout_width="fill_parent"
 				android:layout_height="wrap_content" android:gravity="center">
 
-				<Button android:id="@+id/Button09" android:background="@drawable/map1_button"
+				<Button android:id="@+id/Button09" android:background="@layout/level21_button"
 					android:layout_column="1" android:layout_margin="10dip" />
 
-				<Button android:id="@+id/Button10" android:background="@drawable/map1_button"
+				<Button android:id="@+id/Button10" android:background="@layout/level22_button"
 					android:layout_margin="10dip" />
 
-				<Button android:id="@+id/Button11" android:background="@drawable/map1_button"
+				<Button android:id="@+id/Button11" android:background="@layout/level23_button"
 					android:layout_margin="10dip" />
 
-				<Button android:id="@+id/Button12" android:background="@drawable/map1_button"
+				<Button android:id="@+id/Button12" android:background="@layout/level24_button"
 					android:layout_margin="10dip" />
 
 			</TableRow>
