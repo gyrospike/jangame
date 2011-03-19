@@ -35,7 +35,9 @@ public class ParsedDataSet {
 	
 	public class NodeTemplate {
 		public int type;
-		public int speed;
+		public int link;
+		public int minSpeed;
+		public int maxSpeed;
 		
 		public int i;
 		public int j;

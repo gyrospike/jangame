@@ -438,7 +438,9 @@ public class Grid extends BaseObject {
 			Log.d("DEBUG", "Spark Released!");
 			sparkActive = true;
 			sparkReset = false;
-			mSpark.activate(mNodes[0][0].getX(), mNodes[0][0].getY());
+			Node originNode = mNodes[0][0];
+			mSpark.setNextTarget(originNode.getX(), originNode.getY(),  originNode.type, originNode.minSpeedLimit, originNode.maxSpeedLimit, !sparkActive);
+			mSpark.activate(originNode.getX(), originNode.getY());
 		}
 	}
 
@@ -645,7 +647,10 @@ public class Grid extends BaseObject {
 						sparkActive = false;
 					}
 					Log.d("DEBUG", "---Grid Update: Next target: (" + currentI + ", " + currentJ + ")");
-					mSpark.setNextTarget(mNodes[currentI][currentJ].getX(), mNodes[currentI][currentJ].getY(), mNodes[lastI][lastJ].speedLimit, !sparkActive);
+					Node tempCurrentNode = mNodes[currentI][currentJ];
+					Node tempLastNode = mNodes[lastI][lastJ];
+					mSpark.setNextTarget(tempCurrentNode.getX(), tempCurrentNode.getY(),  tempLastNode.type, tempLastNode.minSpeedLimit, tempLastNode.maxSpeedLimit, !sparkActive);
+					Log.d("DEBUG", "Spark given new gate properties");
 				}
 			}
 		} else if(!sparkReset){

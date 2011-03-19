@@ -9,7 +9,7 @@ public class Spark extends BaseObject {
 	public boolean active;
 	public boolean readyForNextTarget;
 	public float velocity;
-	
+
 	public boolean explode;
 	public float explodeX;
 	public float explodeY;
@@ -23,7 +23,10 @@ public class Spark extends BaseObject {
 	private float nextTargetX;
 	private float nextTargetY;
 	private float acceleration;
-	private float gateVelocity;
+
+	private float gateMinVelocity;
+	private float gateMaxVelocity;
+	private int gateType;
 
 	private int xDir;
 	private int yDir;
@@ -40,7 +43,7 @@ public class Spark extends BaseObject {
 		hide();
 		system = sSystemRegistry.renderSystem;
 	}
-	
+
 	public void explode() {
 		explodeX = posX + 16.0f;
 		explodeY = posY - 16.0f;
@@ -61,7 +64,8 @@ public class Spark extends BaseObject {
 		targetY = 0.0f;
 		nextTargetX = 0.0f;
 		nextTargetY = 0.0f;
-		gateVelocity = 0.0f;
+		gateMinVelocity = 0.0f;
+		gateMaxVelocity = 0.0f;
 		Log.d("DEBUG", "Spark deactivated!");
 	}
 
@@ -85,11 +89,13 @@ public class Spark extends BaseObject {
 		Log.d("DEBUG", "Spark activated!");
 	}
 
-	public void setNextTarget(float x, float y, float newGateVelocity, boolean last) {
+	public void setNextTarget(float x, float y, int type, float newGateMinVelocity, float newGateMaxVelocity, boolean last) {
 		Log.d("DEBUG", "Setting Next Target... ");
 		nextTargetX = x;
 		nextTargetY = y;
-		gateVelocity = newGateVelocity;
+		gateType = type;
+		gateMinVelocity = newGateMinVelocity;
+		gateMaxVelocity = newGateMaxVelocity;
 		lastTarget = last;
 		// Log.d("DEBUG", "targetX, targetY: " + targetX + ", " + targetY);
 		// Log.d("DEBUG", "nextTargetX, nextTargetY: " + nextTargetX + ", " +
@@ -121,16 +127,24 @@ public class Spark extends BaseObject {
 	private void refreshTarget() {
 		if (!done) {
 			Log.d("DEBUG", "Refreshing Target...");
-			if (velocity >= gateVelocity) {
+			if (gateType == 2) {
+				if (velocity >= gateMinVelocity && velocity <= gateMaxVelocity) {
+					targetX = nextTargetX;
+					targetY = nextTargetY;
+					xDir = nextXDir;
+					yDir = nextYDir;
+					readyForNextTarget = true;
+				} else {
+					Log.d("DEBUG", "Not fast enough, velocity: " + velocity + ", gate velocity: " + gateMinVelocity);
+					explode();
+					hide();
+				}
+			} else {
 				targetX = nextTargetX;
 				targetY = nextTargetY;
 				xDir = nextXDir;
 				yDir = nextYDir;
 				readyForNextTarget = true;
-			} else {
-				Log.d("DEBUG", "Not fast enough, velocity: " + velocity + ", gate velocity: " + gateVelocity);
-				explode();
-				hide();
 			}
 		} else {
 			Log.d("DEBUG", "about to hide");

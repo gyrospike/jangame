@@ -101,7 +101,8 @@ class GameThread implements Runnable {
 				}
 			}
 		}
-		BaseObject.sSystemRegistry.renderSystem.emptyQueues(mRenderer);
+		BaseObject.sSystemRegistry.renderSystem.emptyDrawQueues(mRenderer);
+		BaseObject.sSystemRegistry.renderSystem.emptyWriteQueues(mRenderer);
 	}
 
 	public void feedInput(InputObject input) {

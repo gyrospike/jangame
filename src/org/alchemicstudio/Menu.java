@@ -1,13 +1,10 @@
 package org.alchemicstudio;
 
-import java.io.InputStream;
 
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.Resources;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.LayerDrawable;
@@ -15,21 +12,15 @@ import android.graphics.drawable.ShapeDrawable;
 import android.graphics.drawable.shapes.OvalShape;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.HorizontalScrollView;
-import android.widget.ImageView;
-import android.widget.ScrollView;
+
 
 public class Menu extends Activity {
-
-	LayerDrawable layers = null;
-
-	Drawable[] drawA = new Drawable[3];
 
 	/** Called when the activity is first created. */
 	@Override
@@ -69,7 +60,7 @@ public class Menu extends Activity {
 
 			public void onClick(View v) {
 				Intent StartGameIntent = new Intent(Menu.this, BaseActivity.class);
-				StartGameIntent.putExtra("mapNumber", R.raw.map1);
+				StartGameIntent.putExtra("mapNumber", R.raw.map01);
 				startActivity(StartGameIntent);
 			}
 		});
@@ -79,7 +70,7 @@ public class Menu extends Activity {
 
 			public void onClick(View v) {
 				Intent StartGameIntent = new Intent(Menu.this, BaseActivity.class);
-				StartGameIntent.putExtra("mapNumber", R.raw.map2);
+				StartGameIntent.putExtra("mapNumber", R.raw.map02);
 				startActivity(StartGameIntent);
 			}
 		});
@@ -89,7 +80,7 @@ public class Menu extends Activity {
 
 			public void onClick(View v) {
 				Intent StartGameIntent = new Intent(Menu.this, BaseActivity.class);
-				StartGameIntent.putExtra("mapNumber", R.raw.map2);
+				StartGameIntent.putExtra("mapNumber", R.raw.map03);
 				startActivity(StartGameIntent);
 			}
 		});
@@ -99,105 +90,90 @@ public class Menu extends Activity {
 
 			public void onClick(View v) {
 				Intent StartGameIntent = new Intent(Menu.this, BaseActivity.class);
-				StartGameIntent.putExtra("mapNumber", R.raw.map1);
+				StartGameIntent.putExtra("mapNumber", R.raw.map04);
 				startActivity(StartGameIntent);
 			}
 		});
 
-		Button Map5 = (Button) findViewById(R.id.Button05);
+		Button Map5 = (Button) findViewById(R.id.Button11);
 		Map5.setOnClickListener(new OnClickListener() {
 
 			public void onClick(View v) {
 				Intent StartGameIntent = new Intent(Menu.this, BaseActivity.class);
-				StartGameIntent.putExtra("mapNumber", R.raw.map1);
+				StartGameIntent.putExtra("mapNumber", R.raw.map05);
 				startActivity(StartGameIntent);
 			}
 		});
 
-		Button Map6 = (Button) findViewById(R.id.Button06);
+		Button Map6 = (Button) findViewById(R.id.Button12);
 		Map6.setOnClickListener(new OnClickListener() {
 
 			public void onClick(View v) {
 				Intent StartGameIntent = new Intent(Menu.this, BaseActivity.class);
-				StartGameIntent.putExtra("mapNumber", R.raw.map2);
+				StartGameIntent.putExtra("mapNumber", R.raw.map06);
 				startActivity(StartGameIntent);
 			}
 		});
 
-		Button Map7 = (Button) findViewById(R.id.Button07);
+		Button Map7 = (Button) findViewById(R.id.Button13);
 		Map7.setOnClickListener(new OnClickListener() {
 
 			public void onClick(View v) {
 				Intent StartGameIntent = new Intent(Menu.this, BaseActivity.class);
-				StartGameIntent.putExtra("mapNumber", R.raw.map2);
+				StartGameIntent.putExtra("mapNumber", R.raw.map07);
 				startActivity(StartGameIntent);
 			}
 		});
 
-		Button Map8 = (Button) findViewById(R.id.Button08);
+		Button Map8 = (Button) findViewById(R.id.Button14);
 		Map8.setOnClickListener(new OnClickListener() {
 
 			public void onClick(View v) {
 				Intent StartGameIntent = new Intent(Menu.this, BaseActivity.class);
-				StartGameIntent.putExtra("mapNumber", R.raw.map1);
+				StartGameIntent.putExtra("mapNumber", R.raw.map08);
 				startActivity(StartGameIntent);
 			}
 		});
 
-		Button Map9 = (Button) findViewById(R.id.Button09);
+		Button Map9 = (Button) findViewById(R.id.Button21);
 		Map9.setOnClickListener(new OnClickListener() {
 
 			public void onClick(View v) {
 				Intent StartGameIntent = new Intent(Menu.this, BaseActivity.class);
-				StartGameIntent.putExtra("mapNumber", R.raw.map1);
+				StartGameIntent.putExtra("mapNumber", R.raw.map09);
 				startActivity(StartGameIntent);
 			}
 		});
 
-		Button Map10 = (Button) findViewById(R.id.Button10);
+		Button Map10 = (Button) findViewById(R.id.Button22);
 		Map10.setOnClickListener(new OnClickListener() {
 
 			public void onClick(View v) {
 				Intent StartGameIntent = new Intent(Menu.this, BaseActivity.class);
-				StartGameIntent.putExtra("mapNumber", R.raw.map2);
+				StartGameIntent.putExtra("mapNumber", R.raw.map10);
 				startActivity(StartGameIntent);
 			}
 		});
 
-		Button Map11 = (Button) findViewById(R.id.Button11);
+		Button Map11 = (Button) findViewById(R.id.Button23);
 		Map11.setOnClickListener(new OnClickListener() {
 
 			public void onClick(View v) {
 				Intent StartGameIntent = new Intent(Menu.this, BaseActivity.class);
-				StartGameIntent.putExtra("mapNumber", R.raw.map2);
+				StartGameIntent.putExtra("mapNumber", R.raw.map11);
 				startActivity(StartGameIntent);
 			}
 		});
 
-		Button Map12 = (Button) findViewById(R.id.Button12);
+		Button Map12 = (Button) findViewById(R.id.Button24);
 		Map12.setOnClickListener(new OnClickListener() {
 
 			public void onClick(View v) {
 				Intent StartGameIntent = new Intent(Menu.this, BaseActivity.class);
-				StartGameIntent.putExtra("mapNumber", R.raw.map1);
+				StartGameIntent.putExtra("mapNumber", R.raw.map12);
 				startActivity(StartGameIntent);
 			}
 		});
-	}
-
-	public class CustomDrawableView extends View {
-		private ShapeDrawable mDrawable;
-
-		public CustomDrawableView(Context context) {
-			super(context);
-			mDrawable = new ShapeDrawable(new OvalShape());
-			mDrawable.getPaint().setColor(0xff74AC23);
-			mDrawable.setBounds(0, 0, 100, 100);
-		}
-
-		protected void onDraw(Canvas canvas) {
-			mDrawable.draw(canvas);
-		}
 	}
 
 	@Override

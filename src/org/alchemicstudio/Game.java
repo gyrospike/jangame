@@ -59,7 +59,6 @@ public class Game {
 			Log.e("DEBUG", "QueryError", e);
 		}
 
-		//(32 / pixToDPI) = 43 width when actually drawn to screen, meaning it is doubled from 32/1.5 = 21.333
 		Grid mGrid = new Grid(parsedMapData.mapWidth, parsedMapData.mapHeight, parsedMapData.mapSpacing, 32.0f, screenWidth, screenHeight);
 
 		mGrid.mSpark.mSprite.setTextureFrame(longTermTextureLibrary.allocateTexture(R.drawable.spark), 32.0f, 32.0f);
@@ -70,7 +69,9 @@ public class Game {
 			int tempJ = parsedMapData.specialNodes.get(k).j;
 
 			mGrid.mNodes[tempI][tempJ].type = parsedMapData.specialNodes.get(k).type;
-			mGrid.mNodes[tempI][tempJ].speedLimit = parsedMapData.specialNodes.get(k).speed;
+			mGrid.mNodes[tempI][tempJ].link = parsedMapData.specialNodes.get(k).link;
+			mGrid.mNodes[tempI][tempJ].minSpeedLimit = parsedMapData.specialNodes.get(k).minSpeed;
+			mGrid.mNodes[tempI][tempJ].maxSpeedLimit = parsedMapData.specialNodes.get(k).maxSpeed;
 			if (parsedMapData.specialNodes.get(k).source) {
 				mGrid.mNodes[tempI][tempJ].setSource();
 			}

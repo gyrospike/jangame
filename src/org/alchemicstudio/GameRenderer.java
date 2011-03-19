@@ -31,8 +31,7 @@ public class GameRenderer implements Renderer {
 		mDrawLock = new Object();
 		mDrawQueueChanged = false;
 
-		Typeface myFont = Typeface.createFromAsset(context.getAssets(),
-				"fonts/AGENCYR.TTF");
+		Typeface myFont = Typeface.createFromAsset(context.getAssets(), "fonts/AGENCYR.TTF");
 
 		mLabelPaint = new Paint();
 		mLabelPaint.setTypeface(myFont);
@@ -73,8 +72,7 @@ public class GameRenderer implements Renderer {
 		mWidth = width;
 		mHeight = height;
 
-		Log.d("DEBUG", "game screen dimsensions, dpi: " + mWidth + ", "
-				+ mHeight);
+		Log.d("DEBUG", "game screen dimsensions, dpi: " + mWidth + ", " + mHeight);
 
 		gl.glViewport(0, 0, width, height);
 		gl.glMatrixMode(GL10.GL_PROJECTION);
@@ -144,30 +142,33 @@ public class GameRenderer implements Renderer {
 				// is empty, we'll leave the frame buffer alone.
 				gl.glClear(GL10.GL_COLOR_BUFFER_BIT | GL10.GL_DEPTH_BUFFER_BIT);
 			}
-		}
 
-		viewPerspective(gl);
+			viewPerspective(gl);
+			
+			//having the text drawing done outside of the sync caused flickering, possibly more problems too
 
-		if (textBoxList != null) {
-			for (int h = 0; h < textBoxList.getCount(); h++) {
-				if (textBoxList.get(h) != null) {
-					mLabels.beginAdding(gl);
-					textBoxList.get(h).index = mLabels.add(gl,
-							textBoxList.get(h).theText, mLabelPaint);
-					mLabels.endAdding(gl);
+			if (textBoxList != null) {
+				Object[] objectArray = textBoxList.getArray();
+				final int len = objectArray.length;
+				mLabels.beginAdding(gl);
+				for (int h = 0; h < len; h++) {
+					if (objectArray[h] != null) {
+						TextBox currentTextBox = (TextBox) objectArray[h];
+						currentTextBox.index = mLabels.add(gl, currentTextBox.theText, mLabelPaint);
+					}
 				}
-			}
-
-			for (int g = 0; g < textBoxList.getCount(); g++) {
-				if (textBoxList.get(g) != null) {
-					mLabels.beginDrawing(gl, mWidth, mHeight);
-					mLabels.draw(gl, textBoxList.get(g).posX,
-							textBoxList.get(g).posY, textBoxList.get(g).index);
-					mLabels.endDrawing(gl);
+				mLabels.endAdding(gl);
+				mLabels.beginDrawing(gl, mWidth, mHeight);
+				for (int g = 0; g < len; g++) {
+					if (objectArray[g] != null) {
+						TextBox currentTextBox = (TextBox) objectArray[g];
+						mLabels.draw(gl, currentTextBox.posX, currentTextBox.posY, currentTextBox.index);
+					}
 				}
+				mLabels.endDrawing(gl);
+			} else if (textBoxList == null) {
+				gl.glClear(GL10.GL_COLOR_BUFFER_BIT | GL10.GL_DEPTH_BUFFER_BIT);
 			}
-		} else if (textBoxList == null) {
-			gl.glClear(GL10.GL_COLOR_BUFFER_BIT | GL10.GL_DEPTH_BUFFER_BIT);
 		}
 	}
 

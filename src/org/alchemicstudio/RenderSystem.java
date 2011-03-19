@@ -12,7 +12,8 @@ public class RenderSystem extends BaseObject {
 	private PriorityComparator priorityComparator = new PriorityComparator();
 	private FixedSizeArray<Sprite> spriteList[] = new FixedSizeArray[DRAW_QUEUE_COUNT];
 	private FixedSizeArray<TextBox> textBoxList[] = new FixedSizeArray[DRAW_QUEUE_COUNT];
-	private int currentBufferIndex;
+	private int drawBufferIndex;
+	private int writeBufferIndex;
 
 	public RenderSystem() {
 		super();
@@ -21,36 +22,39 @@ public class RenderSystem extends BaseObject {
 			textBoxList[i] = new FixedSizeArray<TextBox>(MAX_DRAWABLE_ELEMENTS);
 			spriteList[i].setComparator(priorityComparator);
 		}
-		currentBufferIndex = 0;
+		drawBufferIndex = 0;
+		writeBufferIndex = 0;
 	}
 	
 	public void scheduleForWrite(TextBox tBox) {
 		if (tBox != null) {
-			textBoxList[currentBufferIndex].add(tBox);
+			textBoxList[writeBufferIndex].add(tBox);
 		}
 	}
 
 
 	public void scheduleForDraw(Sprite sprite) {
 		if (sprite != null) {
-			spriteList[currentBufferIndex].add(sprite);
+			spriteList[drawBufferIndex].add(sprite);
 		}
 	}
 
 	public void sendUpdates(GameRenderer renderer) {
 		// ensures that the spriteArray contains sprites sorted by their
 		// priorities, prevents background from being drawn over nodes
-		spriteList[currentBufferIndex].sort(false);
+		spriteList[drawBufferIndex].sort(false);
 
-		renderer.setDrawQuadQueue(spriteList[currentBufferIndex]);
-		renderer.setTextBoxQueue(textBoxList[currentBufferIndex]);
+		renderer.setDrawQuadQueue(spriteList[drawBufferIndex]);
+		renderer.setTextBoxQueue(textBoxList[writeBufferIndex]);
 		
-		final int lastQueue = (currentBufferIndex == 0) ? DRAW_QUEUE_COUNT - 1 : currentBufferIndex - 1;
+		final int lastDrawQueue = (drawBufferIndex == 0) ? DRAW_QUEUE_COUNT - 1 : drawBufferIndex - 1;
+		final int lastWriteQueue = (writeBufferIndex == 0) ? DRAW_QUEUE_COUNT - 1 : writeBufferIndex - 1;
 		
-		clearQueue(spriteList[lastQueue]);
-		clearQueue(textBoxList[lastQueue]);
+		clearQueue(spriteList[lastDrawQueue]);
+		clearQueue(textBoxList[lastWriteQueue]);
 		
-		currentBufferIndex = (currentBufferIndex + 1) % DRAW_QUEUE_COUNT;
+		drawBufferIndex = (drawBufferIndex + 1) % DRAW_QUEUE_COUNT;
+		writeBufferIndex = (writeBufferIndex + 1) % DRAW_QUEUE_COUNT;
 	}
 
 	private void clearQueue(FixedSizeArray objects) {
@@ -61,11 +65,18 @@ public class RenderSystem extends BaseObject {
 	}
 	
 	/* Empties all draw queues and disconnects the game thread from the renderer. */
-    public void emptyQueues(GameRenderer renderer) {
+    public void emptyDrawQueues(GameRenderer renderer) {
         renderer.setDrawQuadQueue(null); 
         for (int x = 0; x < DRAW_QUEUE_COUNT; x++) {
-            //mRenderQueues[x].commitUpdates();
             FixedSizeArray<Sprite> objects = spriteList[x];
+            clearQueue(objects);
+        }
+    }
+    
+    public void emptyWriteQueues(GameRenderer renderer) {
+        renderer.setTextBoxQueue(null); 
+        for (int x = 0; x < DRAW_QUEUE_COUNT; x++) {
+            FixedSizeArray<TextBox> objects = textBoxList[x];
             clearQueue(objects);
         }
     }

@@ -67,11 +67,15 @@ public class XMLHandler extends DefaultHandler {
 			in_stats = true;
 			
 			String typeString = atts.getValue("TYPE");
-			String speedString = atts.getValue("SPEED");
+			String linkString = atts.getValue("LINK");
+			String minSpeedString = atts.getValue("MIN_SPEED");
+			String maxSpeedString = atts.getValue("MAX_SPEED");
 			String sourceString = atts.getValue("SOURCE");
 			
 			myParsedExampleDataSet.specialNodes.get(myParsedExampleDataSet.specialNodes.getCount()-1).type = Integer.parseInt(typeString);
-			myParsedExampleDataSet.specialNodes.get(myParsedExampleDataSet.specialNodes.getCount()-1).speed = Integer.parseInt(speedString);
+			myParsedExampleDataSet.specialNodes.get(myParsedExampleDataSet.specialNodes.getCount()-1).link = Integer.parseInt(linkString);
+			myParsedExampleDataSet.specialNodes.get(myParsedExampleDataSet.specialNodes.getCount()-1).minSpeed = Integer.parseInt(minSpeedString);
+			myParsedExampleDataSet.specialNodes.get(myParsedExampleDataSet.specialNodes.getCount()-1).maxSpeed = Integer.parseInt(maxSpeedString);
 			myParsedExampleDataSet.specialNodes.get(myParsedExampleDataSet.specialNodes.getCount()-1).source = Boolean.parseBoolean(sourceString);
 		} 
 	}

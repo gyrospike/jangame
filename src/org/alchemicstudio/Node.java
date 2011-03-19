@@ -6,12 +6,16 @@ import android.util.Log;
 public class Node extends BaseObject {
 
 	public Sprite mSprite;
-	public int type;
+	
 	public int iX, iY;
 	public boolean source; 
 	public boolean hasPower;
-	public float speedLimit;
+	
 	public int sourceKey;
+	public int type;
+	public int link;
+	public float minSpeedLimit;
+	public float maxSpeedLimit;
 	
 	private Point[] targetArray;
 	private int maxConnections;
