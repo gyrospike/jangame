@@ -1,0 +1,9 @@
+<?xml version="1.0" ?>
+<MAP NUMBER="3" WIDTH="2" HEIGHT="2" SPACING="100">
+	<NODE I="0" J="0">
+  		<STATS TYPE="1" LINK="0" MIN_SPEED="0" MAX_SPEED="100" SOURCE="true"/>
+  	</NODE>
+  	<NODE I="1" J="1">
+  		<STATS TYPE="1" LINK="0" MIN_SPEED="0" MAX_SPEED="100" SOURCE="true"/>
+  	</NODE>
+</MAP>
