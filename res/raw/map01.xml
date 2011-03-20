@@ -1,6 +1,6 @@
 <?xml version="1.0" ?>
 <MAP NUMBER="1" WIDTH="5" HEIGHT="5" SPACING="60">
-	<NODE I="0" J="0">
+	<NODE I="0" J="1">
   		<STATS TYPE="1" LINK="0" MIN_SPEED="0" MAX_SPEED="100" SOURCE="true"/>
   	</NODE>
   	<NODE I="4" J="4">

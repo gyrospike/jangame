@@ -28,6 +28,11 @@ public class Grid extends BaseObject {
 	private int firstIndexJ;
 	private int maxBestPathLength;
 	private int particleIndex;
+	
+	private int sourceAX;
+	private int sourceAY;
+	private int sourceBX;
+	private int sourceBY;
 
 	private float mScreenWidth;
 	private float xSideBuffer;
@@ -49,7 +54,7 @@ public class Grid extends BaseObject {
 	private TextBox sampleTextBox;
 	private RenderSystem system;
 	
-	public Grid(int width, int height, int spacing, float nodeDim, float screenWidth, float screenHeight) {
+	public Grid(int width, int height, int spacing, float nodeDim, float screenWidth, float screenHeight, int sAX, int sAY, int sBX, int sBY) {
 		system = sSystemRegistry.renderSystem;
 		mHeight = height;
 		mWidth = width;
@@ -58,6 +63,11 @@ public class Grid extends BaseObject {
 		maxWireSegments = (mWidth - 1) * mWidth * (mHeight - 1) + 2;
 		nodeDimension = nodeDim;
 		mScreenWidth = screenWidth;
+		
+		sourceAX = sAX;
+		sourceAY = sAY;
+		sourceBX = sBX;
+		sourceBY = sBY;
 
 		mNodes = new Node[width][height];
 		mWire = new Wire[maxWireSegments];
@@ -67,17 +77,23 @@ public class Grid extends BaseObject {
 		sparkActive = false;
 		nodePressed = false;
 		numWires = 1;
-		currentI = 0;
-		currentJ = 0;
-		lastI = 0;
-		lastJ = 0;
+		currentI = sourceAX;
+		currentJ = sourceAY;
+		lastI = sourceAX;
+		lastJ = sourceAY;
 		
 		xSideBuffer = (screenWidth - ((width*nodeDim) + ((width-1)*mSpacing)))/2;
 		ySideBuffer = (screenHeight - ((height*nodeDim) + ((height-1)*mSpacing)))/2;
 
 		for (int i = 0; i < mWidth; i++) {
 			for (int j = 0; j < mHeight; j++) {
-				mNodes[i][j] = new Node(i, j, new Vector2(xSideBuffer + ((mSpacing + nodeDimension) * i), ySideBuffer + ((mSpacing + nodeDimension) * j)));
+				int maxConnections;
+				if(i==sourceAX && j==sourceAY) {
+					maxConnections = 1;
+				} else {
+					maxConnections = 4;
+				}
+				mNodes[i][j] = new Node(i, j, new Vector2(xSideBuffer + ((mSpacing + nodeDimension) * i), ySideBuffer + ((mSpacing + nodeDimension) * j)), maxConnections);
 			}
 		}
 
@@ -86,8 +102,8 @@ public class Grid extends BaseObject {
 			mWire[k].mSprite.setScale(0.0f, 0.0f);
 		}
 
-		createWire(0, 0, 0, 0, true);
-		createWire(0, 0, mWidth - 1, mHeight - 1, true);
+		createWire(sourceAX, sourceAY, 0, 0, true);
+		createWire(sourceBX, sourceBY, 0, 0, true);
 		
 		sampleTextBox = new TextBox(0, 0, "Hello");
 	}
@@ -139,22 +155,23 @@ public class Grid extends BaseObject {
 		if (numWires < maxWireSegments) {
 			
 			float ax = mNodes[ai][aj].getX() + 8.0f;
-			float ay = mNodes[ai][aj].getY() - 16.0f;
+			float ay = mNodes[ai][aj].getY() - 14.0f;
 
 			float bx = mNodes[bi][bj].getX() + 8.0f;
-			float by = mNodes[bi][bj].getY() - 16.0f;
+			float by = mNodes[bi][bj].getY() - 14.0f;
 
 			if (offScreenWire) {
-				if (bi == 0 && bj == 0) {
-					ax = -8.0f;
-					ay = by;
-				} else {
-					ax = mScreenWidth;
-					ay = by;
+				if (ai == 0) {
+					bx = -8.0f;
+					by = ay;
+				} else if(ai == mWidth-1){
+					bx = mScreenWidth;
+					by = ay;
+					Log.d("DEBUG", "source B is down: " + bx + ", " + by);
 				}
 			} else {
 				bx = mNodes[bi][bj].getX() + 8.0f;
-				by = mNodes[bi][bj].getY() - 16.0f;
+				by = mNodes[bi][bj].getY() - 14.0f;
 			}
 			
 			float distance = Math.abs(new Vector2(bx, by).distance(new Vector2(ax, ay)));
@@ -294,7 +311,7 @@ public class Grid extends BaseObject {
 	}
 
 	private void calculateCircuit(Point currentPoint, Point lastPoint, FixedSizeArray<Point> list) {
-		if (currentPoint.equals(new Point(mWidth - 1, mHeight - 1))) {
+		if (currentPoint.equals(new Point(sourceBX, sourceBY))) {
 			finalList.add(list);
 			printList(list);
 			Log.d("DEBUG", "Added final point");
@@ -312,7 +329,7 @@ public class Grid extends BaseObject {
 			boolean killList = false;
 			if (len == 1) {
 				list.add(new Point(pArray[0].x, pArray[0].y));
-				if (currentPoint.equals(new Point(0, 0)) || currentPoint.equals(new Point(mWidth - 1, mHeight - 1))) {
+				if (currentPoint.equals(new Point(sourceAX, sourceAY)) || currentPoint.equals(new Point(sourceBX, sourceBY))) {
 					calculateCircuit(pArray[0], currentPoint, list);
 				} else {
 					Log.d("DEBUG", "Dead End at " + currentPoint);
@@ -438,7 +455,7 @@ public class Grid extends BaseObject {
 			Log.d("DEBUG", "Spark Released!");
 			sparkActive = true;
 			sparkReset = false;
-			Node originNode = mNodes[0][0];
+			Node originNode = mNodes[sourceAX][sourceAY];
 			mSpark.setNextTarget(originNode.getX(), originNode.getY(),  originNode.type, originNode.minSpeedLimit, originNode.maxSpeedLimit, !sparkActive);
 			mSpark.activate(originNode.getX(), originNode.getY());
 		}
@@ -458,8 +475,8 @@ public class Grid extends BaseObject {
 				mNodes[q][p].removePower();
 			}
 		}
-		checkNodePower(new Point(0, 0), null, 1);
-		checkNodePower(new Point(mWidth - 1, mHeight - 1), null, 2);
+		checkNodePower(new Point(sourceAX, sourceAY), null, 1);
+		checkNodePower(new Point(sourceBX, sourceBY), null, 2);
 	}
 
 	private void checkNodePower(Point myPoint, Point lastPoint, int key) {
@@ -643,7 +660,7 @@ public class Grid extends BaseObject {
 							sparkActive = false;
 						}
 					}
-					if ((currentI == mWidth - 1 && currentJ == mHeight - 1) || (currentI == 0 && currentJ == 0)) {
+					if ((currentI == sourceBX && currentJ == sourceBY) || (currentI == sourceAX && currentJ == sourceAY)) {
 						sparkActive = false;
 					}
 					Log.d("DEBUG", "---Grid Update: Next target: (" + currentI + ", " + currentJ + ")");
@@ -654,10 +671,10 @@ public class Grid extends BaseObject {
 				}
 			}
 		} else if(!sparkReset){
-			currentI = 0;
-			currentJ = 0;
-			lastI = 0;
-			lastJ = 0;
+			currentI = sourceAX;
+			currentJ = sourceAY;
+			lastI = sourceAX;
+			lastJ = sourceAY;
 			sparkReset = true;
 		}
 

@@ -59,7 +59,9 @@ public class Game {
 			Log.e("DEBUG", "QueryError", e);
 		}
 
-		Grid mGrid = new Grid(parsedMapData.mapWidth, parsedMapData.mapHeight, parsedMapData.mapSpacing, 32.0f, screenWidth, screenHeight);
+		Log.d("DEBUG", "source info passed on: parsedMapData.sourceBY = " + parsedMapData.sourceBY);
+		Grid mGrid = new Grid(parsedMapData.mapWidth, parsedMapData.mapHeight, parsedMapData.mapSpacing, 32.0f, screenWidth, screenHeight, 
+				parsedMapData.sourceAX, parsedMapData.sourceAY, parsedMapData.sourceBX, parsedMapData.sourceBY);
 
 		mGrid.mSpark.mSprite.setTextureFrame(longTermTextureLibrary.allocateTexture(R.drawable.spark), 32.0f, 32.0f);
 		mGameRoot.add(mGrid.mSpark);

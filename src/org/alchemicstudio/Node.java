@@ -23,16 +23,12 @@ public class Node extends BaseObject {
 	private Vector2 posVector;
 	private RenderSystem system = sSystemRegistry.renderSystem;
 
-	public Node(int i, int j, Vector2 vec) {
+	public Node(int i, int j, Vector2 vec, int maxC) {
 		iX = i;
 		iY = j;
 		posVector = vec;
 		
-		if(iX==0 && iY==0) {
-			maxConnections = 1;
-		} else {
-			maxConnections = 4;
-		}
+		maxConnections = maxC;
 
 		source = false;
 		hasPower = false;

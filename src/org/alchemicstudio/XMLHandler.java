@@ -32,7 +32,8 @@ public class XMLHandler extends DefaultHandler {
 
 	@Override
 	public void endDocument() throws SAXException {
-		// Nothing to do
+		Log.d("DEBUG", "enddocument called");
+		myParsedExampleDataSet.setSource();
 	}
 
 	@Override
@@ -71,6 +72,7 @@ public class XMLHandler extends DefaultHandler {
 			String minSpeedString = atts.getValue("MIN_SPEED");
 			String maxSpeedString = atts.getValue("MAX_SPEED");
 			String sourceString = atts.getValue("SOURCE");
+			Log.d("DEBUG", "Parsing :" + myParsedExampleDataSet.specialNodes.getCount());
 			
 			myParsedExampleDataSet.specialNodes.get(myParsedExampleDataSet.specialNodes.getCount()-1).type = Integer.parseInt(typeString);
 			myParsedExampleDataSet.specialNodes.get(myParsedExampleDataSet.specialNodes.getCount()-1).link = Integer.parseInt(linkString);
