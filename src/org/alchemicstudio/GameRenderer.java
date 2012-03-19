@@ -42,7 +42,7 @@ public class GameRenderer implements Renderer {
 
 	public void onSurfaceCreated(GL10 gl, EGLConfig config) {
 		Log.d("DEBUG", "onSurfaceCreated was called");
-		loadTextures(gl, BaseObject.sSystemRegistry.longTermTextureLibrary);
+		loadTextures(gl, BaseObject.sSystemRegistry.mTextureLibrary);
 
 		gl.glShadeModel(GL10.GL_SMOOTH);
 		gl.glEnable(GL10.GL_TEXTURE_2D);
@@ -221,7 +221,7 @@ public class GameRenderer implements Renderer {
 		// TODO: this is a hack. Probably this renderer
 		// should just use GLSurfaceView's non-continuous render
 		// mode.
-		unloadTextures(BaseObject.sSystemRegistry.longTermTextureLibrary);
+		unloadTextures(BaseObject.sSystemRegistry.mTextureLibrary);
 		synchronized (mDrawLock) {
 			mDrawQueueChanged = true;
 			mDrawLock.notify();

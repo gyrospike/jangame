@@ -53,10 +53,4 @@ public class OpenGLSystem extends BaseObject {
             sLastSetCropSignature = cropSignature;
         }
     }
-    
-    @Override
-    public void reset() {
-        
-    }
-
 }

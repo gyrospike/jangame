@@ -13,6 +13,7 @@ import android.opengl.GLU;
 import android.opengl.GLUtils;
 import android.util.Log;
 
+
 /**
  * The Texture Library manages all textures in the game.  Textures are pooled and handed out to
  * requesting parties via allocateTexture().  However, the texture data itself is not immediately
@@ -23,6 +24,11 @@ import android.util.Log;
 public class TextureLibrary extends BaseObject {
     // Textures are stored in a simple hash.  This class implements its own array-based hash rather
     // than using HashMap for performance.
+	
+	static final String TEXTURE_GREY_NODE = "";
+	
+	
+	
     Texture[] mTextureHash;
     int[] mTextureNameWorkspace;
     int[] mCropWorkspace;
@@ -42,9 +48,38 @@ public class TextureLibrary extends BaseObject {
         sBitmapOptions.inPreferredConfig = Bitmap.Config.RGB_565;
     }
     
-    @Override
-    public void reset() {
-        removeAll();
+    /**
+     * loads up all the textures in the game we will be using and assigns them by name to
+     * a hash map so they can referenced at any time in the game
+     * 
+     */
+    public void loadGameTextures() {
+    	int[] masterTextureArray = {
+    			R.drawable.grey_gate_node,
+    			R.drawable.yellow_gate_node,
+    			R.drawable.green_gate_node,
+    			R.drawable.grey_node,
+    			R.drawable.yellow_node,
+    			R.drawable.green_node,
+    			R.drawable.gold1,
+    			R.drawable.gold2,
+    			R.drawable.gold3,
+    			R.drawable.gold4,
+    			R.drawable.bg_head,
+    			R.drawable.bg_base,
+    			R.drawable.menu_pipe,
+    			R.drawable.red_gear,
+    			R.drawable.yellow_gear,
+    			R.drawable.pink_gear,
+    			R.drawable.crane,
+    			R.drawable.white_box,
+    			R.drawable.wire_segment,
+    			R.drawable.spark
+    	};
+    	
+    	for(int i = 0; i < masterTextureArray.length; i++) {
+    		allocateTexture(masterTextureArray[i]);
+    	}
     }
 
     /** 

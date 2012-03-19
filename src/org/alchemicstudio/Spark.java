@@ -34,14 +34,14 @@ public class Spark extends BaseObject {
 	private int nextYDir;
 	private boolean done;
 	private boolean lastTarget;
-	private RenderSystem system;
 
 	public Spark() {
-		mSprite = new Sprite(2, 1);
+		int[] textureArray = {R.drawable.spark};
+		mSprite = new Sprite(textureArray, 2, 32.0f, 32.0f, 1, 0);
+		
 		explode = false;
 		active = false;
 		hide();
-		system = sSystemRegistry.renderSystem;
 	}
 
 	public void explode() {
@@ -89,7 +89,8 @@ public class Spark extends BaseObject {
 		Log.d("DEBUG", "Spark activated!");
 	}
 
-	public void setNextTarget(float x, float y, int type, float newGateMinVelocity, float newGateMaxVelocity, boolean last) {
+	public void setNextTarget(float x, float y, int type,
+			float newGateMinVelocity, float newGateMaxVelocity, boolean last) {
 		Log.d("DEBUG", "Setting Next Target... ");
 		nextTargetX = x;
 		nextTargetY = y;
@@ -135,7 +136,8 @@ public class Spark extends BaseObject {
 					yDir = nextYDir;
 					readyForNextTarget = true;
 				} else {
-					Log.d("DEBUG", "Not fast enough, velocity: " + velocity + ", gate velocity: " + gateMinVelocity);
+					Log.d("DEBUG", "Not fast enough, velocity: " + velocity
+							+ ", gate velocity: " + gateMinVelocity);
 					explode();
 					hide();
 				}
@@ -159,7 +161,7 @@ public class Spark extends BaseObject {
 	}
 
 	@Override
-	public void update(float timeDelta, BaseObject parent) {
+	public void update(float timeDelta) {
 		if (active) {
 
 			// scaling timeDelta so that it won't increase or decrease the
@@ -199,7 +201,7 @@ public class Spark extends BaseObject {
 				velocity += acceleration * timeDelta;
 			}
 			mSprite.setPosition(posX, posY);
-			system.scheduleForDraw(mSprite);
+			sSystemRegistry.mRenderSystem.scheduleForDraw(mSprite);
 		}
 	}
 }

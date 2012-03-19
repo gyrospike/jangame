@@ -14,7 +14,7 @@ class OGLSurfaceView extends GLSurfaceView {
 		setRenderer(mOpenGL);
 	}
 	
-	public GameRenderer getRenderer() {
+	public GameRenderer getGameRenderer() {
 		return mOpenGL;
 	}
 }

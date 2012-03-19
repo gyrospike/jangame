@@ -9,11 +9,12 @@ public class Wire extends BaseObject {
 	public boolean active;
 	public boolean permanent;
 
-	private RenderSystem system = sSystemRegistry.renderSystem;
+	private RenderSystem system = sSystemRegistry.mRenderSystem;
 	
 	public Wire(){
 		active = false;
-		mSprite = new Sprite(0, 1);
+		int[] textureArray = {R.drawable.wire_segment};
+		mSprite = new Sprite(textureArray, 0, 16.0f, 4.0f, 1, 0);
 		targetNode = new Point(-1, -1);
 		originNode = new Point(-1, -1);
 	}
@@ -37,7 +38,7 @@ public class Wire extends BaseObject {
 	}
 	
 	@Override
-	public void update(float timeDelta, BaseObject parent) {
+	public void update(float timeDelta) {
 		system.scheduleForDraw(mSprite);	
 	}
 }

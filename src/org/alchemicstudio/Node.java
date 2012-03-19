@@ -21,16 +21,20 @@ public class Node extends BaseObject {
 	private int maxConnections;
 	private int[] targetWireTypeArray;
 	private Vector2 posVector;
-	private RenderSystem system = sSystemRegistry.renderSystem;
 
-	public Node(int i, int j, Vector2 vec, int maxC) {
+	public Node(int i, int j, Vector2 vec, int maxC, boolean isSource, float maxSpeedLimit, float minSpeedLimit, int link, int type) {
 		iX = i;
 		iY = j;
 		posVector = vec;
 		
 		maxConnections = maxC;
-
-		source = false;
+		
+		this.type = type;
+		this.link = link;
+		this.maxSpeedLimit = maxSpeedLimit;
+		this.minSpeedLimit = minSpeedLimit;
+		
+		
 		hasPower = false;
 
 		targetArray = new Point[4];
@@ -44,10 +48,21 @@ public class Node extends BaseObject {
 			targetWireTypeArray[l] = -1;
 		}
 
-		mSprite = new Sprite(1, 3);
+		if(this.type==2) {
+			int[] spriteArray = {R.drawable.grey_gate_node, R.drawable.yellow_gate_node, R.drawable.green_gate_node};
+			mSprite = new Sprite(spriteArray, 1, 32.0f, 32.0f, 3, 0);
+		} else {
+			int[] spriteArray = {R.drawable.grey_node, R.drawable.yellow_node, R.drawable.green_node};
+			mSprite = new Sprite(spriteArray, 1, 32.0f, 32.0f, 3, 0);
+		}
+		
 		mSprite.cameraRelative = false;
 		mSprite.setPosition(posVector.x, posVector.y);
 		mSprite.currentTextureIndex = 0;
+		
+		if(isSource) {
+			setSource();
+		}
 
 		//Log.d("DEBUG", "Node placed at: (" + i + ", " + j + ") ");
 	}
@@ -154,7 +169,7 @@ public class Node extends BaseObject {
 	}
 
 	@Override
-	public void update(float timeDelta, BaseObject parent) {
-		system.scheduleForDraw(mSprite);
+	public void update(float timeDelta) {
+		sSystemRegistry.mRenderSystem.scheduleForDraw(mSprite);
 	}
 }

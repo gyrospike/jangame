@@ -1,5 +1,6 @@
 package org.alchemicstudio;
 
+
 import android.graphics.Point;
 import android.util.Log;
 
@@ -54,22 +55,23 @@ public class Grid extends BaseObject {
 	private TextBox sampleTextBox;
 	private RenderSystem system;
 	
-	public Grid(int width, int height, int spacing, float nodeDim, float screenWidth, float screenHeight, int sAX, int sAY, int sBX, int sBY) {
-		system = sSystemRegistry.renderSystem;
-		mHeight = height;
-		mWidth = width;
-		mSpacing = spacing;
+	public Grid(ParsedDataSet dataSet, float screenWidth, float screenHeight) {
+		
+		system = sSystemRegistry.mRenderSystem;
+		mHeight = dataSet.mapHeight;
+		mWidth = dataSet.mapWidth;
+		mSpacing = dataSet.mapSpacing;
 		maxBestPathLength = (mHeight * mWidth) - 1;
 		maxWireSegments = (mWidth - 1) * mWidth * (mHeight - 1) + 2;
-		nodeDimension = nodeDim;
+		nodeDimension = 32.0f;
 		mScreenWidth = screenWidth;
 		
-		sourceAX = sAX;
-		sourceAY = sAY;
-		sourceBX = sBX;
-		sourceBY = sBY;
+		sourceAX = dataSet.sourceAX;
+		sourceAY = dataSet.sourceAY;
+		sourceBX = dataSet.sourceBX;
+		sourceBY = dataSet.sourceBY;
 
-		mNodes = new Node[width][height];
+		mNodes = new Node[mWidth][mHeight];
 		mWire = new Wire[maxWireSegments];
 		mSpark = new Spark();
 		mSpark.hide();
@@ -82,9 +84,9 @@ public class Grid extends BaseObject {
 		lastI = sourceAX;
 		lastJ = sourceAY;
 		
-		xSideBuffer = (screenWidth - ((width*nodeDim) + ((width-1)*mSpacing)))/2;
-		ySideBuffer = (screenHeight - ((height*nodeDim) + ((height-1)*mSpacing)))/2;
-
+		xSideBuffer = (screenWidth - ((mWidth*nodeDimension) + ((mWidth-1)*mSpacing)))/2;
+		ySideBuffer = (screenHeight - ((mHeight*nodeDimension) + ((mHeight-1)*mSpacing)))/2;
+		
 		for (int i = 0; i < mWidth; i++) {
 			for (int j = 0; j < mHeight; j++) {
 				int maxConnections;
@@ -93,9 +95,31 @@ public class Grid extends BaseObject {
 				} else {
 					maxConnections = 4;
 				}
-				mNodes[i][j] = new Node(i, j, new Vector2(xSideBuffer + ((mSpacing + nodeDimension) * i), ySideBuffer + ((mSpacing + nodeDimension) * j)), maxConnections);
+				
+				int type = 0;
+				int link = 0;
+				float minSpeedLimit = 0.0f;
+				float maxSpeedLimit = 0.0f;
+				boolean isSource = false;
+				for (int k = 0; k < dataSet.specialNodes.getCount(); k++) {
+					int tempI = dataSet.specialNodes.get(k).i;
+					int tempJ = dataSet.specialNodes.get(k).j;
+					
+					if(tempI == i && tempJ == j) {
+						isSource = true;
+						maxSpeedLimit = dataSet.specialNodes.get(k).maxSpeed;
+						minSpeedLimit = dataSet.specialNodes.get(k).minSpeed;
+						link = dataSet.specialNodes.get(k).link;
+						type = dataSet.specialNodes.get(k).type;
+						break;
+					}
+				}
+				
+				mNodes[i][j] = new Node(i, j, new Vector2(xSideBuffer + ((mSpacing + nodeDimension) * i), ySideBuffer + ((mSpacing + nodeDimension) * j)), maxConnections, 
+						isSource, maxSpeedLimit, minSpeedLimit, link, type);
 			}
 		}
+
 
 		for (int k = 0; k < maxWireSegments; k++) {
 			mWire[k] = new Wire();
@@ -589,7 +613,7 @@ public class Grid extends BaseObject {
 	}
 
 	@Override
-	public void update(float timeDelta, BaseObject parent) {
+	public void update(float timeDelta) {
 		sampleTextBox.theText = "Spark Speed: " + Math.round((100.0f * mSpark.velocity))/100.0f;
 		
 		system.scheduleForWrite(sampleTextBox);
@@ -682,6 +706,18 @@ public class Grid extends BaseObject {
 			createParticle((int) mSpark.explodeX, (int) mSpark.explodeY, 15);
 			mSpark.explode = false;
 		}
+		
+		for(int w = 0; w < mNodes.length; w++) {
+			for(int q = 0; q < mNodes[w].length; q++) {
+				mNodes[w][q].update(timeDelta);
+			}
+		}
+		
+		for(int e = 0; e < mWire.length; e++) {
+			mWire[e].update(timeDelta);
+		}
+		
+		mSpark.update(timeDelta);
 	}
 
 	public void setParticles(Particle[] pArray) {

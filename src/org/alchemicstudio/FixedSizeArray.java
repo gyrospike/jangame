@@ -8,11 +8,13 @@ import android.util.Log;
 /**
  * FixedSizeArray is an alternative to a standard Java collection like ArrayList.  It is designed
  * to provide a contiguous array of fixed length which can be accessed, sorted, and searched without
- * requiring any runtime allocation.  This implementation makes a distinction between the "capacity"
- * of an array (the maximum number of objects it can contain) and the "count" of an array
- * (the current number of objects inserted into the array).  Operations such as set() and remove()
- * can only operate on objects that have been explicitly add()-ed to the array; that is, indexes
- * larger than getCount() but smaller than getCapacity() can't be used on their own.
+ * requiring any runtime allocation.
+ * 
+ * This implementation makes a distinction between the "capacity" of an array (the maximum number of 
+ * objects it can contain) and the "count" of an array (the current number of objects inserted into the array).
+ * Operations such as set() and remove() can only operate on objects that have been explicitly add()-ed to 
+ * the array; that is, indexes larger than getCount() but smaller than getCapacity() can't be used on their own.
+ * 
  * @param <T> The type of object that this array contains.
  */
 public class FixedSizeArray<T> {
@@ -23,7 +25,12 @@ public class FixedSizeArray<T> {
     private boolean mSorted;
     private Sorter<T> mSorter;
     
-    public FixedSizeArray(int size) {
+    /**
+     * constructor
+     * 
+     * @param size
+     */
+	public FixedSizeArray(int size) {
         assert size > 0;
         // Ugh!  No generic array construction in Java.
         mContents = (T[])new Object[size];
@@ -33,7 +40,13 @@ public class FixedSizeArray<T> {
         mSorter = new StandardSorter<T>();        
     }
     
-    public FixedSizeArray(int size, Comparator<T> comparator) {
+    /**
+     * constructor
+     * 
+     * @param size
+     * @param comparator
+     */
+	public FixedSizeArray(int size, Comparator<T> comparator) {
         assert size > 0;
         mContents = (T[])new Object[size];
         mCount = 0;

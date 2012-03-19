@@ -28,21 +28,30 @@ public class Sprite {
 	private FloatBuffer textureBuffer;
 	private ByteBuffer indexBuffer;
 
-	private float widthScale;
-	private float heightScale;
+	private float mWidthScale;
+	private float mHeightScale;
 	private float opacity;
 
 	private long mLastTime;
 	private long mTime;
 	private int framesPerMillisecond;
+	
+	TextureLibrary mTextureLibrary;
 
-	public Sprite(int priority, int frames, int fpms) {
-		framesPerMillisecond = fpms;
-		init(priority, frames);
-	}
+	public Sprite(int[] textureIDArray, int priority, float width, float height, int frames, int fpms) {
+		mWidthScale = width;
+		mHeightScale = height;
 
-	public Sprite(int priority, int frames) {
 		init(priority, frames);
+		
+		for(int i = 0; i < textureIDArray.length; i++) {
+			Texture temp = mTextureLibrary.getTextureByResource(textureIDArray[i]);
+			setTextureFrame(temp);
+		}
+		
+		if(fpms != 0) {
+			framesPerMillisecond = fpms;
+		}
 	}
 
 	private void init(int priority, int frames) {
@@ -62,6 +71,8 @@ public class Sprite {
 
 		mTexture = new Texture[frames];
 		currentTextureIndex = 0;
+		mTextureLibrary = BaseObject.sSystemRegistry.mTextureLibrary;
+		
 		opacity = 1.0f;
 		mPriority = priority;
 		xScale = 1.0f;
@@ -125,10 +136,8 @@ public class Sprite {
 		return mPriority;
 	}
 
-	public void setTextureFrame(Texture texture, float width, float height) {
+	public void setTextureFrame(Texture texture) {
 		mTexture[textureIndex] = texture;
-		widthScale = width;
-		heightScale = height;
 		textureIndex++;
 	}
 
@@ -144,6 +153,10 @@ public class Sprite {
 					currentTextureIndex = 0;
 			}
 		}
+		
+		if(mTexture==null || mTexture[currentTextureIndex]==null) {
+			String helllo = "hello";
+		}
 
 		gl.glBindTexture(GL10.GL_TEXTURE_2D, mTexture[currentTextureIndex].name);
 		gl.glEnableClientState(GL10.GL_VERTEX_ARRAY);
@@ -156,11 +169,11 @@ public class Sprite {
 		
 		//translate the gl object to the center of the image, rotate, then go back -> this helps in thinking about opengl 
 		//as a sort of camera moving around looking at objects as opposed to objects moving around
-		gl.glTranslatef(widthScale/2, heightScale/2, 0);
+		gl.glTranslatef(mWidthScale/2, mHeightScale/2, 0);
 		gl.glRotatef(rotation + angle, 0, 0, 1);
-		gl.glTranslatef(-widthScale/2, -heightScale/2, 0);
+		gl.glTranslatef(-mWidthScale/2, -mHeightScale/2, 0);
 		
-		gl.glScalef(widthScale * xScale, heightScale * yScale, 0);
+		gl.glScalef(mWidthScale * xScale, mHeightScale * yScale, 0);
 
 		gl.glDrawElements(GL10.GL_TRIANGLE_STRIP, 4, GL10.GL_UNSIGNED_BYTE, indexBuffer);
 		gl.glLoadIdentity();

@@ -22,7 +22,8 @@ public class Particle extends BaseObject {
 	private float velocity_Y;
 
 	public Particle() {
-		mSprite = new Sprite(0, 1);
+		int[] textureArray = {R.drawable.white_box};
+		mSprite = new Sprite(textureArray, 0, 4, 4, 1, 0);
 	}
 
 	public void createParticle(int x, int y) {
@@ -41,8 +42,8 @@ public class Particle extends BaseObject {
 	}
 
 	@Override
-	public void update(float timeDelta, BaseObject parent) {
-		RenderSystem system = sSystemRegistry.renderSystem;
+	public void update(float timeDelta) {
+		RenderSystem system = sSystemRegistry.mRenderSystem;
 		if (lifeRemaining > 0) {
 
 			glowIntensity = lifeRemaining / lifeSpan;

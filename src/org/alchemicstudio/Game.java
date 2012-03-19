@@ -6,32 +6,59 @@ import android.content.Context;
 import android.util.Log;
 
 public class Game {
+	
+	/** timer system that takes in input, updates game logic, then updates drawable content */
 	private GameThread mGameThread;
-	private Thread mGame;
+	
+	/** thread that takes in the game thread as argument */
+	private Thread mThread;
+	
+	/** open gl surface view - don't know too much about this */
 	private OGLSurfaceView mSurfaceView;
-	private GameManager mGameRoot;
-	private ParsedDataSet parsedMapData;
+	
+	/** game logic manager */
+	private GameManager mGameManager;
 
-	private int screenWidth;
-	private int screenHeight;
+	/** width of the screen */
+	private int mScreenWidth;
+	
+	/** height of the screen */
+	private int mScreenHeight;
+	
+	/** true if the game thread is running */
 	private boolean mRunning;
 
+	/**
+	 * contains the logic and update thread for the game, the renderer is created by BaseActivity
+	 * 
+	 * @param sWidth	screen width
+	 * @param sHeight	screen height
+	 */
 	public Game(int sWidth, int sHeight) {
-		screenWidth = sWidth;
-		screenHeight = sHeight;
-		mGameRoot = new GameManager();
+		mScreenWidth = sWidth;
+		mScreenHeight = sHeight;
+		mGameManager = new GameManager();
 	}
 
+	/**
+	 * load external resources and then initialize the game
+	 * 
+	 * @param context
+	 * @param mapNumber		refers to the xml file from which to get the grid and special features for the level
+	 */
 	public void bootstrap(Context context, int mapNumber) {
 
-		BaseObject.sSystemRegistry.openGLSystem = new OpenGLSystem(null);
+		// don't know what the purpose of this was
+		//BaseObject.sSystemRegistry.openGLSystem = new OpenGLSystem(null);
 
 		RenderSystem renderer = new RenderSystem();
-		BaseObject.sSystemRegistry.renderSystem = renderer;
+		BaseObject.sSystemRegistry.mRenderSystem = renderer;
+		
+		TextureLibrary textureLibrary = new TextureLibrary();
+		textureLibrary.loadGameTextures();
+		BaseObject.sSystemRegistry.mTextureLibrary = textureLibrary;
 
-		TextureLibrary longTermTextureLibrary = new TextureLibrary();
-		BaseObject.sSystemRegistry.longTermTextureLibrary = longTermTextureLibrary;
-
+		ParsedDataSet parsedMapData = null;
 		try {
 			SAXParserFactory spf = SAXParserFactory.newInstance();
 			SAXParser sp = spf.newSAXParser();
@@ -52,101 +79,40 @@ public class Game {
 			 * sp.parse(new InputSource(isr), myExampleHandler);
 			 */
 			sp.parse(context.getResources().openRawResource(mapNumber), myXMLHandler);
-
 			parsedMapData = myXMLHandler.getParsedData();
-
+			
+			mGameThread = new GameThread();
+			mGameThread.setGameRenderer(mSurfaceView.getGameRenderer());
+			mGameThread.setGameManager(mGameManager);
+			
+			mGameManager.initGame(parsedMapData, mScreenWidth, mScreenHeight);
+			start();
 		} catch (Exception e) {
 			Log.e("DEBUG", "QueryError", e);
 		}
-
-		Log.d("DEBUG", "source info passed on: parsedMapData.sourceBY = " + parsedMapData.sourceBY);
-		Grid mGrid = new Grid(parsedMapData.mapWidth, parsedMapData.mapHeight, parsedMapData.mapSpacing, 32.0f, screenWidth, screenHeight, 
-				parsedMapData.sourceAX, parsedMapData.sourceAY, parsedMapData.sourceBX, parsedMapData.sourceBY);
-
-		mGrid.mSpark.mSprite.setTextureFrame(longTermTextureLibrary.allocateTexture(R.drawable.spark), 32.0f, 32.0f);
-		mGameRoot.add(mGrid.mSpark);
-
-		for (int k = 0; k < parsedMapData.specialNodes.getCount(); k++) {
-			int tempI = parsedMapData.specialNodes.get(k).i;
-			int tempJ = parsedMapData.specialNodes.get(k).j;
-
-			mGrid.mNodes[tempI][tempJ].type = parsedMapData.specialNodes.get(k).type;
-			mGrid.mNodes[tempI][tempJ].link = parsedMapData.specialNodes.get(k).link;
-			mGrid.mNodes[tempI][tempJ].minSpeedLimit = parsedMapData.specialNodes.get(k).minSpeed;
-			mGrid.mNodes[tempI][tempJ].maxSpeedLimit = parsedMapData.specialNodes.get(k).maxSpeed;
-			if (parsedMapData.specialNodes.get(k).source) {
-				mGrid.mNodes[tempI][tempJ].setSource();
-			}
-		}
-
-		for (int i = 0; i < mGrid.getWidth(); i++) {
-			for (int j = 0; j < mGrid.getHeight(); j++) {
-				if (mGrid.mNodes[i][j].type == 2) {
-					mGrid.mNodes[i][j].mSprite.setTextureFrame(longTermTextureLibrary.allocateTexture(R.drawable.grey_gate_node), 32.0f, 32.0f);
-					mGrid.mNodes[i][j].mSprite.setTextureFrame(longTermTextureLibrary.allocateTexture(R.drawable.yellow_gate_node), 32.0f, 32.0f);
-					mGrid.mNodes[i][j].mSprite.setTextureFrame(longTermTextureLibrary.allocateTexture(R.drawable.green_gate_node), 32.0f, 32.0f);
-				} else {
-					mGrid.mNodes[i][j].mSprite.setTextureFrame(longTermTextureLibrary.allocateTexture(R.drawable.grey_node), 32.0f, 32.0f);
-					mGrid.mNodes[i][j].mSprite.setTextureFrame(longTermTextureLibrary.allocateTexture(R.drawable.yellow_node), 32.0f, 32.0f);
-					mGrid.mNodes[i][j].mSprite.setTextureFrame(longTermTextureLibrary.allocateTexture(R.drawable.green_node), 32.0f, 32.0f);
-				}
-				mGameRoot.add(mGrid.mNodes[i][j]);
-			}
-		}
-
-		for (int i = 0; i < mGrid.maxWireSegments; i++) {
-			mGrid.mWire[i].mSprite.setTextureFrame(longTermTextureLibrary.allocateTexture(R.drawable.wire_segment), 16.0f, 4.0f);
-			mGameRoot.add(mGrid.mWire[i]);
-		}
-		
-		mGameRoot.addGrid(mGrid);
-
-		Particle[] particleArray = new Particle[20];
-
-		for (int i = 0; i < particleArray.length; i++) {
-			particleArray[i] = new Particle();
-		}
-
-		for (int j = 0; j < particleArray.length; j++) {
-			if ((j % 2) == 0) {
-				particleArray[j].mSprite.setTextureFrame(longTermTextureLibrary.allocateTexture(R.drawable.white_box), 4 , 4);
-			} else {
-				particleArray[j].mSprite.setTextureFrame(longTermTextureLibrary.allocateTexture(R.drawable.yellow_box), 4, 4);
-			}
-		}
-
-		mGameRoot.setParticleArray(particleArray);
-		
-		/*
-		Marker myMarker = new Marker(103, 230);
-		Marker myMarker2 = new Marker(60, 230);
-		myMarker.mSprite.setTextureFrame(longTermTextureLibrary.allocateTexture(R.drawable.red_box),4.0f, 4.0f);
-		myMarker2.mSprite.setTextureFrame(longTermTextureLibrary.allocateTexture(R.drawable.red_box),4.0f, 4.0f );
-		mGameRoot.add(myMarker);
-		mGameRoot.add(myMarker2);
-		*/
-		
-		mGameThread = new GameThread(mSurfaceView.getRenderer());
-		mGameThread.setGameRoot(mGameRoot);
-		mGameRoot.beginGame();
-		start();
 	}
 
+	/**
+	 * start the game thread
+	 */
 	public void start() {
 		if (!mRunning) {
-			assert mGame == null;
+			assert mThread == null;
 			// Now's a good time to run the GC.
 			Runtime r = Runtime.getRuntime();
 			r.gc();
-			mGame = new Thread(mGameThread);
-			mGame.setName("Game");
-			mGame.start();
+			mThread = new Thread(mGameThread);
+			mThread.setName("Game");
+			mThread.start();
 			mRunning = true;
 		} else {
 			mGameThread.resumeGame();
 		}
 	}
 
+	/**
+	 * stop the game thread
+	 */
 	public void stop() {
 		if (mRunning) {
 			if (mGameThread.getPaused()) {
@@ -154,30 +120,43 @@ public class Game {
 			}
 			mGameThread.stopGame();
 			try {
-				mGame.join();
+				mThread.join();
 			} catch (InterruptedException e) {
-				mGame.interrupt();
+				mThread.interrupt();
 			}
-			mGame = null;
+			mThread = null;
 			mRunning = false;
 		}
 	}
 
+	/**
+	 * pause the game thread
+	 */
 	public void pause() {
 		if (mRunning) {
 			mGameThread.pauseGame();
 		}
 	}
 
+	/**
+	 * resume the game thread
+	 */
 	public void resume() {
 		mGameThread.resumeGame();
 	}
 
+	/** setter */
 	public void setSurfaceView(OGLSurfaceView view) {
 		mSurfaceView = view;
 	}
 
+	/** getter */
 	public GameThread getGameThread() {
 		return mGameThread;
+	}
+	
+	/** getter */
+	public GameManager getGameManager() {
+		return mGameManager;
 	}
 }

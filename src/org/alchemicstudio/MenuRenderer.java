@@ -38,55 +38,48 @@ public class MenuRenderer implements Renderer {
 		Log.d("DEBUG", "density: " + metrics.densityDpi);
 		Log.d("DEBUG", "metrics: " + pixToDpiScale);
 		
-		TextureLibrary longTermTextureLibrary = new TextureLibrary();
-		BaseObject.sSystemRegistry.longTermTextureLibrary = longTermTextureLibrary;
+		TextureLibrary textureLibrary = new TextureLibrary();
+		textureLibrary.loadGameTextures();
+		BaseObject.sSystemRegistry.mTextureLibrary = textureLibrary;
 		
-		roboSprite = new Sprite(0, 4, 300);
-		roboSprite.setTextureFrame(longTermTextureLibrary.allocateTexture(R.drawable.gold1), 50.0f, 64.0f);
-		roboSprite.setTextureFrame(longTermTextureLibrary.allocateTexture(R.drawable.gold2), 50.0f, 64.0f);
-		roboSprite.setTextureFrame(longTermTextureLibrary.allocateTexture(R.drawable.gold3), 50.0f, 64.0f);
-		roboSprite.setTextureFrame(longTermTextureLibrary.allocateTexture(R.drawable.gold4), 50.0f, 64.0f);
+		int[] spriteArray = {R.drawable.gold1, R.drawable.gold2, R.drawable.gold3, R.drawable.gold4};
+		roboSprite = new Sprite(spriteArray, 0, 50.0f, 64.0f, 4, 300);
 		
-		backgroundHeadSprite = new Sprite(0, 1);
-		backgroundHeadSprite.setTextureFrame(longTermTextureLibrary.allocateTexture(R.drawable.bg_head), 480.0f, 480.0f);
+		int[] spriteArray2 = {R.drawable.bg_head};
+		backgroundHeadSprite = new Sprite(spriteArray2, 0, 480.0f, 480.0f, 1, 0);
 		
-		backgroundBaseSprite = new Sprite(0, 1);
-		backgroundBaseSprite.setTextureFrame(longTermTextureLibrary.allocateTexture(R.drawable.bg_base), 480.0f, 480.0f);
+		int[] spriteArray3 = {R.drawable.bg_base};
+		backgroundBaseSprite = new Sprite(spriteArray3, 0, 480.0f, 480.0f, 1, 0);
 		
-		menuPipeSprite1 = new Sprite(0, 1);
-		menuPipeSprite1.setTextureFrame(longTermTextureLibrary.allocateTexture(R.drawable.menu_pipe), 32.0f, 32.0f);
+		int[] spriteArray4 = {R.drawable.menu_pipe};
+		menuPipeSprite1 = new Sprite(spriteArray4, 0, 32.0f, 32.0f, 1, 0);
 		menuPipeSprite1.setScale(15, 1);
 		menuPipeSprite1.modTex(6.0f);
 		
-		menuPipeSprite2 = new Sprite(0, 1);
-		menuPipeSprite2.setTextureFrame(longTermTextureLibrary.allocateTexture(R.drawable.menu_pipe), 32.0f, 32.0f);
+		menuPipeSprite2 = new Sprite(spriteArray4, 0, 32.0f, 32.0f, 1, 0);
 		menuPipeSprite2.setScale(15, 1);
 		menuPipeSprite2.modTex(6.0f);
 		
-		menuPipeSprite3 = new Sprite(0, 1);
-		menuPipeSprite3.setTextureFrame(longTermTextureLibrary.allocateTexture(R.drawable.menu_pipe), 32.0f, 32.0f);
+		menuPipeSprite3 = new Sprite(spriteArray4, 0, 32.0f, 32.0f, 1, 0);
 		menuPipeSprite3.setScale(15, 1);
 		menuPipeSprite3.modTex(6.0f);
 		
-		redGearSprite = new Sprite(0, 1);
-		redGearSprite.setTextureFrame(longTermTextureLibrary.allocateTexture(R.drawable.red_gear), 52.0f, 52.0f);
+		int[] spriteArray5 = {R.drawable.red_gear};
+		redGearSprite = new Sprite(spriteArray5, 0, 52.0f, 52.0f, 1, 0);
 		
-		yellowGearSprite = new Sprite(0, 1);
-		yellowGearSprite.setTextureFrame(longTermTextureLibrary.allocateTexture(R.drawable.yellow_gear), 32.0f, 32.0f);
+		int[] spriteArray6 = {R.drawable.yellow_gear};
+		yellowGearSprite = new Sprite(spriteArray6, 0, 32.0f, 32.0f, 1, 0);
 		
-		pinkGearSprite = new Sprite(0, 1);
-		pinkGearSprite.setTextureFrame(longTermTextureLibrary.allocateTexture(R.drawable.pink_gear), 58.0f, 58.0f);
+		int[] spriteArray7 = {R.drawable.pink_gear};
+		pinkGearSprite = new Sprite(spriteArray7, 0, 58.0f, 58.0f, 1, 0);
 		
-		craneSprite = new Sprite(0, 1);
-		craneSprite.setTextureFrame(longTermTextureLibrary.allocateTexture(R.drawable.crane), 100.0f, 120.0f);
+		int[] spriteArray8 = {R.drawable.crane};
+		craneSprite = new Sprite(spriteArray8, 0, 100.0f, 120.0f, 1, 0);
 		
-		// marker is useful for showing where a certain dpi location is
-		//myMarker = new Marker(10, 10);
-		//myMarker.mSprite.setTextureFrame(longTermTextureLibrary.allocateTexture(R.drawable.red_box),(4.0f / pixToDpiScale), (4.0f / pixToDpiScale));
 	}
 
 	public void onSurfaceCreated(GL10 gl, EGLConfig config) {
-		loadTextures(gl, BaseObject.sSystemRegistry.longTermTextureLibrary);
+		loadTextures(gl, BaseObject.sSystemRegistry.mTextureLibrary);
 		
 		gl.glShadeModel(GL10.GL_SMOOTH);
 		gl.glEnable(GL10.GL_TEXTURE_2D);
@@ -152,8 +145,8 @@ public class MenuRenderer implements Renderer {
 			
 			//draws from bottom left corner
 			menuPipeSprite1.draw(gl, 0, 0, -264);
-			menuPipeSprite1.draw(gl, 0, 0, -422);
-			menuPipeSprite1.draw(gl, 0, 0, -578);
+			menuPipeSprite2.draw(gl, 0, 0, -422);
+			menuPipeSprite3.draw(gl, 0, 0, -578);
 			backgroundHeadSprite.draw(gl, 0, 0, -480);
 			backgroundBaseSprite.draw(gl, 0, 0, -854);
 			roboSprite.draw(gl, 0, 392, -168);
@@ -181,6 +174,6 @@ public class MenuRenderer implements Renderer {
 	
 	public synchronized void onPause() {
 		Log.d("DEBUG", "Menu is now paused");
-		unloadTextures(BaseObject.sSystemRegistry.longTermTextureLibrary);
+		unloadTextures(BaseObject.sSystemRegistry.mTextureLibrary);
 	}
 }
