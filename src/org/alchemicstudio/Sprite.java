@@ -8,9 +8,7 @@ import javax.microedition.khronos.opengles.GL10;
 
 import org.alchemicstudio.Texture;
 
-import android.content.res.AssetManager;
 import android.os.SystemClock;
-import android.util.Log;
 
 public class Sprite {
 
@@ -152,10 +150,6 @@ public class Sprite {
 				if (currentTextureIndex >= textureIndex)
 					currentTextureIndex = 0;
 			}
-		}
-		
-		if(mTexture==null || mTexture[currentTextureIndex]==null) {
-			String helllo = "hello";
 		}
 
 		gl.glBindTexture(GL10.GL_TEXTURE_2D, mTexture[currentTextureIndex].name);

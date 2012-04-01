@@ -6,8 +6,17 @@ import android.util.Log;
 
 public class GameManager {
 
-	/** the game grid, huge fat class with too much stuff in it */
-	private Grid mGrid;
+	/** game mode constant for build */
+	private final static int GAME_MODE_BUILD = 0;
+	
+	/** game mode constant for release */
+	private final static int GAME_MODE_RELEASE = 1;
+	
+	/** current active game mode */
+	private int mActiveGameMode = GAME_MODE_BUILD;
+	
+	/** array of game modes */
+	private GameMode[] mGameModeArray = new GameMode[2];
 	
 	/** queue of input objects ready to be processed */
 	private ArrayBlockingQueue<InputObject> mInputQueue = new ArrayBlockingQueue<InputObject>(BaseActivity.INPUT_QUEUE_SIZE);
@@ -22,6 +31,8 @@ public class GameManager {
 	 */
 	public GameManager() {
 		super();
+		mGameModeArray[GAME_MODE_BUILD] = new GMGridBuild();
+		mGameModeArray[GAME_MODE_RELEASE] = new GMRelease();
 	}
 	
 	/**
@@ -32,7 +43,7 @@ public class GameManager {
 	 * @param screenHeight
 	 */
 	public void initGame(ParsedDataSet dataSet, float screenWidth, float screenHeight) {
-		mGrid = new Grid(dataSet, screenWidth, screenHeight);
+		((GMGridBuild) mGameModeArray[GAME_MODE_BUILD]).loadGrid(dataSet, screenWidth, screenHeight);
 	}
 
 	/**
@@ -42,7 +53,7 @@ public class GameManager {
 	 */
 	public void update(float timeDelta) {
 		processInput();
-		mGrid.update(timeDelta);
+		mGameModeArray[mActiveGameMode].update(timeDelta);
 	}
 	
 	/**
@@ -76,13 +87,13 @@ public class GameManager {
 						// Log.d("DEBUG", "Key Event yeah!");
 					} else if (input.eventType == InputObject.EVENT_TYPE_TOUCH) {
 						if (input.action == InputObject.ACTION_TOUCH_DOWN) {
-							processTouchDownEvent(input);
+							mGameModeArray[mActiveGameMode].processTouchDownEvent(input);
 						}
 						if (input.action == InputObject.ACTION_TOUCH_MOVE) {
-							processTouchMoveEvent(input);
+							mGameModeArray[mActiveGameMode].processTouchMoveEvent(input);
 						}
 						if (input.action == InputObject.ACTION_TOUCH_UP) {
-							processTouchUpEvent(input);
+							mGameModeArray[mActiveGameMode].processTouchUpEvent(input);
 						}
 					}
 					input.returnToPool();
@@ -94,36 +105,16 @@ public class GameManager {
 	}
 	
 	/**
-	 * handle touch move event
-	 * 
-	 * @param input
+	 * switch between game modes
 	 */
-	private void processTouchMoveEvent(InputObject input) {
-		mGrid.updateWire(input.x, input.y);
-		//gameManager.checkNodePress(input.x, input.y);
-		// objectManager.checkButtonPress(input.x, input.y);
-		//Log.d("DEBUG", "Create Particle at (" + input.x + ", " + input.y + ")");
-		//gameManager.createParticle(input.x, input.y);
+	/*
+	private void toggleGameModes() {
+		if(mActiveGameMode == GAME_MODE_BUILD) {
+			mActiveGameMode = GAME_MODE_RELEASE;
+			((GMRelease) mGameModeArray[GAME_MODE_RELEASE]).loadTrack(((GMGridBuild) mGameModeArray[GAME_MODE_BUILD]).getTrack());
+		} else {
+			mActiveGameMode = GAME_MODE_BUILD;
+		}
 	}
-
-	/**
-	 * handle touch down event
-	 * 
-	 * @param input
-	 */
-	private void processTouchDownEvent(InputObject input) {
-		mGrid.checkNodePress(input.x, input.y);
-		// objectManager.checkButtonPress(input.x, input.y);
-		//Log.d("DEBUG", "Create Particle at (" + input.x + ", " + input.y + ")");
-		//gameManager.createParticle(input.x, input.y);
-	}
-
-	/**
-	 * handle touch up event
-	 * 
-	 * @param input
-	 */
-	private void processTouchUpEvent(InputObject input) {
-		mGrid.checkNodeRelease(input.x, input.y);
-	}
+	*/
 }

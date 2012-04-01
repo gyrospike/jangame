@@ -4,11 +4,17 @@ import android.graphics.Point;
 import android.util.Log;
 
 public class Node extends BaseObject {
+	
+	/** the number of connections a node may have by default */
+	private final static int CONNECTION_LIMIT_DEFAULT = 4;
+	
+	/** the number of connections a node may have if it is an off/on ramp */
+	private final static int CONNECTION_LIMIT_RAMP = 1;
 
 	public Sprite mSprite;
 	
 	public int iX, iY;
-	public boolean source; 
+	public boolean mRampNode; 
 	public boolean hasPower;
 	
 	public int sourceKey;
@@ -18,16 +24,19 @@ public class Node extends BaseObject {
 	public float maxSpeedLimit;
 	
 	private Point[] targetArray;
-	private int maxConnections;
+	private int mMaxConnections;
 	private int[] targetWireTypeArray;
 	private Vector2 posVector;
 
-	public Node(int i, int j, Vector2 vec, int maxC, boolean isSource, float maxSpeedLimit, float minSpeedLimit, int link, int type) {
+	public Node(int i, int j, Vector2 vec, boolean isRampNode, float maxSpeedLimit, float minSpeedLimit, int link, int type) {
 		iX = i;
 		iY = j;
 		posVector = vec;
 		
-		maxConnections = maxC;
+		mMaxConnections = CONNECTION_LIMIT_DEFAULT;
+		if(isRampNode) {
+			mMaxConnections = CONNECTION_LIMIT_RAMP;
+		}
 		
 		this.type = type;
 		this.link = link;
@@ -60,7 +69,7 @@ public class Node extends BaseObject {
 		mSprite.setPosition(posVector.x, posVector.y);
 		mSprite.currentTextureIndex = 0;
 		
-		if(isSource) {
+		if(isRampNode) {
 			setSource();
 		}
 
@@ -68,7 +77,7 @@ public class Node extends BaseObject {
 	}
 
 	public void setSource() {
-		source = true;
+		mRampNode = true;
 		mSprite.currentTextureIndex = 2;
 	}
 
@@ -108,7 +117,7 @@ public class Node extends BaseObject {
 	}
 	
 	public boolean hasMaxConnections() {
-		if(getNumConnections() >= maxConnections) {
+		if(getNumConnections() >= mMaxConnections) {
 			return true;
 		} else {
 			return false;
@@ -138,14 +147,14 @@ public class Node extends BaseObject {
 	}
 	
 	public void removePower() {
-		if (!source) {
+		if (!mRampNode) {
 			hasPower = false;
 			mSprite.currentTextureIndex = 0;
 		}
 	}
 
 	public void activate(int level, int key) {
-		if (!source) {
+		if (!mRampNode) {
 			sourceKey = key;
 			mSprite.currentTextureIndex = level;
 			hasPower = true;
@@ -153,7 +162,7 @@ public class Node extends BaseObject {
 	}
 
 	public void deactivate() {
-		if (!source) {
+		if (!mRampNode) {
 			hasPower = false;
 			mSprite.currentTextureIndex = 0;
 			setConnectionsNull();
