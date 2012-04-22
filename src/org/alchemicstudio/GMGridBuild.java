@@ -25,8 +25,8 @@ public class GMGridBuild extends GameMode {
 	 * 
 	 * @return
 	 */
-	public int[][] getTrack() {
-		return null;
+	public Node[][] getTrack() {
+		return mGrid.getNodes();
 	}
 	
 	/**

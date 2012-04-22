@@ -3,7 +3,9 @@ package org.alchemicstudio;
 import javax.xml.parsers.SAXParser;
 import javax.xml.parsers.SAXParserFactory;
 import android.content.Context;
+import android.os.Bundle;
 import android.util.Log;
+import android.widget.Button;
 
 public class Game {
 	
@@ -44,9 +46,9 @@ public class Game {
 	 * load external resources and then initialize the game
 	 * 
 	 * @param context
-	 * @param mapNumber		refers to the xml file from which to get the grid and special features for the level
+	 * @param extras	game specific info, like which level to load
 	 */
-	public void bootstrap(Context context, int mapNumber) {
+	public void bootstrap(Context context, Bundle extras, Button button1) {
 
 		// don't know what the purpose of this was
 		//BaseObject.sSystemRegistry.openGLSystem = new OpenGLSystem(null);
@@ -78,6 +80,12 @@ public class Game {
 			 * 
 			 * sp.parse(new InputSource(isr), myExampleHandler);
 			 */
+			
+			int mapNumber = 0;
+			if (extras != null) {
+				mapNumber = extras.getInt("mapNumber", R.raw.map01);
+			}
+			
 			sp.parse(context.getResources().openRawResource(mapNumber), myXMLHandler);
 			parsedMapData = myXMLHandler.getParsedData();
 			
@@ -85,7 +93,7 @@ public class Game {
 			mGameThread.setGameRenderer(mSurfaceView.getGameRenderer());
 			mGameThread.setGameManager(mGameManager);
 			
-			mGameManager.initGame(parsedMapData, mScreenWidth, mScreenHeight);
+			mGameManager.initGame(parsedMapData, mScreenWidth, mScreenHeight, button1);
 			start();
 		} catch (Exception e) {
 			Log.e("DEBUG", "QueryError", e);

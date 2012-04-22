@@ -10,6 +10,7 @@ import android.view.KeyEvent;
 import android.view.MotionEvent;
 import android.view.Window;
 import android.view.WindowManager;
+import android.widget.Button;
 
 public class BaseActivity extends Activity {
 
@@ -36,19 +37,15 @@ public class BaseActivity extends Activity {
 		getWindowManager().getDefaultDisplay().getMetrics(metrics);
 		Log.d("DEBUG", "Real dpi: " + metrics.densityDpi);
 		Log.d("DEBUG", "screen dimensions in dpi: " + metrics.widthPixels + " x " + metrics.heightPixels);
-
-		int mapNumber = 0;
-		Bundle extras = getIntent().getExtras();
-		if (extras != null && getIntent().hasExtra("mapNumber")) {
-			mapNumber = extras.getInt("mapNumber");
-		}
-
-		mGLView = new OGLSurfaceView(this);
-		setContentView(mGLView);
+		
+		setContentView(R.layout.game);
+		mGLView = (OGLSurfaceView)findViewById(R.id.OGLSurfaceView01);
+		
+		Button button1 = (Button) findViewById(R.id.button1);
 
 		mGame = new Game(metrics.widthPixels, metrics.heightPixels);
 		mGame.setSurfaceView((OGLSurfaceView) mGLView);
-		mGame.bootstrap(this, mapNumber);
+		mGame.bootstrap(this, getIntent().getExtras(), button1);
 
 		createInputObjectPool();
 	}

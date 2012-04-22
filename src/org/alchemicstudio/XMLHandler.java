@@ -8,92 +8,134 @@ import android.util.Log;
 
 public class XMLHandler extends DefaultHandler {
 
-	// ===========================================================
-	// Fields
-	// ===========================================================
-
-	private boolean in_map = false;
-	private boolean in_node = false;
-	private boolean in_stats = false;
+	/** the most recent node index i to be parsed */
+	private int mCurrentI;
 	
-	private int currentI;
-	private int currentJ;
+	/** the most recent node index j to be parsed */
+	private int mCurrentJ;
+	
+	/** the index of the most recent node to be parsed */
+	private int mCurrentNodeIndex;
 
-	private ParsedDataSet myParsedExampleDataSet = new ParsedDataSet();
+	/** the entire data set of what we are parsing */
+	private ParsedDataSet mParsedDataSet = new ParsedDataSet();
 
+	/**
+	 * getter
+	 * @return	get the parsed data for this level
+	 */
 	public ParsedDataSet getParsedData() {
-		return myParsedExampleDataSet;
+		return mParsedDataSet;
 	}
+	
+	/**
+	 * helper parsing function for the MAP tag
+	 * @param atts
+	 */
+	private void parseMap(Attributes atts) {
+		mParsedDataSet.setNumber(Integer.parseInt(atts.getValue("NUMBER")));
+		mParsedDataSet.setWidth(Integer.parseInt(atts.getValue("WIDTH")));
+		mParsedDataSet.setHeight(Integer.parseInt(atts.getValue("HEIGHT")));
+		mParsedDataSet.setSpacing(Integer.parseInt(atts.getValue("SPACING")));
+		mParsedDataSet.initializeNodes();
+		mParsedDataSet.initializeBorderNodes();
+	}
+	
+	/**
+	 * helper parsing function for the NODE tag
+	 * @param atts
+	 */
+	private void parseNode(Attributes atts) {
+		mCurrentI = Integer.parseInt(atts.getValue("I"));
+		mCurrentJ = Integer.parseInt(atts.getValue("J"));
+		mCurrentNodeIndex = getNodeIndex(mCurrentI, mCurrentJ);
+	}
+	
+	/**
+	 * helper parsing function for the STATS tag
+	 * @param atts
+	 */
+	private void parseStats(Attributes atts) {
+		Log.d("DEBUG", "Parsing : " + mParsedDataSet.mNodes.getCount());
+		mParsedDataSet.mNodes.get(mCurrentNodeIndex).type = Integer.parseInt(atts.getValue("TYPE"));
+		mParsedDataSet.mNodes.get(mCurrentNodeIndex).link = Integer.parseInt(atts.getValue("LINK"));
+		mParsedDataSet.mNodes.get(mCurrentNodeIndex).minSpeed = Integer.parseInt(atts.getValue("MIN_SPEED"));
+		mParsedDataSet.mNodes.get(mCurrentNodeIndex).maxSpeed = Integer.parseInt(atts.getValue("MAX_SPEED"));
+	}
+	
+	/**
+	 * helper parsing function for the PRETARGET tag
+	 * @param atts
+	 */
+	private void parsePretarget(Attributes atts) {
+		Log.d("DEBUG", "Parsing : " + mParsedDataSet.mNodes.getCount());
+		mParsedDataSet.mNodes.get(mCurrentNodeIndex).addPreTarget(
+				Integer.parseInt(atts.getValue("INDEX")),
+				Boolean.parseBoolean(atts.getValue("FIXED")),
+				Boolean.parseBoolean(atts.getValue("START")),
+				Boolean.parseBoolean(atts.getValue("END")));
+	}
+	
+	/**
+	 * get the node template parsed data set index based on it's i and j index
+	 * 
+	 * @param i
+	 * @param j
+	 * @return
+	 */
+	private int getNodeIndex(int i, int j) {
+		int result = -1;
+		int totalNodeCount =  mParsedDataSet.mNodes.getCount();
+		for(int index = 0; index < totalNodeCount; index++) {
+			if(mParsedDataSet.mNodes.get(index).i == i && mParsedDataSet.mNodes.get(index).j == j) {
+				result = index;
+			}
+		}
+		return result;
+	}
+
 
 	@Override
 	public void startDocument() throws SAXException {
-		myParsedExampleDataSet = new ParsedDataSet();
+		mParsedDataSet = new ParsedDataSet();
 	}
 
 	@Override
 	public void endDocument() throws SAXException {
 		Log.d("DEBUG", "enddocument called");
-		myParsedExampleDataSet.setSource();
+		mParsedDataSet.setStartAndEndIndices();
 	}
 
 	@Override
 	public void startElement(String namespaceURI, String localName, String qName, Attributes atts) throws SAXException {
 		Log.d("DEBUG", "startElement called, localName: " + localName);
 		if (localName.equals("MAP")) {
-			in_map = true;
-			String numberString = atts.getValue("NUMBER");
-			String widthString = atts.getValue("WIDTH");
-			String heightString = atts.getValue("HEIGHT");
-			String spacingString = atts.getValue("SPACING");
-			
-			myParsedExampleDataSet.setNumber(Integer.parseInt(numberString));
-			myParsedExampleDataSet.setWidth(Integer.parseInt(widthString));
-			myParsedExampleDataSet.setHeight(Integer.parseInt(heightString));
-			myParsedExampleDataSet.setSpacing(Integer.parseInt(spacingString));
-			myParsedExampleDataSet.initializeNodes();
-			
+			parseMap(atts);
 		} else if (localName.equals("NODE")) {
-			in_node = true;
-			
-			String iString = atts.getValue("I");
-			String jString = atts.getValue("J");
-			
-			currentI = Integer.parseInt(iString);
-			currentJ = Integer.parseInt(jString);
-			
-			myParsedExampleDataSet.addSpecialNode(currentI, currentJ);
-			
-			
+			parseNode(atts);
 		} else if (localName.equals("STATS")) {
-			in_stats = true;
-			
-			String typeString = atts.getValue("TYPE");
-			String linkString = atts.getValue("LINK");
-			String minSpeedString = atts.getValue("MIN_SPEED");
-			String maxSpeedString = atts.getValue("MAX_SPEED");
-			String sourceString = atts.getValue("SOURCE");
-			Log.d("DEBUG", "Parsing :" + myParsedExampleDataSet.specialNodes.getCount());
-			
-			myParsedExampleDataSet.specialNodes.get(myParsedExampleDataSet.specialNodes.getCount()-1).type = Integer.parseInt(typeString);
-			myParsedExampleDataSet.specialNodes.get(myParsedExampleDataSet.specialNodes.getCount()-1).link = Integer.parseInt(linkString);
-			myParsedExampleDataSet.specialNodes.get(myParsedExampleDataSet.specialNodes.getCount()-1).minSpeed = Integer.parseInt(minSpeedString);
-			myParsedExampleDataSet.specialNodes.get(myParsedExampleDataSet.specialNodes.getCount()-1).maxSpeed = Integer.parseInt(maxSpeedString);
-			myParsedExampleDataSet.specialNodes.get(myParsedExampleDataSet.specialNodes.getCount()-1).source = Boolean.parseBoolean(sourceString);
+			parseStats(atts);
+		} else if (localName.equals("PRETARGET")) {
+			parsePretarget(atts);
 		} 
 	}
 
+	//TODO - need this still?
 	@Override
 	public void endElement(String namespaceURI, String localName, String qName) throws SAXException {
 		Log.d("DEBUG", "endElement called, localName: " + localName);
+		/*
 		if (localName.equals("MAP")) {
 			in_map = false;
 		} else if (localName.equals("NODE")) {
 			in_node = false;
 		} else if (localName.equals("STATS")) {
 			in_stats = false;
-		} 
+		}
+		*/
 	}
 
+	//TODO - need this still?
 	/**
 	 * Gets be called on the following structure: <tag>characters</tag>
 	 */

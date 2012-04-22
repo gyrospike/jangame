@@ -3,6 +3,9 @@ package org.alchemicstudio;
 import java.util.concurrent.ArrayBlockingQueue;
 
 import android.util.Log;
+import android.view.View;
+import android.view.View.OnClickListener;
+import android.widget.Button;
 
 public class GameManager {
 
@@ -12,9 +15,6 @@ public class GameManager {
 	/** game mode constant for release */
 	private final static int GAME_MODE_RELEASE = 1;
 	
-	/** current active game mode */
-	private int mActiveGameMode = GAME_MODE_BUILD;
-	
 	/** array of game modes */
 	private GameMode[] mGameModeArray = new GameMode[2];
 	
@@ -23,6 +23,9 @@ public class GameManager {
 	
 	/** locking object for accessing the input queue */
 	private Object inputQueueMutex = new Object();
+	
+	/** current active game mode */
+	private int mActiveGameMode;
 
 	/**
 	 * handles the initialization of the game's resource loading and the game's
@@ -30,9 +33,13 @@ public class GameManager {
 	 * 
 	 */
 	public GameManager() {
-		super();
+		// what was this for?
+		//super();
+		
 		mGameModeArray[GAME_MODE_BUILD] = new GMGridBuild();
 		mGameModeArray[GAME_MODE_RELEASE] = new GMRelease();
+		
+		mActiveGameMode = GAME_MODE_BUILD;
 	}
 	
 	/**
@@ -42,8 +49,15 @@ public class GameManager {
 	 * @param screenWidth
 	 * @param screenHeight
 	 */
-	public void initGame(ParsedDataSet dataSet, float screenWidth, float screenHeight) {
+	public void initGame(ParsedDataSet dataSet, float screenWidth, float screenHeight, Button button1) {
 		((GMGridBuild) mGameModeArray[GAME_MODE_BUILD]).loadGrid(dataSet, screenWidth, screenHeight);
+		
+		button1.setOnClickListener(new OnClickListener() {
+			public void onClick(View v) {
+				Log.d("DEBUG", "you pushed my button");
+				toggleGameModes();
+			}
+		});
 	}
 
 	/**
@@ -107,14 +121,16 @@ public class GameManager {
 	/**
 	 * switch between game modes
 	 */
-	/*
 	private void toggleGameModes() {
+		Log.d("DEBUG", "toggle game mode");
+		/*
 		if(mActiveGameMode == GAME_MODE_BUILD) {
 			mActiveGameMode = GAME_MODE_RELEASE;
 			((GMRelease) mGameModeArray[GAME_MODE_RELEASE]).loadTrack(((GMGridBuild) mGameModeArray[GAME_MODE_BUILD]).getTrack());
 		} else {
 			mActiveGameMode = GAME_MODE_BUILD;
 		}
+		*/
 	}
-	*/
+
 }

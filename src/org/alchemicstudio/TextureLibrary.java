@@ -74,7 +74,8 @@ public class TextureLibrary extends BaseObject {
     			R.drawable.crane,
     			R.drawable.white_box,
     			R.drawable.wire_segment,
-    			R.drawable.spark
+    			R.drawable.spark,
+    			R.drawable.cart
     	};
     	
     	for(int i = 0; i < masterTextureArray.length; i++) {

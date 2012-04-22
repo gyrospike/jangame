@@ -257,7 +257,7 @@ public class FixedSizeArray<T> {
         return mCount;
     }
     
-    /** Returns the maximum number of objects that can be inserted inot this array. */
+    /** Returns the maximum number of objects that can be inserted into this array. */
     public int getCapacity() {
         return mContents.length;
     }

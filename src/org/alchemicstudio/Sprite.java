@@ -108,6 +108,13 @@ public class Sprite {
 		
 	}
 
+	/**
+	 * Why do I need this -y here? not sure, seem likes the 0 point is at the top of the screen, so negative brings it down into
+	 * the screen, positive is up above for some crazy reason
+	 * 
+	 * @param x
+	 * @param y
+	 */
 	public void setPosition(float x, float y) {
 		xOffset = x;
 		yOffset = -y;
@@ -126,8 +133,9 @@ public class Sprite {
 		rotation = (float) (180 * (angle / Math.PI));
 	}
 
+	// TODO - what is the deal with this negative offset?
 	public Vector2 getPosition() {
-		return new Vector2(xOffset, yOffset);
+		return new Vector2(xOffset, -yOffset);
 	}
 
 	public int getPriority() {

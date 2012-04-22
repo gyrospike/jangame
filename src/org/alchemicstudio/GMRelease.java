@@ -1,9 +1,13 @@
 package org.alchemicstudio;
 
 public class GMRelease extends GameMode {
+	
+	/** 2d array of the nodes that were constructed in the build game mode */
+	private Node[][] mNodes = null;
 
 	public GMRelease() {
-
+		//create the cart
+		
 	}
 
 	/**
@@ -15,9 +19,11 @@ public class GMRelease extends GameMode {
 	
 	/**
 	 * load the track data from the grid build game mode
+	 * 
+	 * @param	nodes	the nodes that were created during the build game mode
 	 */
-	public void loadTrack() {
-		
+	public void loadTrack(Node[][] nodes) {
+		mNodes = nodes;
 	}
 
 	/**

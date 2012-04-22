@@ -1,44 +1,47 @@
 package org.alchemicstudio;
 
-import android.graphics.Point;
 
 public class TrackSegment extends BaseObject {
 
+	/** sprite drawable for a track segment */
 	public Sprite mSprite;
-	public Point targetNode, originNode;
-	public boolean active;
+	
 	public boolean permanent;
+	
+	/** is this track segment being used currently */
+	private boolean mInUse = false;
 
+	/** render system reference */
 	private RenderSystem system = sSystemRegistry.mRenderSystem;
 	
+	/**
+	 * Constructor
+	 */
 	public TrackSegment(){
-		active = false;
 		int[] textureArray = {R.drawable.wire_segment};
 		mSprite = new Sprite(textureArray, 0, 16.0f, 4.0f, 1, 0);
-		targetNode = new Point(-1, -1);
-		originNode = new Point(-1, -1);
 	}
 	
-	public void setTarget(int i, int j) {
-		targetNode.x = i;
-		targetNode.y = j;
+	/**
+	 * setter
+	 * @param val
+	 */
+	public void setInUse(boolean val) {
+		mInUse = val;
 	}
 	
-	public void setOrigin(int i, int j) {
-		originNode.x = i;
-		originNode.y = j;
-	}
-	
-	public Point getTarget() {
-		return targetNode;
-	}
-	
-	public Point getOrigin() {
-		return originNode;
+	/**
+	 * getter
+	 * @return	true if this track segment is being used already
+	 */
+	public boolean getInUse() {
+		return mInUse;
 	}
 	
 	@Override
 	public void update(float timeDelta) {
-		system.scheduleForDraw(mSprite);	
+		if(mInUse) {
+			system.scheduleForDraw(mSprite);
+		}
 	}
 }
