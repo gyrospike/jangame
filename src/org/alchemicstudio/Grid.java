@@ -7,11 +7,17 @@ public class Grid extends BaseObject {
 	/** the array index of the track segment used for visualizing where your current track piece will connect */
 	private final static int POINTER_TRACK_SEGMENT_INDEX = 0;
 	
+	/** the number of track segments for each node */
+	private final static int TRACK_SEGMENTS_PER_NODE = 4;
+	
 	/** number of sparks to be released on touch */
 	private final static int SPARKS_PER_TOUCH = 5;
 	
 	/** max number of particles we can have on screen */
 	private final static int MAX_PARTICLE_ARRAY_SIZE = 30;
+	
+	/** max number of node connections that can be stored in the chain */
+	private final static int MAX_CHAIN_LENGTH = 30;
 	
 	/** TODO - what? */
 	private final static float TRACK_SCALAR = (7.0f / 27.0f);
@@ -73,6 +79,12 @@ public class Grid extends BaseObject {
 	/** how much buffer space we have in the y direction */
 	private float mSideBufferY;
 	
+	/** array that tracks setting of node connection preferences */
+	private NodeConnection[] mNodeChain;
+	
+	/** index for the node chain array */
+	private int mNodeChainIndex = 0;
+	
 	/** array of particles */
 	private Particle[] mParticleArray;
 	
@@ -81,13 +93,14 @@ public class Grid extends BaseObject {
 		mWidth = dataSet.mMapWidth;
 		mSpacing = dataSet.mMapSpacing;
 
-		mMaxTrackSegments = (mWidth * mHeight) * 4;
+		mMaxTrackSegments = (mWidth * mHeight) * TRACK_SEGMENTS_PER_NODE;
 
 		mScreenWidth = screenWidth;
 		mScreenHeight = screenHeight;
 
 		mNodes = new Node[mWidth][mHeight];
 		mBorderNodes = new Node[2*mWidth + 2*mHeight];
+		mNodeChain = new NodeConnection[MAX_CHAIN_LENGTH];
 		mTrackSegments = new TrackSegment[mMaxTrackSegments];
 		// this has to happen before creeateTrackSegmentBetweenPoints
 		for (int k = 0; k < mMaxTrackSegments; k++) {
@@ -357,7 +370,7 @@ public class Grid extends BaseObject {
 	private void deactivateNode(int i, int j) {
 		NodeConnection[] nodeConnections = mNodes[i][j].getConnections();
 		for(int n = 0; n < nodeConnections.length; n++) {
-			//TODO - this makes it so you could never remove a border connection, this should be shapped up a bit
+			//TODO - this makes it so you could never remove a border connection, this should be shaped up a bit
 			if(nodeConnections[n].getI() != -1 && nodeConnections[n].getJ() != -1) {
 				mNodes[nodeConnections[n].getI()][nodeConnections[n].getJ()].removeConnection(i, j);
 				mTrackSegments[nodeConnections[n].getTrackID()].setInUse(false);
@@ -435,7 +448,7 @@ public class Grid extends BaseObject {
 		mCurrentTrackSourceNodeJ = node.getJ();
 		Log.d("DEBUG", "You pressed node: (" + mCurrentTrackSourceNodeI + ", " + mCurrentTrackSourceNodeJ + ")");
 	}
-
+	
 	/**
 	 * set the user removed his finger from to 'released'
 	 * 
@@ -444,7 +457,7 @@ public class Grid extends BaseObject {
 	 */
 	public void checkNodeRelease(int x, int y) {
 		NodeConnection node = determineNodeTouched(x, y);
-		mTrackSegments[0].mSprite.setScale(0.0f, 0.0f);
+		mTrackSegments[POINTER_TRACK_SEGMENT_INDEX].mSprite.setScale(0.0f, 0.0f);
 		nodeReleased(node.getI(),node.getJ());
 	}
 	
@@ -453,6 +466,72 @@ public class Grid extends BaseObject {
 	 */
 	public Node[][] getNodes() {
 		return mNodes;
+	}
+	
+	/**
+	 * begin linking together a 'preferred connection' route that will be used when resolving
+	 * which path to take for the spark as it travels through the nodes
+	 * 
+	 * @param x
+	 * @param y
+	 */
+	public void startTrackSwitchChain(int x, int y) {
+		mNodeChain[mNodeChainIndex] = determineNodeTouched(x, y);
+		mNodeChainIndex++;
+	}
+	
+	/**
+	 * cease to grow the preferred connection array and get the preferred connections
+	 * 
+	 */
+	public void stopTrackSwitchChain() {
+		for(int i = 0; i < mNodeChain.length-1; i++) {
+			if(mNodeChain[i+1] != null) {
+				mNodes[mNodeChain[i].getI()][mNodeChain[i].getJ()].setPreferredConnection(mNodeChain[i+1]);
+			}
+			mNodeChain[i] = null;
+		}
+		mNodeChain[mNodeChain.length-1] = null;
+		mNodeChainIndex=0;
+	}
+	
+	/**
+	 * add another link on the preferred connection array
+	 * 
+	 * @param x
+	 * @param y
+	 */
+	public void growTrackSwitchChain(int x, int y) {
+		NodeConnection newNodeConnection = determineNodeTouched(x, y);
+		if(mNodeChainIndex < MAX_CHAIN_LENGTH) {
+			if(!containsConnection(mNodeChain, newNodeConnection)) {
+				NodeConnection lastLink = mNodeChain[mNodeChainIndex-1];
+				if(mNodes[lastLink.getI()][lastLink.getJ()].hasConnectionTo(newNodeConnection)) {
+					mNodeChain[mNodeChainIndex] = newNodeConnection;
+					mNodeChainIndex++;
+				}
+			}
+		}
+	}
+	
+	/**
+	 * does this chain already contain this node?
+	 * 
+	 * @param chain
+	 * @param node
+	 * @return
+	 */
+	private boolean containsConnection(NodeConnection[] chain, NodeConnection node) {
+		boolean result = false;
+		for(int i = 0; i < chain.length; i++) {
+			if(chain[i] != null) {
+				if(chain[i].getI() == node.getI() && chain[i].getJ() == node.getJ()) {
+					result = true;
+					break;
+				}
+			}
+		}
+		return result;
 	}
 
 	@Override

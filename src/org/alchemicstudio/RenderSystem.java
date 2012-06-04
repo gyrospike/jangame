@@ -6,7 +6,10 @@ import android.util.Log;
 
 public class RenderSystem extends BaseObject {
 
+	/** the number of buffers to use for filling the queues of objects to processed by the Renderer */
 	private final static int DRAW_QUEUE_COUNT = 2;
+	
+	/** the number of elements that can fit in one queue */
 	private final static int MAX_DRAWABLE_ELEMENTS = 400;
 	
 	private PriorityComparator priorityComparator = new PriorityComparator();

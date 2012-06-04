@@ -49,16 +49,10 @@ public class Game {
 	 * @param extras	game specific info, like which level to load
 	 */
 	public void bootstrap(Context context, Bundle extras, Button button1) {
-
-		// don't know what the purpose of this was
-		//BaseObject.sSystemRegistry.openGLSystem = new OpenGLSystem(null);
-
 		RenderSystem renderer = new RenderSystem();
 		BaseObject.sSystemRegistry.mRenderSystem = renderer;
 		
-		TextureLibrary textureLibrary = new TextureLibrary();
-		textureLibrary.loadGameTextures();
-		BaseObject.sSystemRegistry.mTextureLibrary = textureLibrary;
+		BaseObject.sSystemRegistry.mAssetLibrary.loadFonts(context);
 
 		ParsedDataSet parsedMapData = null;
 		try {

@@ -34,7 +34,7 @@ public class Sprite {
 	private long mTime;
 	private int framesPerMillisecond;
 	
-	TextureLibrary mTextureLibrary;
+	AssetLibrary mAssetLibrary;
 
 	public Sprite(int[] textureIDArray, int priority, float width, float height, int frames, int fpms) {
 		mWidthScale = width;
@@ -43,7 +43,7 @@ public class Sprite {
 		init(priority, frames);
 		
 		for(int i = 0; i < textureIDArray.length; i++) {
-			Texture temp = mTextureLibrary.getTextureByResource(textureIDArray[i]);
+			Texture temp = mAssetLibrary.getTextureByResource(textureIDArray[i]);
 			setTextureFrame(temp);
 		}
 		
@@ -69,7 +69,7 @@ public class Sprite {
 
 		mTexture = new Texture[frames];
 		currentTextureIndex = 0;
-		mTextureLibrary = BaseObject.sSystemRegistry.mTextureLibrary;
+		mAssetLibrary = BaseObject.sSystemRegistry.mAssetLibrary;
 		
 		opacity = 1.0f;
 		mPriority = priority;
@@ -185,7 +185,7 @@ public class Sprite {
 	}
 
 	public final static class PriorityComparator implements Comparator<Sprite> {
-
+		// removing this seems to have no effect - not sure why we are overriding, aren't we implementing?
 		@Override
 		public int compare(Sprite s1, Sprite s2) {
 			int s1P = s1.getPriority();

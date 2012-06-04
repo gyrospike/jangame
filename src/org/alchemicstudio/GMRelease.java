@@ -2,28 +2,18 @@ package org.alchemicstudio;
 
 public class GMRelease extends GameMode {
 	
-	/** 2d array of the nodes that were constructed in the build game mode */
-	private Node[][] mNodes = null;
+	/** the game grid, huge fat class with too much stuff in it */
+	private Grid mGrid = null;
 
-	public GMRelease() {
-		//create the cart
-		
+	public GMRelease(Grid grid) {
+		mGrid = grid;
 	}
 
 	/**
 	 * update the release game mode
 	 */
 	public void update(float timeDelta) {
-
-	}
-	
-	/**
-	 * load the track data from the grid build game mode
-	 * 
-	 * @param	nodes	the nodes that were created during the build game mode
-	 */
-	public void loadTrack(Node[][] nodes) {
-		mNodes = nodes;
+		mGrid.update(timeDelta);
 	}
 
 	/**
@@ -32,7 +22,7 @@ public class GMRelease extends GameMode {
 	 * @param input
 	 */
 	public void processTouchMoveEvent(InputObject input) {
-
+		mGrid.growTrackSwitchChain(input.x, input.y);
 	}
 
 	/**
@@ -41,7 +31,7 @@ public class GMRelease extends GameMode {
 	 * @param input
 	 */
 	public void processTouchDownEvent(InputObject input) {
-
+		mGrid.startTrackSwitchChain(input.x, input.y);
 	}
 
 	/**
@@ -50,6 +40,6 @@ public class GMRelease extends GameMode {
 	 * @param input
 	 */
 	public void processTouchUpEvent(InputObject input) {
-
+		mGrid.stopTrackSwitchChain();
 	}
 }

@@ -4,9 +4,7 @@ import javax.microedition.khronos.egl.EGLConfig;
 import javax.microedition.khronos.opengles.GL10;
 
 import android.content.Context;
-import android.content.res.AssetManager;
-import android.graphics.Paint;
-import android.graphics.Typeface;
+
 import android.opengl.GLSurfaceView.Renderer;
 import android.util.Log;
 
@@ -15,8 +13,8 @@ public class GameRenderer implements Renderer {
 	private Context mContext;
 	private FixedSizeArray<Sprite> spriteList;
 	private FixedSizeArray<TextBox> textBoxList;
-	private float originX, originY;
-	private float xCamera, yCamera;
+	//private float originX, originY;
+	//private float xCamera, yCamera;
 	private boolean setOrigin = false;
 	private Object mDrawLock;
 	private boolean mDrawQueueChanged;
@@ -24,25 +22,18 @@ public class GameRenderer implements Renderer {
 	private int mWidth;
 
 	private LabelMaker mLabels;
-	private Paint mLabelPaint;
 
 	public GameRenderer(Context context) {
 		mContext = context;
 		mDrawLock = new Object();
 		mDrawQueueChanged = false;
-
-		Typeface myFont = Typeface.createFromAsset(context.getAssets(), "fonts/AGENCYR.TTF");
-
-		mLabelPaint = new Paint();
-		mLabelPaint.setTypeface(myFont);
-		mLabelPaint.setTextSize(24);
-		mLabelPaint.setAntiAlias(true);
-		mLabelPaint.setARGB(0xff, 0x00, 0x00, 0x00);
+		
+		BaseObject.sSystemRegistry.mAssetLibrary.loadGameTextures();
 	}
 
 	public void onSurfaceCreated(GL10 gl, EGLConfig config) {
 		Log.d("DEBUG", "onSurfaceCreated was called");
-		loadTextures(gl, BaseObject.sSystemRegistry.mTextureLibrary);
+		loadTextures(gl, BaseObject.sSystemRegistry.mAssetLibrary);
 
 		gl.glShadeModel(GL10.GL_SMOOTH);
 		gl.glEnable(GL10.GL_TEXTURE_2D);
@@ -59,7 +50,7 @@ public class GameRenderer implements Renderer {
 		if (mLabels != null) {
 			mLabels.shutdown(gl);
 		} else {
-			mLabels = new LabelMaker(256, 64);
+			mLabels = new LabelMaker(256, 256);
 		}
 		mLabels.initialize(gl);
 	}
@@ -154,7 +145,7 @@ public class GameRenderer implements Renderer {
 				for (int h = 0; h < len; h++) {
 					if (objectArray[h] != null) {
 						TextBox currentTextBox = (TextBox) objectArray[h];
-						currentTextBox.index = mLabels.add(gl, currentTextBox.theText, mLabelPaint);
+						currentTextBox.setIndex(mLabels.add(gl, currentTextBox.getText(), currentTextBox.getPaint()));
 					}
 				}
 				mLabels.endAdding(gl);
@@ -162,7 +153,7 @@ public class GameRenderer implements Renderer {
 				for (int g = 0; g < len; g++) {
 					if (objectArray[g] != null) {
 						TextBox currentTextBox = (TextBox) objectArray[g];
-						mLabels.draw(gl, currentTextBox.posX, currentTextBox.posY, currentTextBox.index);
+						mLabels.draw(gl, currentTextBox.getX(), currentTextBox.getY(), currentTextBox.getIndex());
 					}
 				}
 				mLabels.endDrawing(gl);
@@ -172,14 +163,14 @@ public class GameRenderer implements Renderer {
 		}
 	}
 
-	public void loadTextures(GL10 gl, TextureLibrary library) {
+	public void loadTextures(GL10 gl, AssetLibrary library) {
 		if (gl != null) {
 			library.loadAll(mContext, gl);
 		}
 	}
 
-	public void unloadTextures(TextureLibrary library) {
-		library.invalidateAll();
+	public void unloadTextures(AssetLibrary library) {
+		library.invalidateTextures(AssetLibrary.TEXTURE_TYPE_GAME);
 	}
 
 	public synchronized void setDrawQuadQueue(FixedSizeArray<Sprite> sList) {
@@ -204,16 +195,16 @@ public class GameRenderer implements Renderer {
 
 	public void setPosition(float x, float y) {
 		if (!setOrigin) {
-			originX = x;
-			originY = y;
+			//originX = x;
+			//originY = y;
 			setOrigin = true;
 		}
 
-		xCamera += -(originX - x);
-		yCamera += (originY - y);
+		//xCamera += -(originX - x);
+		//yCamera += (originY - y);
 
-		originX = x;
-		originY = y;
+		//originX = x;
+		//originY = y;
 	}
 
 	public synchronized void onPause() {
@@ -221,7 +212,7 @@ public class GameRenderer implements Renderer {
 		// TODO: this is a hack. Probably this renderer
 		// should just use GLSurfaceView's non-continuous render
 		// mode.
-		unloadTextures(BaseObject.sSystemRegistry.mTextureLibrary);
+		unloadTextures(BaseObject.sSystemRegistry.mAssetLibrary);
 		synchronized (mDrawLock) {
 			mDrawQueueChanged = true;
 			mDrawLock.notify();

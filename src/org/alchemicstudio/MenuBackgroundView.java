@@ -18,7 +18,15 @@ public class MenuBackgroundView extends GLSurfaceView {
 		init(context);
 	}
 
+	/**
+	 * create the asset library and create the menu renderer
+	 * 
+	 * @param context
+	 */
 	private void init(Context context) {
+		AssetLibrary assetLibrary = new AssetLibrary();
+		BaseObject.sSystemRegistry.mAssetLibrary = assetLibrary;
+		
 		mOpenGL = new MenuRenderer(context);
 		setRenderer(mOpenGL);
 	}

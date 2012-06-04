@@ -38,9 +38,7 @@ public class MenuRenderer implements Renderer {
 		Log.d("DEBUG", "density: " + metrics.densityDpi);
 		Log.d("DEBUG", "metrics: " + pixToDpiScale);
 		
-		TextureLibrary textureLibrary = new TextureLibrary();
-		textureLibrary.loadGameTextures();
-		BaseObject.sSystemRegistry.mTextureLibrary = textureLibrary;
+		BaseObject.sSystemRegistry.mAssetLibrary.loadMenuTextures();
 		
 		int[] spriteArray = {R.drawable.gold1, R.drawable.gold2, R.drawable.gold3, R.drawable.gold4};
 		roboSprite = new Sprite(spriteArray, 0, 50.0f, 64.0f, 4, 300);
@@ -79,7 +77,7 @@ public class MenuRenderer implements Renderer {
 	}
 
 	public void onSurfaceCreated(GL10 gl, EGLConfig config) {
-		loadTextures(gl, BaseObject.sSystemRegistry.mTextureLibrary);
+		loadTextures(gl, BaseObject.sSystemRegistry.mAssetLibrary);
 		
 		gl.glShadeModel(GL10.GL_SMOOTH);
 		gl.glEnable(GL10.GL_TEXTURE_2D);
@@ -162,18 +160,18 @@ public class MenuRenderer implements Renderer {
 		viewPerspective(gl);
 	}
 	
-	public void loadTextures(GL10 gl, TextureLibrary library) {
+	public void loadTextures(GL10 gl, AssetLibrary library) {
 		if (gl != null) {
 			library.loadAll(mContext, gl);
 		}
 	}
 
-	public void unloadTextures(TextureLibrary library) {
-		library.invalidateAll();
+	public void unloadTextures(AssetLibrary library) {
+		library.invalidateTextures(AssetLibrary.TEXTURE_TYPE_MENU);
 	}
 	
 	public synchronized void onPause() {
 		Log.d("DEBUG", "Menu is now paused");
-		unloadTextures(BaseObject.sSystemRegistry.mTextureLibrary);
+		unloadTextures(BaseObject.sSystemRegistry.mAssetLibrary);
 	}
 }

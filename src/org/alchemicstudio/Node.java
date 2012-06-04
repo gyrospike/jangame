@@ -38,6 +38,9 @@ public class Node extends BaseObject {
 	
 	/** the other nodes that have connections to this node */
 	private NodeConnection[] mNodeConnections;
+	
+	/** in case of multiple possible paths, use this path */
+	private NodeConnection mPreferredConnection = null;
 
 	public Node(int i, int j, Vector2 vec, boolean isStartNode, boolean isEndNode, boolean isFixed, float maxSpeedLimit, float minSpeedLimit, int link, int type) {
 		mI = i;
@@ -118,6 +121,9 @@ public class Node extends BaseObject {
 				break;
 			}
 		}
+		if(mPreferredConnection.getI() == i && mPreferredConnection.getJ() == j) {
+			mPreferredConnection = null;
+		}
 	}
 
 	/**
@@ -130,6 +136,7 @@ public class Node extends BaseObject {
 				mNumCurrentConnections--;
 			}	
 		}
+		mPreferredConnection = null;
 	}
 	
 	/**
@@ -179,6 +186,34 @@ public class Node extends BaseObject {
 			}
 		}
 		return nonEmptyConnections;
+	}
+	
+	/**
+	 * does this node have an existing connection to the node connection passed in
+	 * 
+	 * @param node
+	 * @return
+	 */
+	public boolean hasConnectionTo(NodeConnection node) {
+		boolean result = false;
+		NodeConnection[] currentNodes = getConnections();
+		for(int i = 0; i < currentNodes.length; i++) {
+			if(currentNodes[i].getI() == node.getI() && currentNodes[i].getJ() == node.getJ()) {
+				result = true;
+				break;
+			}
+		}
+		return result;
+	}
+	
+	/**
+	 * when this node has multiple possible connections, it will prefer to the one passed in now
+	 * 
+	 * @param node
+	 */
+	public void setPreferredConnection(NodeConnection node) {
+		mPreferredConnection = node;
+		Log.d("DEBUG", "Node: (" + getI() + ", " + getJ() + ") now prefers to connect to node: (" + mPreferredConnection.getI() + ", " + mPreferredConnection.getJ() + ")");
 	}
 
 	// TODO - remove

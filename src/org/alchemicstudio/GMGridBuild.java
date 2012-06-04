@@ -3,21 +3,10 @@ package org.alchemicstudio;
 public class GMGridBuild extends GameMode {
 
 	/** the game grid, huge fat class with too much stuff in it */
-	private Grid mGrid;
+	private Grid mGrid = null;
 	
-	public GMGridBuild() {
-		
-	}
-	
-	/**
-	 * initialize the grid object within the passed in parameters
-	 * 
-	 * @param dataSet		contains preset obstacles built into the grid
-	 * @param screenWidth	need this value for spacing
-	 * @param screenHeight	need this value for spacing
-	 */
-	public void loadGrid(ParsedDataSet dataSet, float screenWidth, float screenHeight) {
-		mGrid = new Grid(dataSet, screenWidth, screenHeight);
+	public GMGridBuild(Grid grid) {
+		mGrid = grid;
 	}
 	
 	/**

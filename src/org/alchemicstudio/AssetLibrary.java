@@ -1,6 +1,7 @@
 package org.alchemicstudio;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.HashMap;
 
 import javax.microedition.khronos.opengles.GL10;
 import javax.microedition.khronos.opengles.GL11;
@@ -9,33 +10,52 @@ import javax.microedition.khronos.opengles.GL11Ext;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Typeface;
 import android.opengl.GLU;
 import android.opengl.GLUtils;
 import android.util.Log;
 
 
 /**
- * The Texture Library manages all textures in the game.  Textures are pooled and handed out to
+ * original comment referred to a class TextureLibrary which still exists in part below:
+ * 
+ * "The Texture Library manages all textures in the game.  Textures are pooled and handed out to
  * requesting parties via allocateTexture().  However, the texture data itself is not immediately
  * loaded at that time; it may have already been loaded or it may be loaded in the future via
  * a call to loadTexture() or loadAllTextures().  This allows Texture objects to be dispersed to
- * various game systems and while the texture data itself is streamed in or loaded as necessary.
+ * various game systems and while the texture data itself is streamed in or loaded as necessary."
+ * 
  */
-public class TextureLibrary extends BaseObject {
-    // Textures are stored in a simple hash.  This class implements its own array-based hash rather
-    // than using HashMap for performance.
+public class AssetLibrary extends BaseObject {
+
+	/** default size of the texture hash array */
+	public static final int DEFAULT_SIZE = 512;
 	
-	static final String TEXTURE_GREY_NODE = "";
+	/** identifier for all textures, used when loading or unloading only a subset of the texture hash */
+	public static final int TEXTURE_TYPE_ALL = -1;
 	
+	/** identifier for menu textures, used when loading or unloading only a subset of the texture hash */
+	public static final int TEXTURE_TYPE_MENU = 0;
 	
-	
-    Texture[] mTextureHash;
-    int[] mTextureNameWorkspace;
-    int[] mCropWorkspace;
-    static final int DEFAULT_SIZE = 512;
-    static BitmapFactory.Options sBitmapOptions  = new BitmapFactory.Options();
+	/** identifier for game textures, used when loading or unloading only a subset of the texture hash */
+	public static final int TEXTURE_TYPE_GAME = 1;
     
-    public TextureLibrary() {
+	private static BitmapFactory.Options sBitmapOptions  = new BitmapFactory.Options();
+	
+    private int[] mTextureNameWorkspace;
+    
+    private int[] mCropWorkspace;
+    
+    /** 
+     * array of texture objects, original comment: "Textures are stored in a simple hash.  This class 
+     * implements its own array-based hash rather than using HashMap for performance" 
+     */
+    public Texture[] mTextureHash;
+    
+    /** font name hash, fonts can be accessed from anywhere in the game through the object registry */
+    private HashMap<String, Typeface> mFontHashMap;
+    
+    public AssetLibrary() {
         super();
         mTextureHash = new Texture[DEFAULT_SIZE];
         for (int x = 0; x < mTextureHash.length; x++) {
@@ -44,23 +64,25 @@ public class TextureLibrary extends BaseObject {
 
         mTextureNameWorkspace = new int[1];
         mCropWorkspace = new int[4];
-                
+        
         sBitmapOptions.inPreferredConfig = Bitmap.Config.RGB_565;
     }
     
+    public void loadFonts(Context context) {
+    	mFontHashMap = new HashMap<String, Typeface>();
+    	mFontHashMap.put("agency", Typeface.createFromAsset(context.getAssets(), "fonts/AGENCYR.TTF"));
+    }
+    
+    public Typeface getTypeFace(String tName) {
+    	return mFontHashMap.get(tName);
+    }
+    
     /**
-     * loads up all the textures in the game we will be using and assigns them by name to
-     * a hash map so they can referenced at any time in the game
+     * allocate all the textures used in the menu
      * 
      */
-    public void loadGameTextures() {
-    	int[] masterTextureArray = {
-    			R.drawable.grey_gate_node,
-    			R.drawable.yellow_gate_node,
-    			R.drawable.green_gate_node,
-    			R.drawable.grey_node,
-    			R.drawable.yellow_node,
-    			R.drawable.green_node,
+    public void loadMenuTextures() {
+    	int[] textureArray = {
     			R.drawable.gold1,
     			R.drawable.gold2,
     			R.drawable.gold3,
@@ -72,14 +94,33 @@ public class TextureLibrary extends BaseObject {
     			R.drawable.yellow_gear,
     			R.drawable.pink_gear,
     			R.drawable.crane,
+    	};
+    	
+    	for(int i = 0; i < textureArray.length; i++) {
+    		allocateTexture(textureArray[i], TEXTURE_TYPE_MENU);
+    	}
+    }
+    
+    /**
+     * allocate all the textures used in the game
+     * 
+     */
+    public void loadGameTextures() {
+    	int[] textureArray = {
+    			R.drawable.grey_gate_node,
+    			R.drawable.yellow_gate_node,
+    			R.drawable.green_gate_node,
+    			R.drawable.grey_node,
+    			R.drawable.yellow_node,
+    			R.drawable.green_node,
     			R.drawable.white_box,
     			R.drawable.wire_segment,
     			R.drawable.spark,
     			R.drawable.cart
     	};
     	
-    	for(int i = 0; i < masterTextureArray.length; i++) {
-    		allocateTexture(masterTextureArray[i]);
+    	for(int i = 0; i < textureArray.length; i++) {
+    		allocateTexture(textureArray[i], TEXTURE_TYPE_GAME);
     	}
     }
 
@@ -89,21 +130,23 @@ public class TextureLibrary extends BaseObject {
      * @param resourceID
      * @return
      */
-    public Texture allocateTexture(int resourceID) {
+    public Texture allocateTexture(int resourceID, int type) {
         Texture texture = getTextureByResource(resourceID);
         if (texture == null) {
-            texture = addTexture(resourceID, -1, 0, 0);
+            texture = addTexture(resourceID, -1, 0, 0, type);
         }
 
         return texture;
     }
 
     /** Loads a single texture into memory.  Does nothing if the texture is already loaded. */
+    /*
     public Texture loadTexture(Context context, GL10 gl, int resourceID) {
         Texture texture = allocateTexture(resourceID);
         texture = loadBitmap(context, gl, texture);
         return texture;
     }
+    */
 
     /** Loads all unloaded textures into OpenGL memory.  Already-loaded textures are ignored. */
     public void loadAll(Context context, GL10 gl) {
@@ -134,9 +177,9 @@ public class TextureLibrary extends BaseObject {
     }
     
     /** Marks all textures as unloaded */
-    public void invalidateAll() {
+    public void invalidateTextures(int type) {
         for (int x = 0; x < mTextureHash.length; x++) {
-            if (mTextureHash[x].resource != -1 && mTextureHash[x].loaded) {
+            if (mTextureHash[x].resource != -1 && mTextureHash[x].loaded && (mTextureHash[x].type == type || type == TEXTURE_TYPE_ALL)) {
                 mTextureHash[x].name = -1;
                 mTextureHash[x].loaded = false;
             }
@@ -285,7 +328,7 @@ public class TextureLibrary extends BaseObject {
     }
 
     /** Inserts a texture into the hash */
-    protected Texture addTexture(int id, int name, int width, int height) {
+    protected Texture addTexture(int id, int name, int width, int height, int type) {
         int index = findFirstKey(getHashIndex(id), -1);
         Texture texture = null;
         assert index != -1;
@@ -295,6 +338,7 @@ public class TextureLibrary extends BaseObject {
             mTextureHash[index].name = name;
             mTextureHash[index].width = width;
             mTextureHash[index].height = height;
+            mTextureHash[index].type = type;
             texture = mTextureHash[index];
         }
 

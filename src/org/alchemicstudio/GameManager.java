@@ -26,6 +26,9 @@ public class GameManager {
 	
 	/** current active game mode */
 	private int mActiveGameMode;
+	
+	/** debugging window shows debug text */
+	private DebugWindow mDWindow;
 
 	/**
 	 * handles the initialization of the game's resource loading and the game's
@@ -35,11 +38,6 @@ public class GameManager {
 	public GameManager() {
 		// what was this for?
 		//super();
-		
-		mGameModeArray[GAME_MODE_BUILD] = new GMGridBuild();
-		mGameModeArray[GAME_MODE_RELEASE] = new GMRelease();
-		
-		mActiveGameMode = GAME_MODE_BUILD;
 	}
 	
 	/**
@@ -50,7 +48,15 @@ public class GameManager {
 	 * @param screenHeight
 	 */
 	public void initGame(ParsedDataSet dataSet, float screenWidth, float screenHeight, Button button1) {
-		((GMGridBuild) mGameModeArray[GAME_MODE_BUILD]).loadGrid(dataSet, screenWidth, screenHeight);
+		Grid gameGrid = new Grid(dataSet, screenWidth, screenHeight);
+		
+		mGameModeArray[GAME_MODE_BUILD] = new GMGridBuild(gameGrid);
+		mGameModeArray[GAME_MODE_RELEASE] = new GMRelease(gameGrid);
+		
+		mActiveGameMode = GAME_MODE_BUILD;
+		
+		mDWindow = new DebugWindow();
+		mDWindow.updateTextBlock("Status", "In Progress");
 		
 		button1.setOnClickListener(new OnClickListener() {
 			public void onClick(View v) {
@@ -68,6 +74,7 @@ public class GameManager {
 	public void update(float timeDelta) {
 		processInput();
 		mGameModeArray[mActiveGameMode].update(timeDelta);
+		mDWindow.update(timeDelta);
 	}
 	
 	/**
@@ -123,14 +130,15 @@ public class GameManager {
 	 */
 	private void toggleGameModes() {
 		Log.d("DEBUG", "toggle game mode");
-		/*
+		String updateText = "";
 		if(mActiveGameMode == GAME_MODE_BUILD) {
 			mActiveGameMode = GAME_MODE_RELEASE;
-			((GMRelease) mGameModeArray[GAME_MODE_RELEASE]).loadTrack(((GMGridBuild) mGameModeArray[GAME_MODE_BUILD]).getTrack());
+			updateText = "Release";
 		} else {
 			mActiveGameMode = GAME_MODE_BUILD;
+			updateText = "Build";
 		}
-		*/
+		mDWindow.updateTextBlock("Game Mode", updateText);
 	}
 
 }
