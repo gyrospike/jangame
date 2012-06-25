@@ -25,7 +25,7 @@ public class Menu extends Activity {
 	private static final int LEVEL_ROWS = 3;
 	
 	/** The surface view that creates the game renderer */
-	private MenuBackgroundView mGLView;
+	private MenuSurfaceView mGLView;
 	
 	/** the thread that updates the ui elements and other menu logic separate from the drawing loop */
 	// TODO - this is almost exactly the same as the GameThread, soon to be GameRunnable, generalize
@@ -55,7 +55,7 @@ public class Menu extends Activity {
 		
 		createUIElements();
 		
-		mGLView = (MenuBackgroundView) findViewById(R.id.MenuBackgroundView01);
+		mGLView = (MenuSurfaceView) findViewById(R.id.MenuSurfaceView01);
 		
 		mRunnable = new MenuRunnable();
 		mRunnable.setGameManager(new MenuManager());

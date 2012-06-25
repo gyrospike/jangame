@@ -8,11 +8,11 @@
         android:layout_width="fill_parent"
         android:layout_height="fill_parent" >
 
-        <org.alchemicstudio.MenuBackgroundView
-            android:id="@+id/MenuBackgroundView01"
+        <org.alchemicstudio.MenuSurfaceView
+            android:id="@+id/MenuSurfaceView01"
             android:layout_width="fill_parent"
             android:layout_height="fill_parent" >
-        </org.alchemicstudio.MenuBackgroundView>
+        </org.alchemicstudio.MenuSurfaceView>
     </FrameLayout>
 
     <HorizontalScrollView

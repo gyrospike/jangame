@@ -10,13 +10,13 @@ import android.widget.Button;
 public class Game {
 	
 	/** timer system that takes in input, updates game logic, then updates drawable content */
-	private GameThread mGameThread;
+	private GameRunnable mGameThread;
 	
 	/** thread that takes in the game thread as argument */
 	private Thread mThread;
 	
 	/** open gl surface view - don't know too much about this */
-	private OGLSurfaceView mSurfaceView;
+	private GameSurfaceView mSurfaceView;
 	
 	/** game logic manager */
 	private GameManager mGameManager;
@@ -80,7 +80,7 @@ public class Game {
 			sp.parse(context.getResources().openRawResource(mapNumber), myXMLHandler);
 			parsedMapData = myXMLHandler.getParsedData();
 			
-			mGameThread = new GameThread();
+			mGameThread = new GameRunnable();
 			mGameThread.setGameRenderer(mSurfaceView.getGameRenderer());
 			mGameThread.setGameManager(mGameManager);
 			
@@ -145,7 +145,7 @@ public class Game {
 	}
 
 	/** setter */
-	public void setSurfaceView(OGLSurfaceView view) {
+	public void setSurfaceView(GameSurfaceView view) {
 		mSurfaceView = view;
 	}
 	

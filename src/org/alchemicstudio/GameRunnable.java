@@ -3,7 +3,7 @@ package org.alchemicstudio;
 import android.os.SystemClock;
 import android.util.Log;
 
-class GameThread implements Runnable {
+class GameRunnable implements Runnable {
 
 	/** minimum time that must elapse before the game can be updated again */
 	private static final int MIN_TIME_DELTA_MS = 16;
@@ -30,7 +30,7 @@ class GameThread implements Runnable {
 	 * controls the main update loop, has hooks into the game manager, which updates game logic, and
 	 * the game renderer, which draws the game
 	 */
-	public GameThread() {
+	public GameRunnable() {
 		mPauseLock = new Object();
 		
 		mFinished = false;

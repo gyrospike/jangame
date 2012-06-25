@@ -21,7 +21,7 @@ public class BaseActivity extends Activity {
 	private ArrayBlockingQueue<InputObject> mInputObjectPool;
 	
 	/** The surface view that creates the game renderer */
-	private OGLSurfaceView mGLView;
+	private GameSurfaceView mGLView;
 	
 	/** the game, holds the logic and update loop, not the drawing */
 	private Game mGame;
@@ -39,12 +39,12 @@ public class BaseActivity extends Activity {
 		Log.d("DEBUG", "screen dimensions in dpi: " + metrics.widthPixels + " x " + metrics.heightPixels);
 		
 		setContentView(R.layout.game);
-		mGLView = (OGLSurfaceView)findViewById(R.id.OGLSurfaceView01);
+		mGLView = (GameSurfaceView)findViewById(R.id.GameSurfaceView01);
 		
 		Button button1 = (Button) findViewById(R.id.button1);
 
 		mGame = new Game(metrics.widthPixels, metrics.heightPixels);
-		mGame.setSurfaceView((OGLSurfaceView) mGLView);
+		mGame.setSurfaceView((GameSurfaceView) mGLView);
 		mGame.bootstrap(this, getIntent().getExtras(), button1);
 
 		createInputObjectPool();

@@ -4,7 +4,7 @@ import android.content.Context;
 import android.opengl.GLSurfaceView;
 import android.util.AttributeSet;
 
-public class OGLSurfaceView extends GLSurfaceView {
+public class GameSurfaceView extends GLSurfaceView {
 
 	/** the game renderer object */
 	private GameRenderer mOpenGL;
@@ -14,7 +14,7 @@ public class OGLSurfaceView extends GLSurfaceView {
 	 * 
 	 * @param context
 	 */
-	public OGLSurfaceView(Context context) {
+	public GameSurfaceView(Context context) {
 		super(context);
 		init(context);
 	}
@@ -25,7 +25,7 @@ public class OGLSurfaceView extends GLSurfaceView {
 	 * @param context
 	 * @param attrs		this param is required if you are creating the view via a layout xml definition
 	 */
-	public OGLSurfaceView(Context context, AttributeSet attrs) {
+	public GameSurfaceView(Context context, AttributeSet attrs) {
 		super(context, attrs);
 		init(context);
 	}
