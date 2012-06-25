@@ -1,26 +1,12 @@
 <?xml version="1.0" ?>
-
-<!-- 
-The game only requires you to define a node if it will have non-default properties, all nodes required to make a rectangle
-of width and height specified will be created
- -->
- 
-<MAP NUMBER="1" WIDTH="5" HEIGHT="5" SPACING="60">
-	<NODE I="0" J="1">
-  		<STATS TYPE="1" LINK="0" MIN_SPEED="0" MAX_SPEED="100" />
-  		<PRETARGET INDEX="18" FIXED="true" START="true" />
+<MAP NUMBER="2" WIDTH="4" HEIGHT="6" SPACING="70">
+	<NODE I="0" J="0">
+  		<STATS TYPE="1" LINK="0" MIN_SPEED="0" MAX_SPEED="100" SOURCE="true"/>
   	</NODE>
-  	<NODE I="4" J="4">
-  		<STATS TYPE="1" LINK="0" MIN_SPEED="0" MAX_SPEED="100" />
-  		<PRETARGET INDEX="10" FIXED="true" END="true" />
+  	<NODE I="2" J="5">
+  		<STATS TYPE="2" LINK="0" MIN_SPEED="10" MAX_SPEED="50" SOURCE="false"/>
   	</NODE>
-  	<NODE I="4" J="3">
-  		<STATS TYPE="2" LINK="0" MIN_SPEED="50" MAX_SPEED="100" />
-  	</NODE>
-  	<NODE I="3" J="4">
-  		<STATS TYPE="2" LINK="0" MIN_SPEED="50" MAX_SPEED="100" />
-  	</NODE>
-  	<NODE I="1" J="4">
-  		<STATS TYPE="2" LINK="0" MIN_SPEED="50" MAX_SPEED="100" />
+  	<NODE I="3" J="5">
+  		<STATS TYPE="1" LINK="0" MIN_SPEED="0" MAX_SPEED="100" SOURCE="true"/>
   	</NODE>
 </MAP>

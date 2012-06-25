@@ -49,9 +49,6 @@ public class Game {
 	 * @param extras	game specific info, like which level to load
 	 */
 	public void bootstrap(Context context, Bundle extras, Button button1) {
-		RenderSystem renderer = new RenderSystem();
-		BaseObject.sSystemRegistry.mRenderSystem = renderer;
-		
 		BaseObject.sSystemRegistry.mAssetLibrary.loadFonts(context);
 
 		ParsedDataSet parsedMapData = null;
@@ -77,7 +74,7 @@ public class Game {
 			
 			int mapNumber = 0;
 			if (extras != null) {
-				mapNumber = extras.getInt("mapNumber", R.raw.map01);
+				mapNumber = extras.getInt("mapNumber", R.raw.map00);
 			}
 			
 			sp.parse(context.getResources().openRawResource(mapNumber), myXMLHandler);
@@ -150,11 +147,6 @@ public class Game {
 	/** setter */
 	public void setSurfaceView(OGLSurfaceView view) {
 		mSurfaceView = view;
-	}
-
-	/** getter */
-	public GameThread getGameThread() {
-		return mGameThread;
 	}
 	
 	/** getter */

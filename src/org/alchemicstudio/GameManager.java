@@ -15,6 +15,12 @@ public class GameManager {
 	/** game mode constant for release */
 	private final static int GAME_MODE_RELEASE = 1;
 	
+	/** debug text constant representing the release game mode */
+	private final static String DEBUG_GAME_MODE_RELEASE = "Release";
+	
+	/** debug text constant representing the build game mode */
+	private final static String DEBUG_GAME_MODE_BUILD = "Build";
+	
 	/** array of game modes */
 	private GameMode[] mGameModeArray = new GameMode[2];
 	
@@ -57,6 +63,7 @@ public class GameManager {
 		
 		mDWindow = new DebugWindow();
 		mDWindow.updateTextBlock("Status", "In Progress");
+		mDWindow.updateTextBlock("Game Mode", DEBUG_GAME_MODE_BUILD);
 		
 		button1.setOnClickListener(new OnClickListener() {
 			public void onClick(View v) {
@@ -133,10 +140,10 @@ public class GameManager {
 		String updateText = "";
 		if(mActiveGameMode == GAME_MODE_BUILD) {
 			mActiveGameMode = GAME_MODE_RELEASE;
-			updateText = "Release";
+			updateText = DEBUG_GAME_MODE_RELEASE;
 		} else {
 			mActiveGameMode = GAME_MODE_BUILD;
-			updateText = "Build";
+			updateText = DEBUG_GAME_MODE_BUILD;
 		}
 		mDWindow.updateTextBlock("Game Mode", updateText);
 	}

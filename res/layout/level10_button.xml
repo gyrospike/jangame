@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layer-list xmlns:android="http://schemas.android.com/apk/res/android">
 
-	<item android:drawable="@layout/level24_selector" />
+	<item android:drawable="@layout/level10_selector" />
 	<item android:id="@+id/red_badge_id" android:drawable="@drawable/no_badge"/>
 	<item android:id="@+id/blue_badge_id" android:drawable="@drawable/no_badge"/>
 

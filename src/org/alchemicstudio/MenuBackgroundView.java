@@ -6,7 +6,7 @@ import android.util.AttributeSet;
 
 public class MenuBackgroundView extends GLSurfaceView {
 
-	private MenuRenderer mOpenGL;
+	private GameRenderer mOpenGL;
 
 	public MenuBackgroundView(Context context) {
 		super(context);
@@ -24,10 +24,23 @@ public class MenuBackgroundView extends GLSurfaceView {
 	 * @param context
 	 */
 	private void init(Context context) {
-		AssetLibrary assetLibrary = new AssetLibrary();
-		BaseObject.sSystemRegistry.mAssetLibrary = assetLibrary;
-		
-		mOpenGL = new MenuRenderer(context);
+		BaseObject.sSystemRegistry.mAssetLibrary.loadMenuTextures();
+		mOpenGL = new GameRenderer(context, AssetLibrary.TEXTURE_TYPE_MENU);
 		setRenderer(mOpenGL);
 	}
+	
+	@Override
+	public void onPause() {
+		super.onPause();
+		mOpenGL.pause();
+		BaseObject.sSystemRegistry.mAssetLibrary.prepForReload(AssetLibrary.TEXTURE_TYPE_MENU);
+	}
+	
+	/**
+	 * @return	game renderer
+	 */
+	public GameRenderer getRenderer() {
+		return mOpenGL;
+	}
+	
 }

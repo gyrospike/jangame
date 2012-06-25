@@ -3,6 +3,7 @@ package org.alchemicstudio;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
+import java.util.Map.Entry;
 
 public class DebugWindow extends BaseObject {
 
@@ -24,9 +25,9 @@ public class DebugWindow extends BaseObject {
 	 */
 	private String formatDebugText() {
 		String result = "";
-		Iterator it = mDebugTextMap.entrySet().iterator();
+		Iterator<Entry<String, String>> it = mDebugTextMap.entrySet().iterator();
 		while(it.hasNext()) {
-			Map.Entry pairs = (Map.Entry)it.next();
+			Map.Entry<String, String> pairs = (Map.Entry<String, String>)it.next();
 	        result += pairs.getKey() + " : " + pairs.getValue() + "\n";
 		}
 		return result;
@@ -36,7 +37,7 @@ public class DebugWindow extends BaseObject {
 	 * the debug text is stored in hash map, call this function to add
 	 * new debug output
 	 * 
-	 * @param key		the key of the hashmap
+	 * @param key		the key of the hash map
 	 * @param value		the value for the key
 	 */
 	public void updateTextBlock(String key, String value) {

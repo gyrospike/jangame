@@ -4,8 +4,8 @@ import java.io.InputStream;
 import java.util.HashMap;
 
 import javax.microedition.khronos.opengles.GL10;
-import javax.microedition.khronos.opengles.GL11;
-import javax.microedition.khronos.opengles.GL11Ext;
+//import javax.microedition.khronos.opengles.GL11;
+//import javax.microedition.khronos.opengles.GL11Ext;
 
 import android.content.Context;
 import android.graphics.Bitmap;
@@ -44,7 +44,7 @@ public class AssetLibrary extends BaseObject {
 	
     private int[] mTextureNameWorkspace;
     
-    private int[] mCropWorkspace;
+    //private int[] mCropWorkspace;
     
     /** 
      * array of texture objects, original comment: "Textures are stored in a simple hash.  This class 
@@ -63,7 +63,7 @@ public class AssetLibrary extends BaseObject {
         }
 
         mTextureNameWorkspace = new int[1];
-        mCropWorkspace = new int[4];
+        //mCropWorkspace = new int[4];
         
         sBitmapOptions.inPreferredConfig = Bitmap.Config.RGB_565;
     }
@@ -149,9 +149,9 @@ public class AssetLibrary extends BaseObject {
     */
 
     /** Loads all unloaded textures into OpenGL memory.  Already-loaded textures are ignored. */
-    public void loadAll(Context context, GL10 gl) {
+    public void loadAll(int textureType, Context context, GL10 gl) {
         for (int x = 0; x < mTextureHash.length; x++) {
-        	if (mTextureHash[x].resource != -1 && mTextureHash[x].loaded == false) {
+        	if (mTextureHash[x].resource != -1 && mTextureHash[x].loaded == false && mTextureHash[x].type == textureType) {
                 loadBitmap(context, gl, mTextureHash[x]);
             }
         }
@@ -176,8 +176,12 @@ public class AssetLibrary extends BaseObject {
         }
     }
     
-    /** Marks all textures as unloaded */
-    public void invalidateTextures(int type) {
+    /**
+     * Marks all textures as unloaded so that the loader will reload them in loadAll
+     * 
+     * @param type	type of texture to prep for reloading
+     */
+    public void prepForReload(int type) {
         for (int x = 0; x < mTextureHash.length; x++) {
             if (mTextureHash[x].resource != -1 && mTextureHash[x].loaded && (mTextureHash[x].type == type || type == TEXTURE_TYPE_ALL)) {
                 mTextureHash[x].name = -1;

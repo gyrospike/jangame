@@ -37,7 +37,7 @@ public class Spark extends BaseObject {
 
 	public Spark() {
 		int[] textureArray = {R.drawable.spark};
-		mSprite = new Sprite(textureArray, 2, 32.0f, 32.0f, 1, 0);
+		mSprite = new Sprite(textureArray, 2, 32.0f, 32.0f);
 		
 		explode = false;
 		active = false;

@@ -6,7 +6,7 @@ import android.util.AttributeSet;
 
 public class OGLSurfaceView extends GLSurfaceView {
 
-	/** the gaem renderer object */
+	/** the game renderer object */
 	private GameRenderer mOpenGL;
 	
 	/**
@@ -36,8 +36,16 @@ public class OGLSurfaceView extends GLSurfaceView {
 	 * @param context
 	 */
 	private void init(Context context) {
-		mOpenGL = new GameRenderer(context);
+		BaseObject.sSystemRegistry.mAssetLibrary.loadGameTextures();
+		mOpenGL = new GameRenderer(context, AssetLibrary.TEXTURE_TYPE_GAME);
 		setRenderer(mOpenGL);
+	}
+	
+	@Override
+	public void onPause() {
+		super.onPause();
+		mOpenGL.pause();
+		BaseObject.sSystemRegistry.mAssetLibrary.prepForReload(AssetLibrary.TEXTURE_TYPE_GAME);
 	}
 	
 	/**

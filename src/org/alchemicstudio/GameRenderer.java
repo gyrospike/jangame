@@ -10,30 +10,46 @@ import android.util.Log;
 
 public class GameRenderer implements Renderer {
 
+	/** current context used for loading textures */
 	private Context mContext;
+	
+	/** list of sprites to be drawn */
 	private FixedSizeArray<Sprite> spriteList;
+	
+	/** list of the text boxes to be drawn */
 	private FixedSizeArray<TextBox> textBoxList;
-	//private float originX, originY;
-	//private float xCamera, yCamera;
-	private boolean setOrigin = false;
+	
+	/** lock object - TODO - study this more */
 	private Object mDrawLock;
+	
+	/** has the draw queue been updated? */
 	private boolean mDrawQueueChanged;
+	
+	/** height of the surface */
 	private int mHeight;
+	
+	/** width of the surface */
 	private int mWidth;
 
+	/** handles open GL implementation of text boxes, polys with text textures */
 	private LabelMaker mLabels;
+	
+	/** 
+	 * the textures types that are being used by this game renderer, different
+	 *	types means fewer textures in memory - TODO - might not need this concept
+	 */
+	private int mTextureTypes;
 
-	public GameRenderer(Context context) {
+	public GameRenderer(Context context, int textureTypes) {
 		mContext = context;
 		mDrawLock = new Object();
 		mDrawQueueChanged = false;
-		
-		BaseObject.sSystemRegistry.mAssetLibrary.loadGameTextures();
+		mTextureTypes = textureTypes;
 	}
 
 	public void onSurfaceCreated(GL10 gl, EGLConfig config) {
 		Log.d("DEBUG", "onSurfaceCreated was called");
-		loadTextures(gl, BaseObject.sSystemRegistry.mAssetLibrary);
+		loadTextures(gl);
 
 		gl.glShadeModel(GL10.GL_SMOOTH);
 		gl.glEnable(GL10.GL_TEXTURE_2D);
@@ -163,14 +179,10 @@ public class GameRenderer implements Renderer {
 		}
 	}
 
-	public void loadTextures(GL10 gl, AssetLibrary library) {
+	public void loadTextures(GL10 gl) {
 		if (gl != null) {
-			library.loadAll(mContext, gl);
+			BaseObject.sSystemRegistry.mAssetLibrary.loadAll(mTextureTypes, mContext, gl);
 		}
-	}
-
-	public void unloadTextures(AssetLibrary library) {
-		library.invalidateTextures(AssetLibrary.TEXTURE_TYPE_GAME);
 	}
 
 	public synchronized void setDrawQuadQueue(FixedSizeArray<Sprite> sList) {
@@ -189,30 +201,11 @@ public class GameRenderer implements Renderer {
 		}
 	}
 
-	public void resetPosition() {
-		setOrigin = false;
-	}
-
-	public void setPosition(float x, float y) {
-		if (!setOrigin) {
-			//originX = x;
-			//originY = y;
-			setOrigin = true;
-		}
-
-		//xCamera += -(originX - x);
-		//yCamera += (originY - y);
-
-		//originX = x;
-		//originY = y;
-	}
-
-	public synchronized void onPause() {
+	public synchronized void pause() {
 		// Stop waiting to avoid deadlock.
 		// TODO: this is a hack. Probably this renderer
 		// should just use GLSurfaceView's non-continuous render
 		// mode.
-		unloadTextures(BaseObject.sSystemRegistry.mAssetLibrary);
 		synchronized (mDrawLock) {
 			mDrawQueueChanged = true;
 			mDrawLock.notify();

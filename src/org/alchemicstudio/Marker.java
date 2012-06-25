@@ -6,7 +6,7 @@ public class Marker extends BaseObject {
 	
 	public Marker(float x, float y) {
 		int[] textureArray = {R.drawable.white_box};
-		mSprite = new Sprite(textureArray, 0, 4.0f, 4.0f, 1, 0);
+		mSprite = new Sprite(textureArray, 0, 4.0f, 4.0f);
 		mSprite.setPosition(x, y);
 	}
 	

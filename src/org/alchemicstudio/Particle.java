@@ -23,7 +23,7 @@ public class Particle extends BaseObject {
 
 	public Particle() {
 		int[] textureArray = {R.drawable.white_box};
-		mSprite = new Sprite(textureArray, 0, 4, 4, 1, 0);
+		mSprite = new Sprite(textureArray, 0, 4, 4);
 	}
 
 	public void createParticle(int x, int y) {

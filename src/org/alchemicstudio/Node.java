@@ -61,21 +61,20 @@ public class Node extends BaseObject {
 
 		if(this.type==2) {
 			int[] spriteArray = {R.drawable.grey_gate_node, R.drawable.yellow_gate_node, R.drawable.green_gate_node};
-			mSprite = new Sprite(spriteArray, 1, 32.0f, 32.0f, 3, 0);
+			mSprite = new Sprite(spriteArray, 1, 32.0f, 32.0f);
 		} else {
 			int[] spriteArray = {R.drawable.grey_node, R.drawable.yellow_node, R.drawable.green_node};
-			mSprite = new Sprite(spriteArray, 1, 32.0f, 32.0f, 3, 0);
+			mSprite = new Sprite(spriteArray, 1, 32.0f, 32.0f);
 		}
 		
-		mSprite.cameraRelative = false;
 		mSprite.setPosition(vec.x, vec.y);
-		mSprite.currentTextureIndex = 0;
+		mSprite.setTextureIndex(0);
 		
 		
 		if(isStartNode || isEndNode) {
 			mMaxConnections = CONNECTION_LIMIT_TERMINAL;
 			mTrackIdArray = new int[CONNECTION_LIMIT_TERMINAL];
-			mSprite.currentTextureIndex = 2;
+			mSprite.setTextureIndex(2);
 		} else {
 			mMaxConnections = CONNECTION_LIMIT_DEFAULT;
 			mTrackIdArray = new int[CONNECTION_LIMIT_DEFAULT];
@@ -121,7 +120,7 @@ public class Node extends BaseObject {
 				break;
 			}
 		}
-		if(mPreferredConnection.getI() == i && mPreferredConnection.getJ() == j) {
+		if(mPreferredConnection != null && mPreferredConnection.getI() == i && mPreferredConnection.getJ() == j) {
 			mPreferredConnection = null;
 		}
 	}
@@ -218,7 +217,7 @@ public class Node extends BaseObject {
 
 	// TODO - remove
 	public void removePower() {
-		mSprite.currentTextureIndex = 0;
+		mSprite.setTextureIndex(0);
 	}
 
 	@Override

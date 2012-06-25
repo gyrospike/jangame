@@ -55,11 +55,6 @@ public class BaseActivity extends Activity {
 		super.onPause();
 		mGame.pause();
 		mGLView.onPause();
-		/**
-		 * TODO - some sort of bug exits here where if you switch between activities too fast
-		 * the game crashes
-		 */
-		mGLView.getGameRenderer().onPause();
 		Log.d("DEBUG", "Game paused");
 	}
 

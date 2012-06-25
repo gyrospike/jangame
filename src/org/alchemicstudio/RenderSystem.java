@@ -13,8 +13,8 @@ public class RenderSystem extends BaseObject {
 	private final static int MAX_DRAWABLE_ELEMENTS = 400;
 	
 	private PriorityComparator priorityComparator = new PriorityComparator();
-	private FixedSizeArray<Sprite> spriteList[] = new FixedSizeArray[DRAW_QUEUE_COUNT];
-	private FixedSizeArray<TextBox> textBoxList[] = new FixedSizeArray[DRAW_QUEUE_COUNT];
+	private FixedSizeArray<Sprite>[] spriteList = new FixedSizeArray[DRAW_QUEUE_COUNT];
+	private FixedSizeArray<TextBox>[] textBoxList = new FixedSizeArray[DRAW_QUEUE_COUNT];
 	private int drawBufferIndex;
 	private int writeBufferIndex;
 
@@ -34,7 +34,6 @@ public class RenderSystem extends BaseObject {
 			textBoxList[writeBufferIndex].add(tBox);
 		}
 	}
-
 
 	public void scheduleForDraw(Sprite sprite) {
 		if (sprite != null) {
@@ -74,7 +73,6 @@ public class RenderSystem extends BaseObject {
 		}
 	}
 	
-	/* Empties all draw queues and disconnects the game thread from the renderer. */
     public void emptyDrawQueues(GameRenderer renderer) {
         renderer.setDrawQuadQueue(null); 
         for (int x = 0; x < DRAW_QUEUE_COUNT; x++) {

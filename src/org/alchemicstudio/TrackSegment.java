@@ -19,7 +19,7 @@ public class TrackSegment extends BaseObject {
 	 */
 	public TrackSegment(){
 		int[] textureArray = {R.drawable.wire_segment};
-		mSprite = new Sprite(textureArray, 0, 16.0f, 4.0f, 1, 0);
+		mSprite = new Sprite(textureArray, 0, 16.0f, 4.0f);
 	}
 	
 	/**
