@@ -29,8 +29,7 @@ public class DrawableObject extends BaseObject {
 	}
 	
 	public void setPositionAndAngle(float angle, float xOffset, float yOffset) {
-		mSprite.xOffset = xOffset;
-		mSprite.yOffset = yOffset;
+		mSprite.setPosition(xOffset, yOffset);
 		mSprite.setRotation(angle);
 	}
 	

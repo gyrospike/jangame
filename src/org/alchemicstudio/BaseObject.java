@@ -14,6 +14,20 @@ public class BaseObject {
 	}
 	
 	/**
+	 * initialize global system objects
+	 */
+	public static void conditionallyInitializeBaseObjects() {
+		if(BaseObject.sSystemRegistry.mRenderSystem == null) {
+			RenderSystem renderer = new RenderSystem();
+			BaseObject.sSystemRegistry.mRenderSystem = renderer;
+		}
+		if(BaseObject.sSystemRegistry.mAssetLibrary == null) {
+			AssetLibrary assetLibrary = new AssetLibrary();
+			BaseObject.sSystemRegistry.mAssetLibrary = assetLibrary;
+		}		
+	}
+	
+	/**
 	 * update based on the time step passed in
 	 * 
 	 * @param timeDelta

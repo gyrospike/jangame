@@ -4,11 +4,11 @@ import android.util.Log;
 
 public class Grid extends BaseObject {
 	
+	/** the number of track segments for each node */
+	public final static int CONNECTIONS_PER_NODE = 4;
+	
 	/** the array index of the track segment used for visualizing where your current track piece will connect */
 	private final static int POINTER_TRACK_SEGMENT_INDEX = 0;
-	
-	/** the number of track segments for each node */
-	private final static int TRACK_SEGMENTS_PER_NODE = 4;
 	
 	/** number of sparks to be released on touch */
 	private final static int SPARKS_PER_TOUCH = 5;
@@ -93,7 +93,7 @@ public class Grid extends BaseObject {
 		mWidth = dataSet.mMapWidth;
 		mSpacing = dataSet.mMapSpacing;
 
-		mMaxTrackSegments = (mWidth * mHeight) * TRACK_SEGMENTS_PER_NODE;
+		mMaxTrackSegments = (mWidth * mHeight) * CONNECTIONS_PER_NODE;
 
 		mScreenWidth = screenWidth;
 		mScreenHeight = screenHeight;
@@ -102,7 +102,7 @@ public class Grid extends BaseObject {
 		mBorderNodes = new Node[2*mWidth + 2*mHeight];
 		mNodeChain = new NodeConnection[MAX_CHAIN_LENGTH];
 		mTrackSegments = new TrackSegment[mMaxTrackSegments];
-		// this has to happen before creeateTrackSegmentBetweenPoints
+		// this has to happen before createTrackSegmentBetweenPoints
 		for (int k = 0; k < mMaxTrackSegments; k++) {
 			mTrackSegments[k] = new TrackSegment();
 			mTrackSegments[k].mSprite.setScale(0.0f, 0.0f);
@@ -120,22 +120,15 @@ public class Grid extends BaseObject {
 			int minSpeedLimit = dataSet.mNodes.get(k).minSpeed;
 			int link = dataSet.mNodes.get(k).link;
 			int type = dataSet.mNodes.get(k).type;
-			
-			Boolean isFixed =  dataSet.mNodes.get(k).fixed;
 
 			Vector2 nodePosition = new Vector2(mSideBufferX + ((mSpacing + NODE_DIMENSION) * tempI), mSideBufferY + ((mSpacing + NODE_DIMENSION) * tempJ));
-			mNodes[tempI][tempJ] = new Node(tempI,tempJ, nodePosition, false, false, isFixed, maxSpeedLimit, minSpeedLimit, link, type);
+			mNodes[tempI][tempJ] = new Node(tempI,tempJ, nodePosition, maxSpeedLimit, minSpeedLimit, link, type);
 		}
 		
 		Vector2[] nodePositions = getBorderNodePositions();
 		for (int m = 0; m < dataSet.mBorderNodes.getCount(); m++) {
-
-			Boolean isStartNode =  dataSet.mBorderNodes.get(m).start;
-			Boolean isEndNode =  dataSet.mBorderNodes.get(m).end;
-			Boolean isFixed =  dataSet.mBorderNodes.get(m).fixed;
-
 			Vector2 nodePosition = nodePositions[m];
-			mBorderNodes[m] = new Node(-1,-1, nodePosition, isStartNode, isEndNode, isFixed, 0, 0, 0, 0);
+			mBorderNodes[m] = new Node(-1,-1, nodePosition, 0, 0, 0, 0);
 		}
 		
 		for (int k = 0; k < dataSet.mNodes.getCount(); k++) {
@@ -144,7 +137,9 @@ public class Grid extends BaseObject {
 			int tempJ = dataSet.mNodes.get(k).j;
 			
 			for(int p = 0; p < dataSet.mNodes.get(k).pretargets.getCount(); p++) {
+				int order = dataSet.mNodes.get(k).pretargets.get(p).order;
 				int borderIndex = dataSet.mNodes.get(k).pretargets.get(p).borderIndex;
+				mBorderNodes[borderIndex].setOrder(order);
 				conditionallyCreateConnectionWithBorder(tempI, tempJ, borderIndex);
 			}
 		}
@@ -185,7 +180,7 @@ public class Grid extends BaseObject {
 		int index = 0;
 		// North
 		for( int i = 0; i < mWidth; i++) {
-			float x = mNodes[i][0].mSprite.getPosition().x;
+			float x = mNodes[i][0].getPosition().x;
 			float y = -BORDER_NODE_OFFSET;
 			result[index] = new Vector2(x, y);
 			index++;
@@ -193,13 +188,13 @@ public class Grid extends BaseObject {
 		// East
 		for( int i = 0; i < mHeight; i++) {
 			float x = mScreenWidth + BORDER_NODE_OFFSET;
-			float y = mNodes[mWidth-1][i].mSprite.getPosition().y;
+			float y = mNodes[mWidth-1][i].getPosition().y;
 			result[index] = new Vector2(x, y);
 			index++;
 		}
 		// South
 		for( int i = mWidth-1; i > -1; i--) {
-			float x = mNodes[i][mHeight-1].mSprite.getPosition().x;
+			float x = mNodes[i][mHeight-1].getPosition().x;
 			float y = mScreenHeight + BORDER_NODE_OFFSET;
 			result[index] = new Vector2(x, y);
 			index++;
@@ -207,7 +202,7 @@ public class Grid extends BaseObject {
 		// West
 		for( int i = mHeight-1; i > -1; i--) {
 			float x = -BORDER_NODE_OFFSET; 
-			float y = mNodes[0][i].mSprite.getPosition().y;
+			float y = mNodes[0][i].getPosition().y;
 			result[index] = new Vector2(x, y);
 			index++;
 		}
@@ -224,15 +219,16 @@ public class Grid extends BaseObject {
 	private void conditionallyCreateConnectionWithBorder(int ai, int aj, int borderIndex) {
 		if (mNumTrackSegments < mMaxTrackSegments) {
 			
-			float ax = mNodes[ai][aj].mSprite.getPosition().x + TRACK_OFFSET_X;
-			float ay = mNodes[ai][aj].mSprite.getPosition().y - TRACK_OFFSET_Y;
+			float ax = mNodes[ai][aj].getPosition().x + TRACK_OFFSET_X;
+			float ay = mNodes[ai][aj].getPosition().y - TRACK_OFFSET_Y;
 			
-			float bx = mBorderNodes[borderIndex].mSprite.getPosition().x + TRACK_OFFSET_X;
-			float by = mBorderNodes[borderIndex].mSprite.getPosition().y - TRACK_OFFSET_Y;
+			float bx = mBorderNodes[borderIndex].getPosition().x + TRACK_OFFSET_X;
+			float by = mBorderNodes[borderIndex].getPosition().y - TRACK_OFFSET_Y;
 			
 			int trackID = createTrackSegmentBetweenPoints(ax, ay, bx, by);
 			
 			mNodes[ai][aj].setConnection(-1, -1, borderIndex, trackID);
+			mBorderNodes[borderIndex].setConnection(ai, aj, -1, trackID);
 		}
 	}
 
@@ -251,11 +247,11 @@ public class Grid extends BaseObject {
 				if(!connectionBetween(ai, aj, bi, bj)) {
 					if (mNumTrackSegments < mMaxTrackSegments) {
 
-						float ax = mNodes[ai][aj].mSprite.getPosition().x + TRACK_OFFSET_X;
-						float ay = mNodes[ai][aj].mSprite.getPosition().y - TRACK_OFFSET_Y;
+						float ax = mNodes[ai][aj].getPosition().x + TRACK_OFFSET_X;
+						float ay = mNodes[ai][aj].getPosition().y - TRACK_OFFSET_Y;
 
-						float bx = mNodes[bi][bj].mSprite.getPosition().x + TRACK_OFFSET_X;
-						float by = mNodes[bi][bj].mSprite.getPosition().y - TRACK_OFFSET_Y;
+						float bx = mNodes[bi][bj].getPosition().x + TRACK_OFFSET_X;
+						float by = mNodes[bi][bj].getPosition().y - TRACK_OFFSET_Y;
 
 						int trackID = createTrackSegmentBetweenPoints(ax, ay, bx, by);
 
@@ -341,7 +337,7 @@ public class Grid extends BaseObject {
 		// if the user clicked a released the same node
 		if (mCurrentTrackSourceNodeI == i && mCurrentTrackSourceNodeJ == j) {
 			deactivateNode(i, j);
-			createParticle((int) (mNodes[i][j].mSprite.getPosition().x + 16.0f), (int) (mNodes[i][j].mSprite.getPosition().y - 16.0f), SPARKS_PER_TOUCH);
+			createParticle((int) (mNodes[i][j].getPosition().x + 16.0f), (int) (mNodes[i][j].getPosition().y - 16.0f), SPARKS_PER_TOUCH);
 		}
 		// if the user clicked a node and released on a node to the direct left or right, or above or below (just not diagonal)
 		else if ((mCurrentTrackSourceNodeI == i && mCurrentTrackSourceNodeJ != j) || (mCurrentTrackSourceNodeI != i && mCurrentTrackSourceNodeJ == j)) {
@@ -422,8 +418,8 @@ public class Grid extends BaseObject {
 
 		//Log.d("DEBUG", "current track i, j: " + mCurrentTrackSourceNodeI + ", " + mCurrentTrackSourceNodeJ);
 		
-		float trackOriginX = tempNode.mSprite.getPosition().x + TRACK_OFFSET_X;
-		float trackOriginY = tempNode.mSprite.getPosition().y - TRACK_OFFSET_Y;
+		float trackOriginX = tempNode.getPosition().x + TRACK_OFFSET_X;
+		float trackOriginY = tempNode.getPosition().y - TRACK_OFFSET_Y;
 		
 		double angle= Math.atan((dragPoint.y - trackOriginY)/(trackOriginX - dragPoint.x)) - (Math.PI / 2);
 		//.02 tolerance stops the angle from exploding to infinity and the track switching signs
@@ -466,6 +462,13 @@ public class Grid extends BaseObject {
 	 */
 	public Node[][] getNodes() {
 		return mNodes;
+	}
+	
+	/**
+	 * @return	the nodes around the border
+	 */
+	public Node[] getBorderNodes() {
+		return mBorderNodes;
 	}
 	
 	/**

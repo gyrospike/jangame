@@ -28,7 +28,7 @@ public class Menu extends Activity {
 	private MenuSurfaceView mGLView;
 	
 	/** the thread that updates the ui elements and other menu logic separate from the drawing loop */
-	// TODO - this is almost exactly the same as the GameThread, soon to be GameRunnable, generalize
+	// TODO - this is almost exactly the same as GameRunnable, generalize
 	private MenuRunnable mRunnable;
 	
 	/** thread that takes in the game thread as argument */
@@ -44,15 +44,7 @@ public class Menu extends Activity {
 		this.requestWindowFeature(Window.FEATURE_NO_TITLE);
 		getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
 
-		// system wide processes
-		// TODO - find a better place to store these initializations
-		// these need to be ready before an activity can be launched
-		RenderSystem renderer = new RenderSystem();
-		BaseObject.sSystemRegistry.mRenderSystem = renderer;
-		
-		AssetLibrary assetLibrary = new AssetLibrary();
-		BaseObject.sSystemRegistry.mAssetLibrary = assetLibrary;
-		
+		BaseObject.conditionallyInitializeBaseObjects();
 		createUIElements();
 		
 		mGLView = (MenuSurfaceView) findViewById(R.id.MenuSurfaceView01);

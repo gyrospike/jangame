@@ -58,34 +58,34 @@ public class MenuManager {
 	 */
 	public void update(float timeDelta) {
 		menuPipeSprite1.update(timeDelta);
-		menuPipeSprite1.setPositionAndAngle(0, 0, -264);
+		menuPipeSprite1.setPositionAndAngle(0, 0, 264);
 		
 		menuPipeSprite2.update(timeDelta);
-		menuPipeSprite2.setPositionAndAngle( 0, 0, -422);
+		menuPipeSprite2.setPositionAndAngle( 0, 0, 422);
 		
 		menuPipeSprite3.update(timeDelta);
-		menuPipeSprite3.setPositionAndAngle( 0, 0, -578);
+		menuPipeSprite3.setPositionAndAngle( 0, 0, 578);
 		
 		backgroundHeadSprite.update(timeDelta);
-		backgroundHeadSprite.setPositionAndAngle( 0, 0, -480);
+		backgroundHeadSprite.setPositionAndAngle( 0, 0, 480);
 		
 		backgroundBaseSprite.update(timeDelta);
-		backgroundBaseSprite.setPositionAndAngle( 0, 0, -854);
+		backgroundBaseSprite.setPositionAndAngle( 0, 0, 854);
 		
 		roboSprite.update(timeDelta);
-		roboSprite.setPositionAndAngle( 0, 392, -168);
+		roboSprite.setPositionAndAngle( 0, 392, 168);
 		
 		redGearSprite.update(timeDelta);
-		redGearSprite.setPositionAndAngle(-angle/3, 25, -830);
+		redGearSprite.setPositionAndAngle(-angle/3, 25, 830);
 		
 		yellowGearSprite.update(timeDelta);
-		yellowGearSprite.setPositionAndAngle(angle, 8, -792);
+		yellowGearSprite.setPositionAndAngle(angle, 8, 792);
 		
 		pinkGearSprite.update(timeDelta);
-		pinkGearSprite.setPositionAndAngle(angle/2, 410, -830);
+		pinkGearSprite.setPositionAndAngle(angle/2, 410, 830);
 		
 		craneSprite.update(timeDelta);
-		craneSprite.setPositionAndAngle(0, 340, -843);
+		craneSprite.setPositionAndAngle(0, 340, 843);
 		
 		angle++;
 	}

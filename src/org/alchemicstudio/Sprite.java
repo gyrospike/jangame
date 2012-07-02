@@ -10,8 +10,11 @@ import org.alchemicstudio.Texture;
 
 public class Sprite {
 
-	public float xOffset;
-	public float yOffset;
+	/** the x offset of the sprite */
+	private float xOffset;
+	
+	/** the y offset of the sprite */
+	private float yOffset;
 
 	/** array of textures this sprite uses */
 	private Texture[] mTexture;
@@ -122,15 +125,13 @@ public class Sprite {
 	}
 	
 	/**
-	 * Why do I need this -y here? not sure, seem likes the 0 point is at the top of the screen, so negative brings it down into
-	 * the screen, positive is up above for some crazy reason
 	 * 
 	 * @param x
 	 * @param y
 	 */
 	public void setPosition(float x, float y) {
 		xOffset = x;
-		yOffset = -y;
+		yOffset = y;
 	}
 
 	public void setOpacity(float value) {
@@ -148,7 +149,7 @@ public class Sprite {
 
 	// TODO - what is the deal with this negative offset?
 	public Vector2 getPosition() {
-		return new Vector2(xOffset, -yOffset);
+		return new Vector2(xOffset, yOffset);
 	}
 
 	public int getPriority() {
@@ -161,15 +162,11 @@ public class Sprite {
 		gl.glEnableClientState(GL10.GL_TEXTURE_COORD_ARRAY);
 		gl.glVertexPointer(2, GL10.GL_FLOAT, 0, mVertexBuffer);
 		gl.glTexCoordPointer(2, GL10.GL_FLOAT, 0, mTextureBuffer);
-
 		gl.glColor4f(mOpacity, mOpacity, mOpacity, mOpacity);
 		
-		// 392, -168
-		// x = 392;
-		// y = -168;
-		//
-		
-		gl.glTranslatef(x, y, 0);
+		// NOTE: negative here allows all values for y to be positive in game managers, though 
+		// coordinates in y axis are flipped
+		gl.glTranslatef(x, -y, 0);
 		
 		//translate the gl object to the center of the image, rotate, then go back -> this helps in thinking about opengl 
 		//as a sort of camera moving around looking at objects as opposed to objects moving around

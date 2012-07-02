@@ -2,6 +2,8 @@ package org.alchemicstudio;
 
 import java.util.concurrent.ArrayBlockingQueue;
 
+import android.app.Activity;
+import android.content.Context;
 import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -49,15 +51,16 @@ public class GameManager {
 	/**
 	 * create the primary logical entities for the game
 	 * 
+	 * @param context		reference to the base activity
 	 * @param dataSet		the game's grid data loaded from xml
 	 * @param screenWidth
 	 * @param screenHeight
 	 */
-	public void initGame(ParsedDataSet dataSet, float screenWidth, float screenHeight, Button button1) {
+	public void initGame(Context context, ParsedDataSet dataSet, float screenWidth, float screenHeight) {
 		Grid gameGrid = new Grid(dataSet, screenWidth, screenHeight);
 		
 		mGameModeArray[GAME_MODE_BUILD] = new GMGridBuild(gameGrid);
-		mGameModeArray[GAME_MODE_RELEASE] = new GMRelease(gameGrid);
+		mGameModeArray[GAME_MODE_RELEASE] = new GMRelease(gameGrid, context);
 		
 		mActiveGameMode = GAME_MODE_BUILD;
 		
@@ -65,7 +68,9 @@ public class GameManager {
 		mDWindow.updateTextBlock("Status", "In Progress");
 		mDWindow.updateTextBlock("Game Mode", DEBUG_GAME_MODE_BUILD);
 		
-		button1.setOnClickListener(new OnClickListener() {
+		Button gameModeToggleButton = (Button) ((Activity) context).findViewById(R.id.gameModeToggleButton);
+		
+		gameModeToggleButton.setOnClickListener(new OnClickListener() {
 			public void onClick(View v) {
 				Log.d("DEBUG", "you pushed my button");
 				toggleGameModes();
@@ -144,6 +149,13 @@ public class GameManager {
 		} else {
 			mActiveGameMode = GAME_MODE_BUILD;
 			updateText = DEBUG_GAME_MODE_BUILD;
+		}
+		for(int i = 0; i < mGameModeArray.length; i++) {
+			if(i == mActiveGameMode) {
+				mGameModeArray[i].makeActive();
+			} else {
+				mGameModeArray[i].makeInactive();
+			}
 		}
 		mDWindow.updateTextBlock("Game Mode", updateText);
 	}

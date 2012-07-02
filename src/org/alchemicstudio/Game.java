@@ -48,7 +48,7 @@ public class Game {
 	 * @param context
 	 * @param extras	game specific info, like which level to load
 	 */
-	public void bootstrap(Context context, Bundle extras, Button button1) {
+	public void bootstrap(Context context, Bundle extras) {
 		BaseObject.sSystemRegistry.mAssetLibrary.loadFonts(context);
 
 		ParsedDataSet parsedMapData = null;
@@ -72,7 +72,7 @@ public class Game {
 			 * sp.parse(new InputSource(isr), myExampleHandler);
 			 */
 			
-			int mapNumber = 0;
+			int mapNumber = R.raw.map00;
 			if (extras != null) {
 				mapNumber = extras.getInt("mapNumber", R.raw.map00);
 			}
@@ -84,7 +84,7 @@ public class Game {
 			mGameThread.setGameRenderer(mSurfaceView.getGameRenderer());
 			mGameThread.setGameManager(mGameManager);
 			
-			mGameManager.initGame(parsedMapData, mScreenWidth, mScreenHeight, button1);
+			mGameManager.initGame(context, parsedMapData, mScreenWidth, mScreenHeight);
 			start();
 		} catch (Exception e) {
 			Log.e("DEBUG", "QueryError", e);

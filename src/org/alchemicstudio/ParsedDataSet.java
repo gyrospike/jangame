@@ -86,9 +86,9 @@ public class ParsedDataSet {
 	 */
 	public void setStartAndEndIndices() {
 		for (int i = 0; i < mBorderNodes.getCount(); i++) {
-			if (mBorderNodes.get(i).start) {
+			if (mBorderNodes.get(i).order == Node.BORDER_TYPE_START) {
 				mBorderStartIndex = i;
-			} else if(mBorderNodes.get(i).end) {
+			} else if(mBorderNodes.get(i).order == Node.BORDER_TYPE_START) {
 				mBorderEndIndex = i;
 			}
 		}
@@ -107,10 +107,7 @@ public class ParsedDataSet {
 		public int i;
 		public int j;
 		public int borderIndex;
-		
-		public boolean fixed = false;
-		public boolean start = false;
-		public boolean end = false;
+		public int order;
 
 		public FixedSizeArray<NodeTemplate> pretargets = new FixedSizeArray<NodeTemplate>(Node.CONNECTION_LIMIT_DEFAULT);
 		
@@ -130,16 +127,12 @@ public class ParsedDataSet {
 		 * connected to when the game starts
 		 * 
 		 * @param index
-		 * @param fixed
-		 * @param start
-		 * @param end
+		 * @param order
 		 */
-		public void addPreTarget(int index, boolean fixed, boolean start, boolean end) {
+		public void addPreTarget(int index, int order) {
 			NodeTemplate newPreTarget = new NodeTemplate(-1, -1);
 			newPreTarget.borderIndex = index;
-			newPreTarget.fixed = fixed;
-			newPreTarget.start = start;
-			newPreTarget.end = end;
+			newPreTarget.order = order;
 			pretargets.add(newPreTarget);
 		}
 	}

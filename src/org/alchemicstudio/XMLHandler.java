@@ -71,9 +71,7 @@ public class XMLHandler extends DefaultHandler {
 		Log.d("DEBUG", "Parsing : " + mParsedDataSet.mNodes.getCount());
 		mParsedDataSet.mNodes.get(mCurrentNodeIndex).addPreTarget(
 				Integer.parseInt(atts.getValue("INDEX")),
-				Boolean.parseBoolean(atts.getValue("FIXED")),
-				Boolean.parseBoolean(atts.getValue("START")),
-				Boolean.parseBoolean(atts.getValue("END")));
+				Integer.parseInt(atts.getValue("ORDER")));
 	}
 	
 	/**

@@ -10,15 +10,6 @@ public class GMGridBuild extends GameMode {
 	}
 	
 	/**
-	 * return the track the user has created on this grid
-	 * 
-	 * @return
-	 */
-	public Node[][] getTrack() {
-		return mGrid.getNodes();
-	}
-	
-	/**
 	 * updates the build game mode
 	 */
 	public void update(float timeDelta) {
@@ -50,5 +41,17 @@ public class GMGridBuild extends GameMode {
 	 */
 	public void processTouchUpEvent(InputObject input) {
 		mGrid.checkNodeRelease(input.x, input.y);
+	}
+
+	@Override
+	public void makeActive() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void makeInactive() {
+		// TODO Auto-generated method stub
+		
 	}
 }

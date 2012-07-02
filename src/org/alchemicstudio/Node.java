@@ -8,8 +8,17 @@ public class Node extends BaseObject {
 	/** the number of connections a node may have by default */
 	public final static int CONNECTION_LIMIT_DEFAULT = 4;
 	
+	/** constant representing a node being neither start nor end */
+	public final static int BORDER_TYPE_NONE = 0;
+	
+	/** constant representing a node being of type start */
+	public final static int BORDER_TYPE_START = 1;
+	
+	/** constant representing a node being of type end */
+	public final static int BORDER_TYPE_END = 2;
+	
 	/** sprite for the node */
-	public Sprite mSprite;
+	private Sprite mSprite;
 	
 	// TODO - remove
 	public int sourceKey;
@@ -41,8 +50,14 @@ public class Node extends BaseObject {
 	
 	/** in case of multiple possible paths, use this path */
 	private NodeConnection mPreferredConnection = null;
+	
+	/** is this the end, start, or neither type of node */
+	private int mOrder = 0;
+	
+	/** the vector position of this node */
+	private Vector2 mPosition = null;
 
-	public Node(int i, int j, Vector2 vec, boolean isStartNode, boolean isEndNode, boolean isFixed, float maxSpeedLimit, float minSpeedLimit, int link, int type) {
+	public Node(int i, int j, Vector2 vec, float maxSpeedLimit, float minSpeedLimit, int link, int type) {
 		mI = i;
 		mJ = j;
 		
@@ -67,11 +82,12 @@ public class Node extends BaseObject {
 			mSprite = new Sprite(spriteArray, 1, 32.0f, 32.0f);
 		}
 		
+		mPosition = vec;
 		mSprite.setPosition(vec.x, vec.y);
 		mSprite.setTextureIndex(0);
 		
 		
-		if(isStartNode || isEndNode) {
+		if(mOrder == BORDER_TYPE_START || mOrder == BORDER_TYPE_END) {
 			mMaxConnections = CONNECTION_LIMIT_TERMINAL;
 			mTrackIdArray = new int[CONNECTION_LIMIT_TERMINAL];
 			mSprite.setTextureIndex(2);
@@ -85,6 +101,28 @@ public class Node extends BaseObject {
 		}
 
 		//Log.d("DEBUG", "Node placed at: (" + i + ", " + j + ") ");
+	}
+	
+	/**
+	 * @return	the order for this node
+	 */
+	public int getOrder() {
+		return mOrder;
+	}
+	
+	/**
+	 * 
+	 * @param order		order to set this node to
+	 */
+	public void setOrder(int order) {
+		mOrder = order;
+	}
+	
+	/**
+	 * @return	the position this node is located at in game pixels
+	 */
+	public Vector2 getPosition() {
+		return mPosition;
 	}
 	
 	/**
@@ -213,6 +251,13 @@ public class Node extends BaseObject {
 	public void setPreferredConnection(NodeConnection node) {
 		mPreferredConnection = node;
 		Log.d("DEBUG", "Node: (" + getI() + ", " + getJ() + ") now prefers to connect to node: (" + mPreferredConnection.getI() + ", " + mPreferredConnection.getJ() + ")");
+	}
+	
+	/**
+	 * @return	this node's preferred connection
+	 */
+	public NodeConnection getPreferredConnection() {
+		return mPreferredConnection;
 	}
 
 	// TODO - remove

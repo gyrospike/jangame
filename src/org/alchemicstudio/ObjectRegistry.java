@@ -2,9 +2,9 @@ package org.alchemicstudio;
 
 public class ObjectRegistry extends BaseObject {
 
-    public RenderSystem mRenderSystem;
-    public AssetLibrary mAssetLibrary;
-    public OpenGLSystem mOpenGLSystem;
+    public RenderSystem mRenderSystem = null;
+    public AssetLibrary mAssetLibrary = null;
+    public OpenGLSystem mOpenGLSystem = null;
     
     public ObjectRegistry() {
         super();

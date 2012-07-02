@@ -138,8 +138,9 @@ public class GameRenderer implements Renderer {
 				for (int i = 0; i < count; i++) {
 					if (objectArray[i] != null) {
 						Sprite currentSprite = (Sprite) objectArray[i];
-						x = currentSprite.xOffset;
-						y = currentSprite.yOffset;
+						Vector2 tempPos = currentSprite.getPosition();
+						x = tempPos.x;
+						y = tempPos.y;
 						currentSprite.draw(gl, 0, x, y);
 					}
 				}

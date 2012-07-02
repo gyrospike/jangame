@@ -32,6 +32,8 @@ public class BaseActivity extends Activity {
 
 		this.requestWindowFeature(Window.FEATURE_NO_TITLE);
 		getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
+		
+		BaseObject.conditionallyInitializeBaseObjects();
 
 		DisplayMetrics metrics = new DisplayMetrics();
 		getWindowManager().getDefaultDisplay().getMetrics(metrics);
@@ -40,12 +42,10 @@ public class BaseActivity extends Activity {
 		
 		setContentView(R.layout.game);
 		mGLView = (GameSurfaceView)findViewById(R.id.GameSurfaceView01);
-		
-		Button button1 = (Button) findViewById(R.id.button1);
 
 		mGame = new Game(metrics.widthPixels, metrics.heightPixels);
 		mGame.setSurfaceView((GameSurfaceView) mGLView);
-		mGame.bootstrap(this, getIntent().getExtras(), button1);
+		mGame.bootstrap(this, getIntent().getExtras());
 
 		createInputObjectPool();
 	}

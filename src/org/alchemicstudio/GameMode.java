@@ -24,6 +24,16 @@ public abstract class GameMode {
 	public abstract void processTouchUpEvent(InputObject input);
 	
 	/**
+	 * make this game mode active
+	 */
+	public abstract void makeActive();
+	
+	/**
+	 * make this game mode inactive
+	 */
+	public abstract void makeInactive();
+	
+	/**
 	 * update the game mode
 	 * 
 	 * @param timeDelta
