@@ -7,11 +7,20 @@ package org.alchemicstudio;
  * name itself, as it may change at any time.
  */
 public class Texture {
+	
+	/** resource id, as in R.drawable.whatever for this texture */
     public int resource;
+    
     public int name;
+    
     public int width;
+    
     public int height;
+    
     public boolean loaded;
+    
+    /** used for marking certain textures to be unloaded or loaded at certain times */
+    public int type;
     
     public Texture() {
         super();
@@ -19,6 +28,7 @@ public class Texture {
     }
     
     public void reset() {
+    	type = -1;
         resource = -1;
         name = -1;
         width = 0;

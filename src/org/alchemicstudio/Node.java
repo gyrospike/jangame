@@ -1,160 +1,272 @@
 package org.alchemicstudio;
 
-import android.graphics.Point;
 import android.util.Log;
 
-public class Node extends BaseObject {
 
-	public Sprite mSprite;
+public class Node extends BaseObject {
 	
-	public int iX, iY;
-	public boolean source; 
-	public boolean hasPower;
+	/** the number of connections a node may have by default */
+	public final static int CONNECTION_LIMIT_DEFAULT = 4;
 	
+	/** constant representing a node being neither start nor end */
+	public final static int BORDER_TYPE_NONE = 0;
+	
+	/** constant representing a node being of type start */
+	public final static int BORDER_TYPE_START = 1;
+	
+	/** constant representing a node being of type end */
+	public final static int BORDER_TYPE_END = 2;
+	
+	/** sprite for the node */
+	private Sprite mSprite;
+	
+	// TODO - remove
 	public int sourceKey;
 	public int type;
 	public int link;
 	public float minSpeedLimit;
 	public float maxSpeedLimit;
 	
-	private Point[] targetArray;
-	private int maxConnections;
-	private int[] targetWireTypeArray;
-	private Vector2 posVector;
-	private RenderSystem system = sSystemRegistry.renderSystem;
+	/** the number of connections a node may have if it is an off/on ramp */
+	private final static int CONNECTION_LIMIT_TERMINAL = 1;
+	
+	/** track indices that linking this node to other nodes */
+	private int[] mTrackIdArray;
+	
+	/** the i index for this node's position in the grid */
+	private int mI;
+	
+	/** the j index for this node's position in the grid */
+	private int mJ;
+	
+	/** the maximum number of connections to other nodes this node can have */
+	private int mMaxConnections;
+	
+	/** keeps track of the current number of connections */
+	private int mNumCurrentConnections;
+	
+	/** the other nodes that have connections to this node */
+	private NodeConnection[] mNodeConnections;
+	
+	/** in case of multiple possible paths, use this path */
+	private NodeConnection mPreferredConnection = null;
+	
+	/** is this the end, start, or neither type of node */
+	private int mOrder = 0;
+	
+	/** the vector position of this node */
+	private Vector2 mPosition = null;
 
-	public Node(int i, int j, Vector2 vec, int maxC) {
-		iX = i;
-		iY = j;
-		posVector = vec;
+	public Node(int i, int j, Vector2 vec, float maxSpeedLimit, float minSpeedLimit, int link, int type) {
+		mI = i;
+		mJ = j;
 		
-		maxConnections = maxC;
+		this.type = type;
+		this.link = link;
+		this.maxSpeedLimit = maxSpeedLimit;
+		this.minSpeedLimit = minSpeedLimit;
 
-		source = false;
-		hasPower = false;
+		mNumCurrentConnections = 0;
+		// create an array of connections so we can have {i, j, k} - k being used for the border array
+		mNodeConnections = new NodeConnection[4];
 
-		targetArray = new Point[4];
-		targetWireTypeArray = new int[4];
-
-		for (int k = 0; k < targetArray.length; k++) {
-			targetArray[k] = new Point(-1, -1);
+		for (int k = 0; k < mNodeConnections.length; k++) {
+			mNodeConnections[k] = new NodeConnection(-1, -1, -1);
 		}
 
-		for (int l = 0; l < targetWireTypeArray.length; l++) {
-			targetWireTypeArray[l] = -1;
+		if(this.type==2) {
+			int[] spriteArray = {R.drawable.grey_gate_node, R.drawable.yellow_gate_node, R.drawable.green_gate_node};
+			mSprite = new Sprite(spriteArray, 1, 32.0f, 32.0f);
+		} else {
+			int[] spriteArray = {R.drawable.grey_node, R.drawable.yellow_node, R.drawable.green_node};
+			mSprite = new Sprite(spriteArray, 1, 32.0f, 32.0f);
 		}
-
-		mSprite = new Sprite(1, 3);
-		mSprite.cameraRelative = false;
-		mSprite.setPosition(posVector.x, posVector.y);
-		mSprite.currentTextureIndex = 0;
+		
+		mPosition = vec;
+		mSprite.setPosition(vec.x, vec.y);
+		mSprite.setTextureIndex(0);
+		
+		
+		if(mOrder == BORDER_TYPE_START || mOrder == BORDER_TYPE_END) {
+			mMaxConnections = CONNECTION_LIMIT_TERMINAL;
+			mTrackIdArray = new int[CONNECTION_LIMIT_TERMINAL];
+			mSprite.setTextureIndex(2);
+		} else {
+			mMaxConnections = CONNECTION_LIMIT_DEFAULT;
+			mTrackIdArray = new int[CONNECTION_LIMIT_DEFAULT];
+		}
+		
+		for(int h = 0; h < mTrackIdArray.length; h++) {
+			mTrackIdArray[h] = -1;
+		}
 
 		//Log.d("DEBUG", "Node placed at: (" + i + ", " + j + ") ");
 	}
-
-	public void setSource() {
-		source = true;
-		mSprite.currentTextureIndex = 2;
-	}
-
-	public void setConnection(Point point, int wireType) {
-		for (int i = 0; i < targetArray.length; i++) {
-			if (targetArray[i].equals(new Point(-1, -1))) {
-				targetArray[i] = point;
-				targetWireTypeArray[i] = wireType;
-				i = targetArray.length;
-			}
-		}
-	}
-
-	public void setConnectionNull(int index) {
-		targetArray[index] = new Point(-1, -1);
-		targetWireTypeArray[index] = -1;
-		int nullIndex = -1;
-		for(int i = 0; i < targetArray.length; i++) {
-			if(nullIndex != -1 && targetArray[i].x != -1) {
-				targetArray[nullIndex] = targetArray[i];
-				targetWireTypeArray[nullIndex] = targetWireTypeArray[i];
-				targetArray[i] = new Point(-1, -1);
-				targetWireTypeArray[i] = -1;
-			}
-			if(targetArray[i].x == -1) {
-				nullIndex = i;
-			}
-		}
-		Log.d("DEBUG", "After running setConnectionNull: " + targetArray[0] + ", " + targetArray[1] + ", " + targetArray[2] + ", " + targetArray[3]);
-	}
-
-	public void setConnectionsNull() {
-		for (int i = 0; i < targetArray.length; i++) {
-			targetArray[i] = new Point(-1, -1);
-			targetWireTypeArray[i] = -1;
-		}
+	
+	/**
+	 * @return	the order for this node
+	 */
+	public int getOrder() {
+		return mOrder;
 	}
 	
+	/**
+	 * 
+	 * @param order		order to set this node to
+	 */
+	public void setOrder(int order) {
+		mOrder = order;
+	}
+	
+	/**
+	 * @return	the position this node is located at in game pixels
+	 */
+	public Vector2 getPosition() {
+		return mPosition;
+	}
+	
+	/**
+	 * create a connection to another node
+	 * 
+	 * @param i			the i index of the other node
+	 * @param j			the j index of the other node
+	 * @param k			the k index of the other node (used for the border nodes)
+	 * @param trackID	the id for the track segment that represents the visual component of a connection
+	 */
+	public void setConnection(int i, int j, int k, int trackID) {
+		for (int p = 0; p < mNodeConnections.length; p++) {
+			if (mNodeConnections[p].isEmptyNodeConnection()) {
+				mNodeConnections[p] = new NodeConnection(i, j, k);
+				mNodeConnections[p].setTrackID(trackID);
+				mNumCurrentConnections++;
+				break;
+			}
+		}
+	}
+
+	/**
+	 * remove a connection, currently this only supports removing other game board nodes (not border nodes)
+	 * 
+	 * @param i		the i index for the node to be removed
+	 * @param j		the k index for the node to be removed
+	 */
+	public void removeConnection(int i, int j) {
+		for (int p = 0; p < mNodeConnections.length; p++) {
+			if (mNodeConnections[p].hasValueOf(i, j, -1)) {
+				mNodeConnections[p] = new NodeConnection(-1, -1, -1);
+				mNumCurrentConnections--;
+				break;
+			}
+		}
+		if(mPreferredConnection != null && mPreferredConnection.getI() == i && mPreferredConnection.getJ() == j) {
+			mPreferredConnection = null;
+		}
+	}
+
+	/**
+	 * remove all non-border node connections from this node
+	 */
+	public void removeAllConnections() {
+		for (int i = 0; i < mNodeConnections.length; i++) {
+			if((mNodeConnections[i].getI() != -1 || mNodeConnections[i].getJ() != -1) && mNodeConnections[i].getK() == -1) {
+				mNodeConnections[i] = new NodeConnection(-1, -1, -1);
+				mNumCurrentConnections--;
+			}	
+		}
+		mPreferredConnection = null;
+	}
+	
+	/**
+	 * @return	true is this node has reached the maximum number of connections it can support
+	 */
 	public boolean hasMaxConnections() {
-		if(getNumConnections() >= maxConnections) {
+		if(getNumConnections() >= mMaxConnections) {
 			return true;
 		} else {
 			return false;
 		}
 	}
 	
+	/**
+	 * @return	the number of connections this node has
+	 */
 	public int getNumConnections() {
-		int len = 0;
-		for(int i = 0; i < targetArray.length; i++) {
-			if(!targetArray[i].equals(new Point(-1, -1))) {
-				len++;
-			}
-		}
-		return len;
-	}
-
-	public Point getConnection(int i) {
-		return targetArray[i];
-	}
-
-	public Point[] getConnections() {
-		return targetArray;
-	}
-
-	public int[] getWireTypes() {
-		return targetWireTypeArray;
+		return mNumCurrentConnections;
 	}
 	
+	/**
+	 * @return	the i index
+	 */
+	public int getI() {
+		return mI;
+	}
+	
+	/**
+	 * @return	the j index
+	 */
+	public int getJ() {
+		return mJ;
+	}
+	
+	/**
+	 * gets the connection data for this node (makes sure to not return empty connections)
+	 * 
+	 * @return		this node's connections
+	 */
+	public NodeConnection[] getConnections() {
+		NodeConnection[] nonEmptyConnections = new NodeConnection[mNumCurrentConnections];
+		int index = 0;
+		for(int i = 0; i < mNodeConnections.length; i++) {
+			if(!mNodeConnections[i].isEmptyNodeConnection()) {
+				nonEmptyConnections[index] = mNodeConnections[i];
+				index++;
+			}
+		}
+		return nonEmptyConnections;
+	}
+	
+	/**
+	 * does this node have an existing connection to the node connection passed in
+	 * 
+	 * @param node
+	 * @return
+	 */
+	public boolean hasConnectionTo(NodeConnection node) {
+		boolean result = false;
+		NodeConnection[] currentNodes = getConnections();
+		for(int i = 0; i < currentNodes.length; i++) {
+			if(currentNodes[i].getI() == node.getI() && currentNodes[i].getJ() == node.getJ()) {
+				result = true;
+				break;
+			}
+		}
+		return result;
+	}
+	
+	/**
+	 * when this node has multiple possible connections, it will prefer to the one passed in now
+	 * 
+	 * @param node
+	 */
+	public void setPreferredConnection(NodeConnection node) {
+		mPreferredConnection = node;
+		Log.d("DEBUG", "Node: (" + getI() + ", " + getJ() + ") now prefers to connect to node: (" + mPreferredConnection.getI() + ", " + mPreferredConnection.getJ() + ")");
+	}
+	
+	/**
+	 * @return	this node's preferred connection
+	 */
+	public NodeConnection getPreferredConnection() {
+		return mPreferredConnection;
+	}
+
+	// TODO - remove
 	public void removePower() {
-		if (!source) {
-			hasPower = false;
-			mSprite.currentTextureIndex = 0;
-		}
-	}
-
-	public void activate(int level, int key) {
-		if (!source) {
-			sourceKey = key;
-			mSprite.currentTextureIndex = level;
-			hasPower = true;
-		}
-	}
-
-	public void deactivate() {
-		if (!source) {
-			hasPower = false;
-			mSprite.currentTextureIndex = 0;
-			setConnectionsNull();
-		}
-	}
-
-	public float getX() {
-		return posVector.x;
-	}
-
-	public float getY() {
-		return posVector.y;
+		mSprite.setTextureIndex(0);
 	}
 
 	@Override
-	public void update(float timeDelta, BaseObject parent) {
-		system.scheduleForDraw(mSprite);
+	public void update(float timeDelta) {
+		sSystemRegistry.mRenderSystem.scheduleForDraw(mSprite);
 	}
 }

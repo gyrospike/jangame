@@ -6,12 +6,15 @@ import android.util.Log;
 
 public class RenderSystem extends BaseObject {
 
+	/** the number of buffers to use for filling the queues of objects to processed by the Renderer */
 	private final static int DRAW_QUEUE_COUNT = 2;
+	
+	/** the number of elements that can fit in one queue */
 	private final static int MAX_DRAWABLE_ELEMENTS = 400;
 	
 	private PriorityComparator priorityComparator = new PriorityComparator();
-	private FixedSizeArray<Sprite> spriteList[] = new FixedSizeArray[DRAW_QUEUE_COUNT];
-	private FixedSizeArray<TextBox> textBoxList[] = new FixedSizeArray[DRAW_QUEUE_COUNT];
+	private FixedSizeArray<Sprite>[] spriteList = new FixedSizeArray[DRAW_QUEUE_COUNT];
+	private FixedSizeArray<TextBox>[] textBoxList = new FixedSizeArray[DRAW_QUEUE_COUNT];
 	private int drawBufferIndex;
 	private int writeBufferIndex;
 
@@ -32,7 +35,6 @@ public class RenderSystem extends BaseObject {
 		}
 	}
 
-
 	public void scheduleForDraw(Sprite sprite) {
 		if (sprite != null) {
 			spriteList[drawBufferIndex].add(sprite);
@@ -50,26 +52,32 @@ public class RenderSystem extends BaseObject {
 		final int lastDrawQueue = (drawBufferIndex == 0) ? DRAW_QUEUE_COUNT - 1 : drawBufferIndex - 1;
 		final int lastWriteQueue = (writeBufferIndex == 0) ? DRAW_QUEUE_COUNT - 1 : writeBufferIndex - 1;
 		
-		clearQueue(spriteList[lastDrawQueue]);
-		clearQueue(textBoxList[lastWriteQueue]);
+		clearSpriteQueue(spriteList[lastDrawQueue]);
+		clearTextBoxQueue(textBoxList[lastWriteQueue]);
 		
 		drawBufferIndex = (drawBufferIndex + 1) % DRAW_QUEUE_COUNT;
 		writeBufferIndex = (writeBufferIndex + 1) % DRAW_QUEUE_COUNT;
 	}
 
-	private void clearQueue(FixedSizeArray objects) {
+	private void clearSpriteQueue(FixedSizeArray<Sprite> objects) {
 		final int count = objects.getCount();
 		for (int i = count - 1; i >= 0; i--) {
 			objects.removeLast();
 		}
 	}
 	
-	/* Empties all draw queues and disconnects the game thread from the renderer. */
+	private void clearTextBoxQueue(FixedSizeArray<TextBox> objects) {
+		final int count = objects.getCount();
+		for (int i = count - 1; i >= 0; i--) {
+			objects.removeLast();
+		}
+	}
+	
     public void emptyDrawQueues(GameRenderer renderer) {
         renderer.setDrawQuadQueue(null); 
         for (int x = 0; x < DRAW_QUEUE_COUNT; x++) {
             FixedSizeArray<Sprite> objects = spriteList[x];
-            clearQueue(objects);
+            clearSpriteQueue(objects);
         }
     }
     
@@ -77,7 +85,7 @@ public class RenderSystem extends BaseObject {
         renderer.setTextBoxQueue(null); 
         for (int x = 0; x < DRAW_QUEUE_COUNT; x++) {
             FixedSizeArray<TextBox> objects = textBoxList[x];
-            clearQueue(objects);
+            clearTextBoxQueue(objects);
         }
     }
 }

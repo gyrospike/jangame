@@ -1,91 +1,147 @@
 <?xml version="1.0" encoding="utf-8"?>
-
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-	android:orientation="vertical" android:layout_width="fill_parent"
-	android:layout_height="fill_parent">
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:orientation="vertical" >
 
-	<FrameLayout android:layout_width="fill_parent"
-		android:layout_height="fill_parent">
-		
-	<org.alchemicstudio.MenuBackgroundView android:layout_height="fill_parent" android:id="@+id/alchemicstudioMenuBackgroundView01" android:layout_width="fill_parent"></org.alchemicstudio.MenuBackgroundView>
-</FrameLayout>
+    <FrameLayout
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent" >
 
-	<HorizontalScrollView android:id="@+id/ScrollView01"
-		android:layout_width="fill_parent" android:layout_marginTop="126dip"
-		android:layout_height="95dip"
-		android:scrollbarAlwaysDrawHorizontalTrack="false" android:fadingEdge="none">
-		<TableLayout android:id="@+id/TableLayout01"
-			android:layout_height="wrap_content" android:layout_width="fill_parent">
+        <org.alchemicstudio.MenuSurfaceView
+            android:id="@+id/MenuSurfaceView01"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent" >
+        </org.alchemicstudio.MenuSurfaceView>
+    </FrameLayout>
 
-			<TableRow android:id="@+id/TableRow01" android:layout_width="fill_parent"
-				android:layout_height="wrap_content" android:gravity="center">
+    <HorizontalScrollView
+        android:id="@+id/ScrollView01"
+        android:layout_width="fill_parent"
+        android:layout_height="95dip"
+        android:layout_marginTop="126dip"
+        android:fadingEdge="none"
+        android:scrollbarAlwaysDrawHorizontalTrack="false" >
 
-				<Button android:id="@+id/Button01" android:background="@layout/level01_button"
-					android:layout_column="1" android:layout_margin="10dip" />
+        <TableLayout
+            android:id="@+id/TableLayout01"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content" >
 
-				<Button android:id="@+id/Button02" android:background="@layout/level02_button"
-					android:layout_margin="10dip" />
+            <TableRow
+                android:id="@+id/TableRow00"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center" >
 
-				<Button android:id="@+id/Button03" android:background="@layout/level03_button"
-					android:layout_margin="10dip" />
+                <Button
+                    android:id="@+id/Button00"
+                    android:layout_column="1"
+                    android:layout_margin="10dip"
+                    android:background="@layout/level00_button" />
 
-				<Button android:id="@+id/Button04" android:background="@layout/level04_button"
-					android:layout_margin="10dip" />
+                <Button
+                    android:id="@+id/Button01"
+                    android:layout_margin="10dip"
+                    android:background="@layout/level01_button" />
 
-			</TableRow>
-		</TableLayout>
-	</HorizontalScrollView>
-	
-	<HorizontalScrollView android:id="@+id/ScrollView02"
-		android:layout_width="fill_parent" android:layout_marginTop="231dip"
-		android:layout_height="95dip"
-		android:scrollbarAlwaysDrawHorizontalTrack="false" android:fadingEdge="none">
-		<TableLayout android:id="@+id/TableLayout01"
-			android:layout_height="wrap_content" android:layout_width="fill_parent">
+                <Button
+                    android:id="@+id/Button02"
+                    android:layout_margin="10dip"
+                    android:background="@layout/level02_button" />
 
-			<TableRow android:id="@+id/TableRow01" android:layout_width="fill_parent"
-				android:layout_height="wrap_content" android:gravity="center">
+                <Button
+                    android:id="@+id/Button03"
+                    android:layout_margin="10dip"
+                    android:background="@layout/level03_button" />
+            </TableRow>
+        </TableLayout>
+    </HorizontalScrollView>
 
-				<Button android:id="@+id/Button11" android:background="@layout/level11_button"
-					android:layout_column="1" android:layout_margin="10dip" />
+    <HorizontalScrollView
+        android:id="@+id/ScrollView02"
+        android:layout_width="fill_parent"
+        android:layout_height="95dip"
+        android:layout_marginTop="231dip"
+        android:fadingEdge="none"
+        android:scrollbarAlwaysDrawHorizontalTrack="false" >
 
-				<Button android:id="@+id/Button12" android:background="@layout/level12_button"
-					android:layout_margin="10dip" />
+        <TableLayout
+            android:id="@+id/TableLayout01"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content" >
 
-				<Button android:id="@+id/Button13" android:background="@layout/level13_button"
-					android:layout_margin="10dip" />
+            <TableRow
+                android:id="@+id/TableRow01"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center" >
 
-				<Button android:id="@+id/Button14" android:background="@layout/level14_button"
-					android:layout_margin="10dip" />
+                <Button
+                    android:id="@+id/Button10"
+                    android:layout_column="1"
+                    android:layout_margin="10dip"
+                    android:background="@layout/level10_button" />
 
-			</TableRow>
-		</TableLayout>
-	</HorizontalScrollView>
-	
-	<HorizontalScrollView android:id="@+id/ScrollView03"
-		android:layout_width="fill_parent" android:layout_marginTop="336dip"
-		android:layout_height="95dip"
-		android:scrollbarAlwaysDrawHorizontalTrack="false" android:fadingEdge="none">
-		<TableLayout android:id="@+id/TableLayout01"
-			android:layout_height="wrap_content" android:layout_width="fill_parent">
+                <Button
+                    android:id="@+id/Button11"
+                    android:layout_margin="10dip"
+                    android:background="@layout/level11_button" />
 
-			<TableRow android:id="@+id/TableRow01" android:layout_width="fill_parent"
-				android:layout_height="wrap_content" android:gravity="center">
+                <Button
+                    android:id="@+id/Button12"
+                    android:layout_margin="10dip"
+                    android:background="@layout/level12_button" />
 
-				<Button android:id="@+id/Button21" android:background="@layout/level21_button"
-					android:layout_column="1" android:layout_margin="10dip" />
+                <Button
+                    android:id="@+id/Button13"
+                    android:layout_margin="10dip"
+                    android:background="@layout/level13_button" />
+            </TableRow>
+        </TableLayout>
+    </HorizontalScrollView>
 
-				<Button android:id="@+id/Button22" android:background="@layout/level22_button"
-					android:layout_margin="10dip" />
+    <HorizontalScrollView
+        android:id="@+id/ScrollView03"
+        android:layout_width="fill_parent"
+        android:layout_height="95dip"
+        android:layout_marginTop="336dip"
+        android:fadingEdge="none"
+        android:scrollbarAlwaysDrawHorizontalTrack="false" >
 
-				<Button android:id="@+id/Button23" android:background="@layout/level23_button"
-					android:layout_margin="10dip" />
+        <TableLayout
+            android:id="@+id/TableLayout01"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content" >
 
-				<Button android:id="@+id/Button24" android:background="@layout/level24_button"
-					android:layout_margin="10dip" />
+            <TableRow
+                android:id="@+id/TableRow01"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center" >
 
-			</TableRow>
-		</TableLayout>
-	</HorizontalScrollView>
+                <Button
+                    android:id="@+id/Button20"
+                    android:layout_column="1"
+                    android:layout_margin="10dip"
+                    android:background="@layout/level20_button" />
+
+                <Button
+                    android:id="@+id/Button21"
+                    android:layout_margin="10dip"
+                    android:background="@layout/level21_button" />
+
+                <Button
+                    android:id="@+id/Button22"
+                    android:layout_margin="10dip"
+                    android:background="@layout/level22_button" />
+
+                <Button
+                    android:id="@+id/Button23"
+                    android:layout_margin="10dip"
+                    android:background="@layout/level23_button" />
+            </TableRow>
+        </TableLayout>
+    </HorizontalScrollView>
 
 </RelativeLayout>

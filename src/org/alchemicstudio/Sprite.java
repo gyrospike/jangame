@@ -8,80 +8,95 @@ import javax.microedition.khronos.opengles.GL10;
 
 import org.alchemicstudio.Texture;
 
-import android.content.res.AssetManager;
-import android.os.SystemClock;
-import android.util.Log;
-
 public class Sprite {
 
-	public float xOffset;
-	public float yOffset;
-	public float rotation;
-	public boolean cameraRelative;
-	public int currentTextureIndex;
-	public float xScale, yScale;
+	/** the x offset of the sprite */
+	private float xOffset;
+	
+	/** the y offset of the sprite */
+	private float yOffset;
 
+	/** array of textures this sprite uses */
 	private Texture[] mTexture;
-	private int textureIndex;
+	
+	/** length of texture array cached in a member variable as it is needed on draw, which is called often */
+	private int mTextureArrayLength;
+	
+	/** the current texture index of the texture array to be used as the display texture */
+	private int mCurrentTextureIndex = 0;
+	
+	/** the draw priority for this sprite, as in, should this sprite appear in front of this one? */
 	private int mPriority;
-	private FloatBuffer vertexBuffer;
-	private FloatBuffer textureBuffer;
-	private ByteBuffer indexBuffer;
+	
+	private FloatBuffer mVertexBuffer;
+	private FloatBuffer mTextureBuffer;
+	private ByteBuffer mIndexBuffer;
 
-	private float widthScale;
-	private float heightScale;
-	private float opacity;
+	private float mWidthScale;
+	private float mHeightScale;
+	private float mRotation;
+	
+	private float mOpacity = 1.0f;
+	private float mXScale = 1.0f;
+	private float mYScale = 1.0f;
 
-	private long mLastTime;
-	private long mTime;
-	private int framesPerMillisecond;
-
-	public Sprite(int priority, int frames, int fpms) {
-		framesPerMillisecond = fpms;
-		init(priority, frames);
-	}
-
-	public Sprite(int priority, int frames) {
-		init(priority, frames);
+	public Sprite(int[] textureIDArray, int priority, float width, float height) {
+		mWidthScale = width;
+		mHeightScale = height;
+		
+		mTextureArrayLength = textureIDArray.length;
+		init(priority, mTextureArrayLength);
+		
+		for(int i = 0; i < mTextureArrayLength; i++) {
+			Texture temp = BaseObject.sSystemRegistry.mAssetLibrary.getTextureByResource(textureIDArray[i]);
+			mTexture[i] = temp;
+		}
 	}
 
 	private void init(int priority, int frames) {
-		byte[] indices = { 1, 0, 2, 3 };
+		final byte[] indices = { 1, 0, 2, 3 };
 		
-		float[] vertices = { 0.0f, 0.0f, // 0 bottom left
+		final float[] vertices = { 
+				0.0f, 0.0f, // 0 bottom left
 				0.0f, 1.0f, // 1 top left
 				1.0f, 1.0f, // 2 top right
 				1.0f, 0.0f, // 3 bottom right
 		};
 		
-		float[] texture = { 0.0f, 1.0f, //
+		final float[] texture = { 
+				0.0f, 1.0f, //
 				0.0f, 0.0f, //
 				1.0f, 0.0f, //
 				1.0f, 1.0f, //
 		};
 
 		mTexture = new Texture[frames];
-		currentTextureIndex = 0;
-		opacity = 1.0f;
 		mPriority = priority;
-		xScale = 1.0f;
-		yScale = 1.0f;
 
 		ByteBuffer byteBuf = ByteBuffer.allocateDirect(vertices.length * 4);
 		byteBuf.order(ByteOrder.nativeOrder());
-		vertexBuffer = byteBuf.asFloatBuffer();
-		vertexBuffer.put(vertices);
-		vertexBuffer.position(0);
+		mVertexBuffer = byteBuf.asFloatBuffer();
+		mVertexBuffer.put(vertices);
+		mVertexBuffer.position(0);
 
 		byteBuf = ByteBuffer.allocateDirect(texture.length * 4);
 		byteBuf.order(ByteOrder.nativeOrder());
-		textureBuffer = byteBuf.asFloatBuffer();
-		textureBuffer.put(texture);
-		textureBuffer.position(0);
+		mTextureBuffer = byteBuf.asFloatBuffer();
+		mTextureBuffer.put(texture);
+		mTextureBuffer.position(0);
 
-		indexBuffer = ByteBuffer.allocateDirect(indices.length);
-		indexBuffer.put(indices);
-		indexBuffer.position(0);
+		mIndexBuffer = ByteBuffer.allocateDirect(indices.length);
+		mIndexBuffer.put(indices);
+		mIndexBuffer.position(0);
+	}
+	
+	/**
+	 * setter for the current texture index
+	 * 
+	 * @param newIndex
+	 */
+	protected void setTextureIndex(int newIndex) {
+		mCurrentTextureIndex = newIndex;
 	}
 	
 	public void modTex(float scale) {
@@ -93,30 +108,46 @@ public class Sprite {
 		
 		ByteBuffer byteBuf = ByteBuffer.allocateDirect(texture.length * 4);
 		byteBuf.order(ByteOrder.nativeOrder());
-		textureBuffer = byteBuf.asFloatBuffer();
-		textureBuffer.put(texture);
-		textureBuffer.position(0);
+		mTextureBuffer = byteBuf.asFloatBuffer();
+		mTextureBuffer.put(texture);
+		mTextureBuffer.position(0);
 		
 	}
 
+	/**
+	 * increment the texture frame by one, resetting to zero if out of range
+	 */
+	public void incrementFrame() {
+		mCurrentTextureIndex++;
+		if(mCurrentTextureIndex == mTextureArrayLength) {
+			mCurrentTextureIndex = 0;
+		}
+	}
+	
+	/**
+	 * 
+	 * @param x
+	 * @param y
+	 */
 	public void setPosition(float x, float y) {
 		xOffset = x;
-		yOffset = -y;
+		yOffset = y;
 	}
 
 	public void setOpacity(float value) {
-		opacity = value;
+		mOpacity = value;
 	}
 
 	public void setScale(float x, float y) {
-		xScale = x;
-		yScale = y;
+		mXScale = x;
+		mYScale = y;
 	}
 
 	public void setRotation(float angle) {
-		rotation = (float) (180 * (angle / Math.PI));
+		mRotation = (float) (180 * (angle / Math.PI));
 	}
 
+	// TODO - what is the deal with this negative offset?
 	public Vector2 getPosition() {
 		return new Vector2(xOffset, yOffset);
 	}
@@ -125,44 +156,27 @@ public class Sprite {
 		return mPriority;
 	}
 
-	public void setTextureFrame(Texture texture, float width, float height) {
-		mTexture[textureIndex] = texture;
-		widthScale = width;
-		heightScale = height;
-		textureIndex++;
-	}
-
 	public void draw(GL10 gl, float angle, float x, float y) {
-		if (framesPerMillisecond != 0) {
-			mTime = SystemClock.uptimeMillis();
-			final long timeDelta = mTime - mLastTime;
-
-			if (timeDelta > framesPerMillisecond) {
-				mLastTime = mTime;
-				currentTextureIndex++;
-				if (currentTextureIndex >= textureIndex)
-					currentTextureIndex = 0;
-			}
-		}
-
-		gl.glBindTexture(GL10.GL_TEXTURE_2D, mTexture[currentTextureIndex].name);
+		gl.glBindTexture(GL10.GL_TEXTURE_2D, mTexture[mCurrentTextureIndex].name);
 		gl.glEnableClientState(GL10.GL_VERTEX_ARRAY);
 		gl.glEnableClientState(GL10.GL_TEXTURE_COORD_ARRAY);
-		gl.glVertexPointer(2, GL10.GL_FLOAT, 0, vertexBuffer);
-		gl.glTexCoordPointer(2, GL10.GL_FLOAT, 0, textureBuffer);
-
-		gl.glColor4f(opacity, opacity, opacity, opacity);
-		gl.glTranslatef(x, y, 0);
+		gl.glVertexPointer(2, GL10.GL_FLOAT, 0, mVertexBuffer);
+		gl.glTexCoordPointer(2, GL10.GL_FLOAT, 0, mTextureBuffer);
+		gl.glColor4f(mOpacity, mOpacity, mOpacity, mOpacity);
+		
+		// NOTE: negative here allows all values for y to be positive in game managers, though 
+		// coordinates in y axis are flipped
+		gl.glTranslatef(x, -y, 0);
 		
 		//translate the gl object to the center of the image, rotate, then go back -> this helps in thinking about opengl 
 		//as a sort of camera moving around looking at objects as opposed to objects moving around
-		gl.glTranslatef(widthScale/2, heightScale/2, 0);
-		gl.glRotatef(rotation + angle, 0, 0, 1);
-		gl.glTranslatef(-widthScale/2, -heightScale/2, 0);
+		gl.glTranslatef(mWidthScale/2, mHeightScale/2, 0);
+		gl.glRotatef(mRotation + angle, 0, 0, 1);
+		gl.glTranslatef(-mWidthScale/2, -mHeightScale/2, 0);
 		
-		gl.glScalef(widthScale * xScale, heightScale * yScale, 0);
+		gl.glScalef(mWidthScale * mXScale, mHeightScale * mYScale, 0);
 
-		gl.glDrawElements(GL10.GL_TRIANGLE_STRIP, 4, GL10.GL_UNSIGNED_BYTE, indexBuffer);
+		gl.glDrawElements(GL10.GL_TRIANGLE_STRIP, 4, GL10.GL_UNSIGNED_BYTE, mIndexBuffer);
 		gl.glLoadIdentity();
 
 		gl.glDisableClientState(GL10.GL_VERTEX_ARRAY);
@@ -170,7 +184,7 @@ public class Sprite {
 	}
 
 	public final static class PriorityComparator implements Comparator<Sprite> {
-
+		// removing this seems to have no effect - not sure why we are overriding, aren't we implementing?
 		@Override
 		public int compare(Sprite s1, Sprite s2) {
 			int s1P = s1.getPriority();

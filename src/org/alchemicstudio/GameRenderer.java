@@ -4,45 +4,52 @@ import javax.microedition.khronos.egl.EGLConfig;
 import javax.microedition.khronos.opengles.GL10;
 
 import android.content.Context;
-import android.content.res.AssetManager;
-import android.graphics.Paint;
-import android.graphics.Typeface;
+
 import android.opengl.GLSurfaceView.Renderer;
 import android.util.Log;
 
 public class GameRenderer implements Renderer {
 
+	/** current context used for loading textures */
 	private Context mContext;
+	
+	/** list of sprites to be drawn */
 	private FixedSizeArray<Sprite> spriteList;
+	
+	/** list of the text boxes to be drawn */
 	private FixedSizeArray<TextBox> textBoxList;
-	private float originX, originY;
-	private float xCamera, yCamera;
-	private boolean setOrigin = false;
+	
+	/** lock object - TODO - study this more */
 	private Object mDrawLock;
+	
+	/** has the draw queue been updated? */
 	private boolean mDrawQueueChanged;
+	
+	/** height of the surface */
 	private int mHeight;
+	
+	/** width of the surface */
 	private int mWidth;
 
+	/** handles open GL implementation of text boxes, polys with text textures */
 	private LabelMaker mLabels;
-	private Paint mLabelPaint;
+	
+	/** 
+	 * the textures types that are being used by this game renderer, different
+	 *	types means fewer textures in memory - TODO - might not need this concept
+	 */
+	private int mTextureTypes;
 
-	public GameRenderer(Context context) {
+	public GameRenderer(Context context, int textureTypes) {
 		mContext = context;
 		mDrawLock = new Object();
 		mDrawQueueChanged = false;
-
-		Typeface myFont = Typeface.createFromAsset(context.getAssets(), "fonts/AGENCYR.TTF");
-
-		mLabelPaint = new Paint();
-		mLabelPaint.setTypeface(myFont);
-		mLabelPaint.setTextSize(24);
-		mLabelPaint.setAntiAlias(true);
-		mLabelPaint.setARGB(0xff, 0x00, 0x00, 0x00);
+		mTextureTypes = textureTypes;
 	}
 
 	public void onSurfaceCreated(GL10 gl, EGLConfig config) {
 		Log.d("DEBUG", "onSurfaceCreated was called");
-		loadTextures(gl, BaseObject.sSystemRegistry.longTermTextureLibrary);
+		loadTextures(gl);
 
 		gl.glShadeModel(GL10.GL_SMOOTH);
 		gl.glEnable(GL10.GL_TEXTURE_2D);
@@ -59,7 +66,7 @@ public class GameRenderer implements Renderer {
 		if (mLabels != null) {
 			mLabels.shutdown(gl);
 		} else {
-			mLabels = new LabelMaker(256, 64);
+			mLabels = new LabelMaker(256, 256);
 		}
 		mLabels.initialize(gl);
 	}
@@ -131,8 +138,9 @@ public class GameRenderer implements Renderer {
 				for (int i = 0; i < count; i++) {
 					if (objectArray[i] != null) {
 						Sprite currentSprite = (Sprite) objectArray[i];
-						x = currentSprite.xOffset;
-						y = currentSprite.yOffset;
+						Vector2 tempPos = currentSprite.getPosition();
+						x = tempPos.x;
+						y = tempPos.y;
 						currentSprite.draw(gl, 0, x, y);
 					}
 				}
@@ -154,7 +162,7 @@ public class GameRenderer implements Renderer {
 				for (int h = 0; h < len; h++) {
 					if (objectArray[h] != null) {
 						TextBox currentTextBox = (TextBox) objectArray[h];
-						currentTextBox.index = mLabels.add(gl, currentTextBox.theText, mLabelPaint);
+						currentTextBox.setIndex(mLabels.add(gl, currentTextBox.getText(), currentTextBox.getPaint()));
 					}
 				}
 				mLabels.endAdding(gl);
@@ -162,7 +170,7 @@ public class GameRenderer implements Renderer {
 				for (int g = 0; g < len; g++) {
 					if (objectArray[g] != null) {
 						TextBox currentTextBox = (TextBox) objectArray[g];
-						mLabels.draw(gl, currentTextBox.posX, currentTextBox.posY, currentTextBox.index);
+						mLabels.draw(gl, currentTextBox.getX(), currentTextBox.getY(), currentTextBox.getIndex());
 					}
 				}
 				mLabels.endDrawing(gl);
@@ -172,14 +180,10 @@ public class GameRenderer implements Renderer {
 		}
 	}
 
-	public void loadTextures(GL10 gl, TextureLibrary library) {
+	public void loadTextures(GL10 gl) {
 		if (gl != null) {
-			library.loadAll(mContext, gl);
+			BaseObject.sSystemRegistry.mAssetLibrary.loadAll(mTextureTypes, mContext, gl);
 		}
-	}
-
-	public void unloadTextures(TextureLibrary library) {
-		library.invalidateAll();
 	}
 
 	public synchronized void setDrawQuadQueue(FixedSizeArray<Sprite> sList) {
@@ -198,30 +202,11 @@ public class GameRenderer implements Renderer {
 		}
 	}
 
-	public void resetPosition() {
-		setOrigin = false;
-	}
-
-	public void setPosition(float x, float y) {
-		if (!setOrigin) {
-			originX = x;
-			originY = y;
-			setOrigin = true;
-		}
-
-		xCamera += -(originX - x);
-		yCamera += (originY - y);
-
-		originX = x;
-		originY = y;
-	}
-
-	public synchronized void onPause() {
+	public synchronized void pause() {
 		// Stop waiting to avoid deadlock.
 		// TODO: this is a hack. Probably this renderer
 		// should just use GLSurfaceView's non-continuous render
 		// mode.
-		unloadTextures(BaseObject.sSystemRegistry.longTermTextureLibrary);
 		synchronized (mDrawLock) {
 			mDrawQueueChanged = true;
 			mDrawLock.notify();
