@@ -1,6 +1,5 @@
 package org.alchemicstudio;
 
-import android.graphics.Point;
 import android.util.Log;
 
 public class Track extends BaseObject {
@@ -8,17 +7,18 @@ public class Track extends BaseObject {
 	/** the nodes that make up the track */
 	private Node[][] mNodes = null;
 	
+	/** the nodes that make up the outside of the track */
+	private Node[] mBorderNodes = null;
+	
 	/** the spark that traverses the track */
 	private Spark mSpark = null;
 	
 	private Node mStartNode = null;
 	
-	private Node mEndNode = null;
-	
 	private Node mPreviousNode = null;
 	
 	public Track() {
-		
+		mSpark = new Spark();
 	}
 	
 	/**
@@ -28,12 +28,11 @@ public class Track extends BaseObject {
 	 */
 	public void loadNodes(Node[][] nodes, Node[] borderNodes) {
 		mNodes = nodes;
+		mBorderNodes = borderNodes;
 		int len = borderNodes.length;
 		for(int i = 0; i < len; i++) {
 			if(borderNodes[i].getOrder() == Node.BORDER_TYPE_START) {
 				mStartNode = borderNodes[i];
-			} else if(borderNodes[i].getOrder() == Node.BORDER_TYPE_END) {
-				mEndNode = borderNodes[i];
 			}
 		}
 	}
@@ -42,17 +41,19 @@ public class Track extends BaseObject {
 	 * release the spark
 	 */
 	public void releaseSpark() {
-		mSpark = new Spark();
+		mSpark.resetSpark();
 		mSpark.setPosition(mStartNode.getPosition().x, mStartNode.getPosition().y);
 		mSpark.setTarget(resolveNextTargetNode(mStartNode));
+		mSpark.setStartingSpeed(Spark.STARTING_VELOCITY);
 	}
 	
 	@Override
 	public void update(float timeDelta) {
-		if(mSpark != null) {
+		if(mSpark.getReleased()) {
 			mSpark.update(timeDelta);
-			if(mSpark.readyForNextTarget()) {
+			if(mSpark.getReadyForNextTarget()) {
 				mSpark.setTarget(resolveNextTargetNode(mSpark.getTarget()));
+				mSpark.updateSprite();
 			}
 		}
 	}
@@ -64,25 +65,31 @@ public class Track extends BaseObject {
 	 * @return
 	 */
 	private Node resolveNextTargetNode(Node currentNode) {
-		NodeConnection result = null;
+		Node result = null;
 		NodeConnection pConnection = currentNode.getPreferredConnection();
 		// don't add the connection to this node that the spark just came from
 		if(pConnection != null && (mPreviousNode.getI() != pConnection.getI() || mPreviousNode.getJ() != pConnection.getJ())) {
-			result = pConnection;
+			result = getNodeFromConnection(pConnection);
 		} else {
 			NodeConnection[] connections = currentNode.getConnections();
 			for(int i = 0; i < connections.length; i++) {
 				// if there is no previous connection we assume we are just starting
 				if(mPreviousNode == null) {
-					result = connections[i];
+					result = getNodeFromConnection(connections[i]);
 				} else if (mPreviousNode.getI() != connections[i].getI() || mPreviousNode.getJ() != connections[i].getJ()) {
-					result = connections[i];
+					// don't allow us to get to end node through this flow, wait until last check
+					// TODO - we'll probably want to allow this flow later
+					result = getNodeFromConnection(connections[i]);
 					break;
 				}
 			}
+			if(result == null) {
+				Log.d("DEBUG", "spark reached the end of the line");
+				mSpark.resetSpark();
+			}
 		}
 		mPreviousNode = currentNode;
-		return getNodeFromConnection(result);
+		return result;
 	}
 	
 	/**
@@ -90,7 +97,13 @@ public class Track extends BaseObject {
 	 * @return		node that matches the node connection passed in
 	 */
 	private Node getNodeFromConnection(NodeConnection nC) {
-		return mNodes[nC.getI()][nC.getJ()];
+		Node result = null;
+		if(nC.getK() == -1) {
+			result = mNodes[nC.getI()][nC.getJ()];
+		} else {
+			result = mBorderNodes[nC.getK()];
+		}
+		return result;
 	}
 	
 }

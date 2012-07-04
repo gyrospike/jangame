@@ -49,8 +49,6 @@ public class Game {
 	 * @param extras	game specific info, like which level to load
 	 */
 	public void bootstrap(Context context, Bundle extras) {
-		BaseObject.sSystemRegistry.mAssetLibrary.loadFonts(context);
-
 		ParsedDataSet parsedMapData = null;
 		try {
 			SAXParserFactory spf = SAXParserFactory.newInstance();
@@ -80,11 +78,13 @@ public class Game {
 			sp.parse(context.getResources().openRawResource(mapNumber), myXMLHandler);
 			parsedMapData = myXMLHandler.getParsedData();
 			
-			mGameThread = new GameRunnable();
+			DebugWindow mDWindow = new DebugWindow();
+			
+			mGameThread = new GameRunnable(mDWindow);
 			mGameThread.setGameRenderer(mSurfaceView.getGameRenderer());
 			mGameThread.setGameManager(mGameManager);
 			
-			mGameManager.initGame(context, parsedMapData, mScreenWidth, mScreenHeight);
+			mGameManager.initGame(context, parsedMapData, mScreenWidth, mScreenHeight, mDWindow);
 			start();
 		} catch (Exception e) {
 			Log.e("DEBUG", "QueryError", e);
@@ -141,6 +141,7 @@ public class Game {
 	 * resume the game thread
 	 */
 	public void resume() {
+		Log.d("DEBUG", "resuming...");
 		mGameThread.resumeGame();
 	}
 

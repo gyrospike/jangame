@@ -10,6 +10,9 @@ import android.util.Log;
 
 public class GameRenderer implements Renderer {
 
+	/** fps counter used in debug window */
+	public static int mDebugFPSCounter = 0;
+	
 	/** current context used for loading textures */
 	private Context mContext;
 	
@@ -153,8 +156,7 @@ public class GameRenderer implements Renderer {
 
 			viewPerspective(gl);
 			
-			//having the text drawing done outside of the sync caused flickering, possibly more problems too
-
+			//having the text drawing done outside of the sync caused flickering
 			if (textBoxList != null) {
 				Object[] objectArray = textBoxList.getArray();
 				final int len = objectArray.length;
@@ -178,6 +180,7 @@ public class GameRenderer implements Renderer {
 				gl.glClear(GL10.GL_COLOR_BUFFER_BIT | GL10.GL_DEPTH_BUFFER_BIT);
 			}
 		}
+		mDebugFPSCounter++;
 	}
 
 	public void loadTextures(GL10 gl) {

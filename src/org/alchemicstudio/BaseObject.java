@@ -24,7 +24,7 @@ public class BaseObject {
 		if(BaseObject.sSystemRegistry.mAssetLibrary == null) {
 			AssetLibrary assetLibrary = new AssetLibrary();
 			BaseObject.sSystemRegistry.mAssetLibrary = assetLibrary;
-		}		
+		}
 	}
 	
 	/**

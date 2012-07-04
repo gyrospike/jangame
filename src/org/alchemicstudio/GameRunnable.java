@@ -8,6 +8,9 @@ class GameRunnable implements Runnable {
 	/** minimum time that must elapse before the game can be updated again */
 	private static final int MIN_TIME_DELTA_MS = 16;
 	
+	/** number of milliseconds in a second */
+	private static final int MILLISECONDS_PER_SECOND = 1000;
+	
 	/** game time at last update */
 	private long mLastTime;
 	
@@ -25,15 +28,18 @@ class GameRunnable implements Runnable {
 	
 	/** pause lock object, I don't know too much about this */
 	private Object mPauseLock;
+	
+	/** debugging window shows debug text */
+	private DebugWindow mDWindow;
 
 	/**
 	 * controls the main update loop, has hooks into the game manager, which updates game logic, and
 	 * the game renderer, which draws the game
 	 */
-	public GameRunnable() {
+	public GameRunnable(DebugWindow dWindow) {
 		mPauseLock = new Object();
-		
 		mFinished = false;
+		mDWindow = dWindow;
 	}
 	
 	public void stopGame() {
@@ -60,6 +66,7 @@ class GameRunnable implements Runnable {
 	@Override
 	public void run() {
 		mLastTime = SystemClock.uptimeMillis();
+		long fpsTime = SystemClock.uptimeMillis();
 		while (!mFinished) {
 			if (mGameManager != null) {
 				mGameRenderer.waitDrawingComplete();
@@ -68,12 +75,20 @@ class GameRunnable implements Runnable {
 				final long timeDelta = time - mLastTime;
 				long finalDelta = timeDelta;
 
+				if(time - fpsTime >= MILLISECONDS_PER_SECOND) {
+					fpsTime = time;
+					mDWindow.updateTextBlock("FPS", Integer.toString(GameRenderer.mDebugFPSCounter));
+					GameRenderer.mDebugFPSCounter = 0;
+				}
+				
 				if (timeDelta > MIN_TIME_DELTA_MS) {
 					mLastTime = time;
 					mGameManager.update(timeDelta);
+					mDWindow.update(timeDelta);
 					BaseObject.sSystemRegistry.mRenderSystem.sendUpdates(mGameRenderer);
 				}
 
+				
 				if (finalDelta < MIN_TIME_DELTA_MS) {
 					try {
 						Thread.sleep(MIN_TIME_DELTA_MS - finalDelta);
@@ -81,10 +96,10 @@ class GameRunnable implements Runnable {
 						// Interruptions here are no big deal.
 					}
 				}
+				
 				// Log.d("DEBUG", "right before pause block");
 				synchronized (mPauseLock) {
 					if (mPaused) {
-						Log.d("DEBUG", "first run: paused");
 						while (mPaused) {
 							try {
 								Log.d("DEBUG", "paused...");
@@ -92,6 +107,7 @@ class GameRunnable implements Runnable {
 							} catch (InterruptedException e) {
 								// No big deal if this wait is interrupted.
 							}
+							Log.d("DEBUG", "pause lock awoken!");
 						}
 					}
 				}

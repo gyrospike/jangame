@@ -231,11 +231,11 @@ public class Node extends BaseObject {
 	 * @param node
 	 * @return
 	 */
-	public boolean hasConnectionTo(NodeConnection node) {
+	public boolean hasConnectionTo(int indexI, int indexJ) {
 		boolean result = false;
 		NodeConnection[] currentNodes = getConnections();
 		for(int i = 0; i < currentNodes.length; i++) {
-			if(currentNodes[i].getI() == node.getI() && currentNodes[i].getJ() == node.getJ()) {
+			if(currentNodes[i].getI() == indexI && currentNodes[i].getJ() == indexJ) {
 				result = true;
 				break;
 			}

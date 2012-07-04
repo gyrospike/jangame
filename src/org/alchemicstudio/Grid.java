@@ -32,7 +32,7 @@ public class Grid extends BaseObject {
 	private final static float TRACK_OFFSET_Y = 14.0f;
 	
 	/** the amount to hide the border nodes beyond the screen by */
-	private final static float BORDER_NODE_OFFSET = 10.0f;
+	private final static float BORDER_NODE_OFFSET = 30.0f;
 
 	/** current index for particle array */
 	private int mParticleIndex = 0;
@@ -509,7 +509,7 @@ public class Grid extends BaseObject {
 		if(mNodeChainIndex < MAX_CHAIN_LENGTH) {
 			if(!containsConnection(mNodeChain, newNodeConnection)) {
 				NodeConnection lastLink = mNodeChain[mNodeChainIndex-1];
-				if(mNodes[lastLink.getI()][lastLink.getJ()].hasConnectionTo(newNodeConnection)) {
+				if(mNodes[lastLink.getI()][lastLink.getJ()].hasConnectionTo(newNodeConnection.getI(), newNodeConnection.getJ())) {
 					mNodeChain[mNodeChainIndex] = newNodeConnection;
 					mNodeChainIndex++;
 				}
@@ -547,9 +547,9 @@ public class Grid extends BaseObject {
 		}
 		
 		/*
-		 * Uncomment this when you need to debug the border nodes, also remember to set the offset
-		 * BORDER_NODE_OFFSET = -50.0f seems to work
-		 * 
+		Uncomment this when you need to debug the border nodes, also remember to set the offset
+		BORDER_NODE_OFFSET = -50.0f seems to work
+		  
 		for(int q = 0; q < mBorderNodes.length; q++) {
 			mBorderNodes[q].update(timeDelta);
 		}

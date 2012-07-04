@@ -56,7 +56,7 @@ public class GameManager {
 	 * @param screenWidth
 	 * @param screenHeight
 	 */
-	public void initGame(Context context, ParsedDataSet dataSet, float screenWidth, float screenHeight) {
+	public void initGame(Context context, ParsedDataSet dataSet, float screenWidth, float screenHeight, DebugWindow dWindow) {
 		Grid gameGrid = new Grid(dataSet, screenWidth, screenHeight);
 		
 		mGameModeArray[GAME_MODE_BUILD] = new GMGridBuild(gameGrid);
@@ -64,8 +64,7 @@ public class GameManager {
 		
 		mActiveGameMode = GAME_MODE_BUILD;
 		
-		mDWindow = new DebugWindow();
-		mDWindow.updateTextBlock("Status", "In Progress");
+		mDWindow = dWindow;
 		mDWindow.updateTextBlock("Game Mode", DEBUG_GAME_MODE_BUILD);
 		
 		Button gameModeToggleButton = (Button) ((Activity) context).findViewById(R.id.gameModeToggleButton);
@@ -86,7 +85,6 @@ public class GameManager {
 	public void update(float timeDelta) {
 		processInput();
 		mGameModeArray[mActiveGameMode].update(timeDelta);
-		mDWindow.update(timeDelta);
 	}
 	
 	/**
