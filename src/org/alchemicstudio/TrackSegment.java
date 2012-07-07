@@ -18,8 +18,8 @@ public class TrackSegment extends BaseObject {
 	 * Constructor
 	 */
 	public TrackSegment(){
-		int[] textureArray = {R.drawable.wire_segment};
-		mSprite = new Sprite(textureArray, 0, 16.0f, 4.0f);
+		Texture texture = BaseObject.sSystemRegistry.mAssetLibrary.getTextureByResource(R.drawable.wire_segment);
+		mSprite = new Sprite(texture, 0, texture.width, texture.height);
 	}
 	
 	/**
@@ -39,7 +39,7 @@ public class TrackSegment extends BaseObject {
 	}
 	
 	@Override
-	public void update(float timeDelta) {
+	public void update(long timeDelta) {
 		if(mInUse) {
 			system.scheduleForDraw(mSprite);
 		}

@@ -27,9 +27,17 @@ public class GMRelease extends GameMode {
 	public GMRelease(Grid grid, Context context) {
 		mGrid = grid;
 		mTrack = new Track();
+		
+		Texture red = BaseObject.sSystemRegistry.mAssetLibrary.getTextureByResource(R.drawable.hud_gear_red);
+		HUD.getInstance().addElement(GameManager.GAME_MODE_RELEASE, red, 30, 60, 0, 300, false, HUD.NOT_UNIQUE_ELEMENT);
+		
+		Texture green = BaseObject.sSystemRegistry.mAssetLibrary.getTextureByResource(R.drawable.hud_gear_green);
+		HUD.getInstance().addElement(GameManager.GAME_MODE_RELEASE, green, 150, 60, 0, 300, false, HUD.NOT_UNIQUE_ELEMENT);
+		
+		Texture blue = BaseObject.sSystemRegistry.mAssetLibrary.getTextureByResource(R.drawable.hud_gear_blue);
+		HUD.getInstance().addElement(GameManager.GAME_MODE_RELEASE, blue, 270, 60, 0, 300, false, HUD.NOT_UNIQUE_ELEMENT);
 
 		sparkReleaseButton = (Button) ((Activity) context).findViewById(R.id.sparkReleaseButton);
-
 		sparkReleaseButton.setOnClickListener(new OnClickListener() {
 			public void onClick(View v) {
 				Log.d("DEBUG", "released the spark");
@@ -41,7 +49,7 @@ public class GMRelease extends GameMode {
 	/**
 	 * update the release game mode
 	 */
-	public void update(float timeDelta) {
+	public void update(long timeDelta) {
 		mGrid.update(timeDelta);
 		mTrack.update(timeDelta);
 	}
@@ -77,11 +85,14 @@ public class GMRelease extends GameMode {
 	@Override
 	public void makeActive() {
 		sparkReleaseButton.setVisibility(View.VISIBLE);
+		HUD.getInstance().setElementsVisibility(GameManager.GAME_MODE_RELEASE, true);
 	}
 
 	@Override
 	public void makeInactive() {
+		mTrack.resetSpark();
 		sparkReleaseButton.setVisibility(View.INVISIBLE);
+		HUD.getInstance().setElementsVisibility(GameManager.GAME_MODE_RELEASE, false);
 	}
 	
 	/**

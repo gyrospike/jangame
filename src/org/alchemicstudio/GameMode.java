@@ -38,5 +38,5 @@ public abstract class GameMode {
 	 * 
 	 * @param timeDelta
 	 */
-	public abstract void update(float timeDelta);
+	public abstract void update(long timeDelta);
 }

@@ -13,28 +13,57 @@ public class DrawableObject extends BaseObject {
 	/** tracking how much time has elapsed every update call for animation purposes */
 	private float mElapsedTime;
 	
-	/**
-	 * Basic drawable object that holds a sprite object and can update that sprite object
-	 * for animations
-	 * 
-	 * @param textureArray
-	 * @param drawPriority
-	 * @param width
-	 * @param height
-	 * @param mspf
-	 */
-	public DrawableObject(int[] textureArray, int drawPriority, float width, float height, int mspf) {
-		mMillisecondPerFrame = mspf;
-		mSprite = new Sprite(textureArray, drawPriority, width, height);
+	/** how fast should this object rotate */
+	private float mRotationSpeed = 0.0f;
+	
+
+	public DrawableObject(Texture texture, int drawPriority) {
+		mMillisecondPerFrame = 0;
+		mSprite = new Sprite(texture, drawPriority);
 	}
 	
-	public void setPositionAndAngle(float angle, float xOffset, float yOffset) {
+	public DrawableObject(Texture texture, int drawPriority, int polyWidth, int polyHeight) {
+		mMillisecondPerFrame = 0;
+		mSprite = new Sprite(texture, drawPriority, polyWidth, polyHeight);
+	}
+	
+	public DrawableObject(Texture[] textureArray, int drawPriority, int mspf) {
+		mMillisecondPerFrame = mspf;
+		mSprite = new Sprite(textureArray, drawPriority);
+	}
+	
+	public DrawableObject(Texture[] textureArray, int drawPriority, int polyWidth, int polyHeight, int mspf) {
+		mMillisecondPerFrame = mspf;
+		mSprite = new Sprite(textureArray, drawPriority, polyWidth, polyHeight);
+	}
+	
+	/**
+	 * 
+	 * @param xOffset	the x position to set
+	 * @param yOffset 	the y position to set
+	 */
+	public void setPosition(float xOffset, float yOffset) {
 		mSprite.setPosition(xOffset, yOffset);
-		mSprite.setRotation(angle);
+	}
+	
+	/**
+	 * 
+	 * @param speed		the rotation speed in degrees
+	 */
+	public void setRotationSpeed(float speed) {
+		mRotationSpeed = speed;
+	}
+	
+	/**
+	 * 
+	 * @param newPos	new position to use
+	 */
+	public void setRelativePosition(Vector2 newPos) {
+		mSprite.setPosition(newPos.x, newPos.y);
 	}
 	
 	@Override
-	public void update(float timeDelta) {
+	public void update(long timeDelta) {
 		
 		if (mMillisecondPerFrame != 0) {
 			mElapsedTime += timeDelta;
@@ -42,6 +71,10 @@ public class DrawableObject extends BaseObject {
 				mElapsedTime = mElapsedTime - mMillisecondPerFrame;
 				mSprite.incrementFrame();
 			}
+		}
+		
+		if(mRotationSpeed != 0.0f) {
+			mSprite.setRotationDegrees(mSprite.getRotation()+mRotationSpeed);
 		}
 		
 		sSystemRegistry.mRenderSystem.scheduleForDraw(mSprite);

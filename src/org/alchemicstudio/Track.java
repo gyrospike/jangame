@@ -13,8 +13,10 @@ public class Track extends BaseObject {
 	/** the spark that traverses the track */
 	private Spark mSpark = null;
 	
+	/** the node at which the start begins it's journey */
 	private Node mStartNode = null;
 	
+	/** the node the spark just departed from */
 	private Node mPreviousNode = null;
 	
 	public Track() {
@@ -38,22 +40,34 @@ public class Track extends BaseObject {
 	}
 	
 	/**
+	 * reset the spark
+	 */
+	public void resetSpark() {
+		mSpark.resetSpark();
+	}
+	
+	/**
 	 * release the spark
 	 */
 	public void releaseSpark() {
 		mSpark.resetSpark();
-		mSpark.setPosition(mStartNode.getPosition().x, mStartNode.getPosition().y);
-		mSpark.setTarget(resolveNextTargetNode(mStartNode));
-		mSpark.setStartingSpeed(Spark.STARTING_VELOCITY);
+		if(mStartNode != null) {
+			mSpark.setPosition(mStartNode.getPosition().x, mStartNode.getPosition().y);
+			mSpark.setTarget(resolveNextTargetNode(mStartNode));
+			mSpark.setStartingSpeed(Spark.STARTING_VELOCITY);
+		} else {
+			Log.e("ERROR", "no start node set");
+		}
+		
 	}
 	
 	@Override
-	public void update(float timeDelta) {
+	public void update(long timeDelta) {
 		if(mSpark.getReleased()) {
 			mSpark.update(timeDelta);
 			if(mSpark.getReadyForNextTarget()) {
 				mSpark.setTarget(resolveNextTargetNode(mSpark.getTarget()));
-				mSpark.updateSprite();
+				mSpark.updateSprite(timeDelta);
 			}
 		}
 	}

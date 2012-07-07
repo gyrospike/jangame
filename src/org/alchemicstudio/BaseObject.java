@@ -32,7 +32,7 @@ public class BaseObject {
 	 * 
 	 * @param timeDelta
 	 */
-	public void update(float timeDelta) {
+	public void update(long timeDelta) {
 		
 	}
 }

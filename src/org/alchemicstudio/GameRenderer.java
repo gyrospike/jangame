@@ -37,6 +37,9 @@ public class GameRenderer implements Renderer {
 	/** handles open GL implementation of text boxes, polys with text textures */
 	private LabelMaker mLabels;
 	
+	/** has the renderer loaded all the textures yet? */
+	private boolean mLoadAllComplete = false;
+	
 	/** 
 	 * the textures types that are being used by this game renderer, different
 	 *	types means fewer textures in memory - TODO - might not need this concept
@@ -69,7 +72,7 @@ public class GameRenderer implements Renderer {
 		if (mLabels != null) {
 			mLabels.shutdown(gl);
 		} else {
-			mLabels = new LabelMaker(256, 256);
+			mLabels = new LabelMaker(512, 256);
 		}
 		mLabels.initialize(gl);
 	}
@@ -144,7 +147,7 @@ public class GameRenderer implements Renderer {
 						Vector2 tempPos = currentSprite.getPosition();
 						x = tempPos.x;
 						y = tempPos.y;
-						currentSprite.draw(gl, 0, x, y);
+						currentSprite.draw(gl, x, y);
 					}
 				}
 			} else if (spriteList == null) {
@@ -186,7 +189,12 @@ public class GameRenderer implements Renderer {
 	public void loadTextures(GL10 gl) {
 		if (gl != null) {
 			BaseObject.sSystemRegistry.mAssetLibrary.loadAll(mTextureTypes, mContext, gl);
+			mLoadAllComplete = true;
 		}
+	}
+	
+	public boolean isLoadAllComplete() {
+		return mLoadAllComplete;
 	}
 
 	public synchronized void setDrawQuadQueue(FixedSizeArray<Sprite> sList) {

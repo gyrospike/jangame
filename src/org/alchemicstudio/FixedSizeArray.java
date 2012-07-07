@@ -117,6 +117,19 @@ public class FixedSizeArray<T> {
     }
     
     /**
+     * Gets the last element added to the array
+     * 
+     * @return The contents of the last element in the array.
+     */
+    public T getLast() {
+        T object = null;
+        if (mCount > 0) {
+            object = mContents[mCount - 1];
+        }
+        return object;
+    }
+    
+    /**
      * Swaps the element at the passed index with the element at the end of the array.  When
      * followed by removeLast(), this is useful for quickly removing array elements.
      */

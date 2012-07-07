@@ -47,7 +47,7 @@ public class DebugWindow extends BaseObject {
 	}
 	
 	@Override
-	public void update(float timeDelta) {
+	public void update(long timeDelta) {
 		sSystemRegistry.mRenderSystem.scheduleForWrite(mDebugTextBox);
 	}
 }

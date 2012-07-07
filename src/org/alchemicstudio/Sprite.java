@@ -10,6 +10,8 @@ import org.alchemicstudio.Texture;
 
 public class Sprite {
 
+	private final float TEXTURE_FITS_POLY = 1.0f;
+	
 	/** the x offset of the sprite */
 	private float xOffset;
 	
@@ -34,26 +36,59 @@ public class Sprite {
 
 	private float mWidthScale;
 	private float mHeightScale;
-	private float mRotation;
+	private float mRotDegrees;
 	
 	private float mOpacity = 1.0f;
 	private float mXScale = 1.0f;
 	private float mYScale = 1.0f;
 
-	public Sprite(int[] textureIDArray, int priority, float width, float height) {
-		mWidthScale = width;
-		mHeightScale = height;
+	public Sprite(Texture texture, int priority) {
+		mWidthScale = texture.width;
+		mHeightScale = texture.height;
 		
-		mTextureArrayLength = textureIDArray.length;
-		init(priority, mTextureArrayLength);
+		Texture[] textureArray = {texture};
+		mTexture = textureArray;
+		mPriority = priority;
 		
-		for(int i = 0; i < mTextureArrayLength; i++) {
-			Texture temp = BaseObject.sSystemRegistry.mAssetLibrary.getTextureByResource(textureIDArray[i]);
-			mTexture[i] = temp;
-		}
+		mTextureArrayLength = mTexture.length;
+		init(TEXTURE_FITS_POLY, TEXTURE_FITS_POLY);
+	}
+	
+	public Sprite(Texture texture, int priority, int polyWidth, int polyHeight) {
+		mWidthScale = polyWidth;
+		mHeightScale = polyHeight;
+		
+		Texture[] textureArray = {texture};
+		mTexture = textureArray;
+		mPriority = priority;
+		
+		mTextureArrayLength = mTexture.length;
+		init(polyWidth/texture.width, polyHeight/texture.height);
+	}
+	
+	public Sprite(Texture[] textureArray, int priority) {
+		mWidthScale = textureArray[0].width;
+		mHeightScale = textureArray[0].height;
+		
+		mTexture = textureArray;
+		mPriority = priority;
+		
+		mTextureArrayLength = mTexture.length;
+		init(TEXTURE_FITS_POLY, TEXTURE_FITS_POLY);
+	}
+	
+	public Sprite(Texture[] textureArray, int priority, int polyWidth, int polyHeight) {
+		mWidthScale = polyWidth;
+		mHeightScale = polyHeight;
+		
+		mTexture = textureArray;
+		mPriority = priority;
+		
+		mTextureArrayLength = mTexture.length;
+		init(polyWidth/textureArray[0].width, polyHeight/textureArray[0].height);
 	}
 
-	private void init(int priority, int frames) {
+	private void init(float repeatS, float repeatT) {
 		final byte[] indices = { 1, 0, 2, 3 };
 		
 		final float[] vertices = { 
@@ -64,14 +99,11 @@ public class Sprite {
 		};
 		
 		final float[] texture = { 
-				0.0f, 1.0f, //
+				0.0f, repeatT, //
 				0.0f, 0.0f, //
-				1.0f, 0.0f, //
-				1.0f, 1.0f, //
+				repeatS, 0.0f, //
+				repeatS, repeatT, //
 		};
-
-		mTexture = new Texture[frames];
-		mPriority = priority;
 
 		ByteBuffer byteBuf = ByteBuffer.allocateDirect(vertices.length * 4);
 		byteBuf.order(ByteOrder.nativeOrder());
@@ -99,11 +131,12 @@ public class Sprite {
 		mCurrentTextureIndex = newIndex;
 	}
 	
-	public void modTex(float scale) {
-		float[] texture = { 0.0f, 1.0f, //
+	public void modTex(float lengthScale, float widthScale) {
+		float[] texture = { 
+				0.0f, widthScale, //
 				0.0f, 0.0f, //
-				scale, 0.0f, //
-				scale, 1.0f, //
+				lengthScale, 0.0f, //
+				lengthScale, widthScale, //
 		};
 		
 		ByteBuffer byteBuf = ByteBuffer.allocateDirect(texture.length * 4);
@@ -137,17 +170,29 @@ public class Sprite {
 	public void setOpacity(float value) {
 		mOpacity = value;
 	}
+	
+	public void setPolyScale(float x, float y) {
+		mWidthScale *= x;
+		mHeightScale *= y;
+	}
 
 	public void setScale(float x, float y) {
 		mXScale = x;
 		mYScale = y;
 	}
-
-	public void setRotation(float angle) {
-		mRotation = (float) (180 * (angle / Math.PI));
+	
+	public float getRotation() {
+		return mRotDegrees;
 	}
 
-	// TODO - what is the deal with this negative offset?
+	public void setRotationDegrees(float degree) {
+		mRotDegrees = degree;
+	}
+	
+	public void setRotation(double rad) {
+		mRotDegrees = (float) (180 * (rad / Math.PI));
+	}
+
 	public Vector2 getPosition() {
 		return new Vector2(xOffset, yOffset);
 	}
@@ -155,14 +200,22 @@ public class Sprite {
 	public int getPriority() {
 		return mPriority;
 	}
+	
+	public Vector2 getPolyScale() {
+		return new Vector2(mWidthScale, mHeightScale);
+	}
 
-	public void draw(GL10 gl, float angle, float x, float y) {
+	public void draw(GL10 gl, float x, float y) {
 		gl.glBindTexture(GL10.GL_TEXTURE_2D, mTexture[mCurrentTextureIndex].name);
 		gl.glEnableClientState(GL10.GL_VERTEX_ARRAY);
 		gl.glEnableClientState(GL10.GL_TEXTURE_COORD_ARRAY);
+		
 		gl.glVertexPointer(2, GL10.GL_FLOAT, 0, mVertexBuffer);
 		gl.glTexCoordPointer(2, GL10.GL_FLOAT, 0, mTextureBuffer);
 		gl.glColor4f(mOpacity, mOpacity, mOpacity, mOpacity);
+		
+		//gl.glTexParameterf(GL10.GL_TEXTURE_2D,GL10.GL_TEXTURE_WRAP_S,GL10.GL_REPEAT);
+		//gl.glTexParameterf(GL10.GL_TEXTURE_2D,GL10.GL_TEXTURE_WRAP_T,GL10.GL_REPEAT);
 		
 		// NOTE: negative here allows all values for y to be positive in game managers, though 
 		// coordinates in y axis are flipped
@@ -171,7 +224,7 @@ public class Sprite {
 		//translate the gl object to the center of the image, rotate, then go back -> this helps in thinking about opengl 
 		//as a sort of camera moving around looking at objects as opposed to objects moving around
 		gl.glTranslatef(mWidthScale/2, mHeightScale/2, 0);
-		gl.glRotatef(mRotation + angle, 0, 0, 1);
+		gl.glRotatef(mRotDegrees, 0, 0, 1);
 		gl.glTranslatef(-mWidthScale/2, -mHeightScale/2, 0);
 		
 		gl.glScalef(mWidthScale * mXScale, mHeightScale * mYScale, 0);

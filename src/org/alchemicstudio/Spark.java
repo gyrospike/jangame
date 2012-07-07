@@ -50,9 +50,18 @@ public class Spark extends BaseObject {
 	/** has this spark been released yet? */
 	private boolean isReleased = false;
 	
+	/** the number of milliseconds that should elapse for each frame */
+	private int mMillisecondPerFrame;
+	
+	/** tracking how much time has elapsed every update call for animation purposes */
+	private long mElapsedTime = 0;
+	
+	
 	public Spark() {
-		int[] textureArray = {R.drawable.spark};
-		mSprite = new Sprite(textureArray, 2, 32.0f, 32.0f);
+		int[] ids = {R.drawable.spark1, R.drawable.spark2, R.drawable.spark3};
+		Texture[] textures = BaseObject.sSystemRegistry.mAssetLibrary.getTexturesByResources(ids);
+		mSprite = new Sprite(textures, 2, textures[0].width, textures[0].height);
+		mMillisecondPerFrame = 100;
 	}
 	
 	/**
@@ -165,17 +174,24 @@ public class Spark extends BaseObject {
 	/**
 	 * update the sprite position and send it to be drawn
 	 */
-	public void updateSprite() {
+	public void updateSprite(long timeDelta) {
 		mSprite.setPosition(mPhysicsObject.getXPos(), mPhysicsObject.getYPos());
+		if (mMillisecondPerFrame != 0) {
+			mElapsedTime += timeDelta;
+			if (mElapsedTime > mMillisecondPerFrame) {
+				mElapsedTime = mElapsedTime - mMillisecondPerFrame;
+				mSprite.incrementFrame();
+			}
+		}
 		sSystemRegistry.mRenderSystem.scheduleForDraw(mSprite);
 	}
 	
 	@Override
-	public void update(float timeDelta) {
+	public void update(long timeDelta) {
 		calculateForce();
 		mPhysicsObject.updateState(timeDelta, mDistanceToTargetX, mDistanceToTargetY);
 		if(!mPhysicsObject.hasRemainder()) {
-			updateSprite();
+			updateSprite(timeDelta);
 		}
 	}
 }

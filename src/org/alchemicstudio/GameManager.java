@@ -1,5 +1,12 @@
 package org.alchemicstudio;
 
+/**
+ * handles the initialization of the game's resource loading and the game's
+ * logical entities
+ * 
+ */
+
+
 import java.util.concurrent.ArrayBlockingQueue;
 
 import android.app.Activity;
@@ -12,10 +19,10 @@ import android.widget.Button;
 public class GameManager {
 
 	/** game mode constant for build */
-	private final static int GAME_MODE_BUILD = 0;
+	public final static int GAME_MODE_BUILD = 0;
 	
 	/** game mode constant for release */
-	private final static int GAME_MODE_RELEASE = 1;
+	public final static int GAME_MODE_RELEASE = 1;
 	
 	/** debug text constant representing the release game mode */
 	private final static String DEBUG_GAME_MODE_RELEASE = "Release";
@@ -37,16 +44,21 @@ public class GameManager {
 	
 	/** debugging window shows debug text */
 	private DebugWindow mDWindow;
-
-	/**
-	 * handles the initialization of the game's resource loading and the game's
-	 * logical entities
-	 * 
-	 */
-	public GameManager() {
-		// what was this for?
-		//super();
-	}
+	
+	/** has the manager been initialized */
+	private boolean mInitialized = false;
+	
+	/** the context of the activity creating this manager */
+	private Context mContext;
+	
+	/** the data set containing all the level data */
+	private ParsedDataSet mDataSet;
+	
+	/** width of the screen */
+	private int mScreenWidth;
+	
+	/** height of the screen */
+	private int mScreenHeight;
 	
 	/**
 	 * create the primary logical entities for the game
@@ -56,25 +68,40 @@ public class GameManager {
 	 * @param screenWidth
 	 * @param screenHeight
 	 */
-	public void initGame(Context context, ParsedDataSet dataSet, float screenWidth, float screenHeight, DebugWindow dWindow) {
-		Grid gameGrid = new Grid(dataSet, screenWidth, screenHeight);
-		
-		mGameModeArray[GAME_MODE_BUILD] = new GMGridBuild(gameGrid);
-		mGameModeArray[GAME_MODE_RELEASE] = new GMRelease(gameGrid, context);
-		
-		mActiveGameMode = GAME_MODE_BUILD;
+	public void loadData(Context context, ParsedDataSet dataSet, int screenWidth, int screenHeight, DebugWindow dWindow) {
+		mContext = context;
+		mDataSet = dataSet;
+		mScreenWidth = screenWidth;
+		mScreenHeight = screenHeight;
 		
 		mDWindow = dWindow;
 		mDWindow.updateTextBlock("Game Mode", DEBUG_GAME_MODE_BUILD);
-		
-		Button gameModeToggleButton = (Button) ((Activity) context).findViewById(R.id.gameModeToggleButton);
-		
+	}
+	
+	/**
+	 * start the game manager now that we now the assets are loaded
+	 */
+	public void init() {
+		Grid gameGrid = new Grid(mDataSet, mScreenWidth, mScreenHeight);
+
+		mGameModeArray[GAME_MODE_BUILD] = new GMGridBuild(gameGrid);
+		mGameModeArray[GAME_MODE_RELEASE] = new GMRelease(gameGrid, mContext);
+		mActiveGameMode = GAME_MODE_BUILD;
+
+		Button gameModeToggleButton = (Button) ((Activity) mContext).findViewById(R.id.gameModeToggleButton);
+
 		gameModeToggleButton.setOnClickListener(new OnClickListener() {
 			public void onClick(View v) {
 				Log.d("DEBUG", "you pushed my button");
 				toggleGameModes();
 			}
 		});
+
+		mInitialized = true;
+	}
+
+	public boolean getInitialized() {
+		return mInitialized;
 	}
 
 	/**
@@ -82,9 +109,10 @@ public class GameManager {
 	 * 
 	 * @param timeDelta
 	 */
-	public void update(float timeDelta) {
+	public void update(long timeDelta) {
 		processInput();
 		mGameModeArray[mActiveGameMode].update(timeDelta);
+		HUD.getInstance().update(timeDelta);
 	}
 	
 	/**
@@ -139,7 +167,6 @@ public class GameManager {
 	 * switch between game modes
 	 */
 	private void toggleGameModes() {
-		Log.d("DEBUG", "toggle game mode");
 		String updateText = "";
 		if(mActiveGameMode == GAME_MODE_BUILD) {
 			mActiveGameMode = GAME_MODE_RELEASE;

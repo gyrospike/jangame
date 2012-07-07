@@ -22,8 +22,8 @@ public class Particle extends BaseObject {
 	private float velocity_Y;
 
 	public Particle() {
-		int[] textureArray = {R.drawable.white_box};
-		mSprite = new Sprite(textureArray, 0, 4, 4);
+		Texture texture = BaseObject.sSystemRegistry.mAssetLibrary.getTextureByResource(R.drawable.white_box);
+		mSprite = new Sprite(texture, 0, texture.width, texture.height);
 	}
 
 	public void createParticle(int x, int y) {
@@ -42,7 +42,7 @@ public class Particle extends BaseObject {
 	}
 
 	@Override
-	public void update(float timeDelta) {
+	public void update(long timeDelta) {
 		RenderSystem system = sSystemRegistry.mRenderSystem;
 		if (lifeRemaining > 0) {
 

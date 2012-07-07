@@ -538,7 +538,7 @@ public class Grid extends BaseObject {
 	}
 
 	@Override
-	public void update(float timeDelta) {	
+	public void update(long timeDelta) {	
 		
 		for(int w = 0; w < mNodes.length; w++) {
 			for(int q = 0; q < mNodes[w].length; q++) {

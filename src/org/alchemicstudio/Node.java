@@ -17,6 +17,21 @@ public class Node extends BaseObject {
 	/** constant representing a node being of type end */
 	public final static int BORDER_TYPE_END = 2;
 	
+	/** const for angles */
+	private final static double ANGLE_EAST = Math.PI;
+	
+	/** const for angles */
+	private final static double ANGLE_SOUTH = Math.PI/2.0;
+	
+	/** const for angles */
+	private final static double ANGLE_WEST = 0.0;
+	
+	/** const for angles */
+	private final static double ANGLE_NORTH = (3.0/2.0)*Math.PI;
+	
+	/** how far the preferred node arrow indicator is from it's node */
+	private final static int PREFERRED_ARROW_OFFSET = 35;
+	
 	/** sprite for the node */
 	private Sprite mSprite;
 	
@@ -75,11 +90,13 @@ public class Node extends BaseObject {
 		}
 
 		if(this.type==2) {
-			int[] spriteArray = {R.drawable.grey_gate_node, R.drawable.yellow_gate_node, R.drawable.green_gate_node};
-			mSprite = new Sprite(spriteArray, 1, 32.0f, 32.0f);
+			int[] ids = {R.drawable.grey_gate_node, R.drawable.yellow_gate_node, R.drawable.green_gate_node};
+			Texture[] textures = BaseObject.sSystemRegistry.mAssetLibrary.getTexturesByResources(ids);
+			mSprite = new Sprite(textures, 1);
 		} else {
-			int[] spriteArray = {R.drawable.grey_node, R.drawable.yellow_node, R.drawable.green_node};
-			mSprite = new Sprite(spriteArray, 1, 32.0f, 32.0f);
+			int[] ids = {R.drawable.grey_node, R.drawable.yellow_node, R.drawable.green_node};
+			Texture[] textures = BaseObject.sSystemRegistry.mAssetLibrary.getTexturesByResources(ids);
+			mSprite = new Sprite(textures, 1);
 		}
 		
 		mPosition = vec;
@@ -250,7 +267,34 @@ public class Node extends BaseObject {
 	 */
 	public void setPreferredConnection(NodeConnection node) {
 		mPreferredConnection = node;
-		Log.d("DEBUG", "Node: (" + getI() + ", " + getJ() + ") now prefers to connect to node: (" + mPreferredConnection.getI() + ", " + mPreferredConnection.getJ() + ")");
+		double angle = ANGLE_EAST;
+		float posX = 0;
+		float posY = 0;
+		if(mPreferredConnection.getJ() == getJ()) {
+			if(mPreferredConnection.getI() > getI()) {
+				angle = ANGLE_EAST;
+				posX = mPosition.x + PREFERRED_ARROW_OFFSET;
+				posY = mPosition.y;
+			} else {
+				angle = ANGLE_WEST;
+				posX = mPosition.x - PREFERRED_ARROW_OFFSET;
+				posY = mPosition.y;
+			}
+		} else {
+			if(mPreferredConnection.getJ() > getJ()) {
+				angle = ANGLE_SOUTH;
+				posX = mPosition.x;
+				posY = mPosition.y + PREFERRED_ARROW_OFFSET;
+			} else {
+				angle = ANGLE_NORTH;
+				posX = mPosition.x;
+				posY = mPosition.y - PREFERRED_ARROW_OFFSET;
+			}
+		}
+		Texture texture = BaseObject.sSystemRegistry.mAssetLibrary.getTextureByResource(R.drawable.arrow);
+		String uniqueID = Integer.toString(getI()) + Integer.toString(getJ());
+		HUD.getInstance().addElement(GameManager.GAME_MODE_RELEASE, texture, posX, posY, angle, 300, true, uniqueID);
+		//Log.d("DEBUG", "Node: (" + getI() + ", " + getJ() + ") now prefers to connect to node: (" + mPreferredConnection.getI() + ", " + mPreferredConnection.getJ() + ")");
 	}
 	
 	/**
@@ -266,7 +310,7 @@ public class Node extends BaseObject {
 	}
 
 	@Override
-	public void update(float timeDelta) {
+	public void update(long timeDelta) {
 		sSystemRegistry.mRenderSystem.scheduleForDraw(mSprite);
 	}
 }

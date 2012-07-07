@@ -62,7 +62,17 @@ class MenuRunnable implements Runnable {
 	public void run() {
 		mLastTime = SystemClock.uptimeMillis();
 		while (!mFinished) {
-			if (mManager != null) {
+			if(mManager.getInitialized() == false) {
+				if(mGameRenderer.isLoadAllComplete()) {
+					mManager.init();
+				} else {
+					try {
+						// TODO - be careful here, is it OK to have the thread only check if loading
+						//		  is done once every second?
+						Thread.sleep(GameRunnable.MILLISECONDS_PER_SECOND);
+					} catch (InterruptedException e) {}
+				}
+			} else {
 				mGameRenderer.waitDrawingComplete();
 
 				final long time = SystemClock.uptimeMillis();

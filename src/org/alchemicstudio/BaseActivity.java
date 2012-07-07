@@ -34,7 +34,7 @@ public class BaseActivity extends Activity {
 		getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
 		
 		BaseObject.conditionallyInitializeBaseObjects();
-		BaseObject.sSystemRegistry.mAssetLibrary.loadFonts(this);
+		BaseObject.sSystemRegistry.mAssetLibrary.conditionallyLoadFonts(this);
 
 		DisplayMetrics metrics = new DisplayMetrics();
 		getWindowManager().getDefaultDisplay().getMetrics(metrics);

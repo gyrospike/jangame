@@ -4,6 +4,6 @@
 	<item android:drawable="@layout/level00_selector" />
 	<item android:id="@+id/red_badge_id" android:drawable="@drawable/no_badge"/>
 	<item android:id="@+id/blue_badge_id" android:drawable="@drawable/no_badge"/>
-
+	<item android:id="@+id/green_badge_id" android:drawable="@drawable/no_badge"/>
 </layer-list>
 

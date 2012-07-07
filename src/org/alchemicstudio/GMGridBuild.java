@@ -12,7 +12,7 @@ public class GMGridBuild extends GameMode {
 	/**
 	 * updates the build game mode
 	 */
-	public void update(float timeDelta) {
+	public void update(long timeDelta) {
 		mGrid.update(timeDelta);
 	}
 	
@@ -45,13 +45,12 @@ public class GMGridBuild extends GameMode {
 
 	@Override
 	public void makeActive() {
-		// TODO Auto-generated method stub
+		HUD.getInstance().setElementsVisibility(GameManager.GAME_MODE_BUILD, true);
 		
 	}
 
 	@Override
 	public void makeInactive() {
-		// TODO Auto-generated method stub
-		
+		HUD.getInstance().setElementsVisibility(GameManager.GAME_MODE_BUILD, false);
 	}
 }

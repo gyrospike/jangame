@@ -9,10 +9,10 @@ public class TextBox {
 	private String mText;
 	
 	/** the x position for this text box */
-	private int mPosX;
+	private float mPosX;
 	
 	/** the x position for this text box */
-	private int mPosY;
+	private float mPosY;
 	
 	/** the index for this text box */
 	private int mIndex;
@@ -21,7 +21,7 @@ public class TextBox {
 	private Paint mPaint;
 	
 	/** constructor */
-	public TextBox(int x, int y) {
+	public TextBox(float x, float y) {
 		mPosX = x;
 		mPosY = y;
 		
@@ -31,6 +31,16 @@ public class TextBox {
 		mPaint.setTextSize(24);
 		mPaint.setAntiAlias(true);
 		mPaint.setARGB(0xff, 0x00, 0x00, 0x00);
+	}
+	
+	public void setPosition(float posX, float posY) {
+		mPosX = posX;
+		mPosY = posY;
+	}
+	
+	/** setter for the text size */
+	public void setTextSize(int size) {
+		mPaint.setTextSize(size);
 	}
 	
 	/** getter for the label paint */
@@ -49,12 +59,12 @@ public class TextBox {
 	}
 	
 	/** getter for x position */
-	public int getX() {
+	public float getX() {
 		return mPosX;
 	}
 	
 	/** getter for y position */
-	public int getY() {
+	public float getY() {
 		return mPosY;
 	}
 	
@@ -67,4 +77,5 @@ public class TextBox {
 	public int getIndex() {
 		return mIndex;
 	}
+	
 }

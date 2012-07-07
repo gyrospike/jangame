@@ -7,6 +7,7 @@ import android.content.res.Resources;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.LayerDrawable;
 import android.os.Bundle;
+import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.View;
 import android.view.Window;
@@ -45,12 +46,19 @@ public class Menu extends Activity {
 		getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
 
 		BaseObject.conditionallyInitializeBaseObjects();
+		BaseObject.sSystemRegistry.mAssetLibrary.conditionallyLoadFonts(this);
+		
+		DisplayMetrics metrics = new DisplayMetrics();
+		getWindowManager().getDefaultDisplay().getMetrics(metrics);
+		Log.d("DEBUG", "Real dpi: " + metrics.densityDpi);
+		Log.d("DEBUG", "screen dimensions in dpi: " + metrics.widthPixels + " x " + metrics.heightPixels);
+		
 		createUIElements();
 		
 		mGLView = (MenuSurfaceView) findViewById(R.id.MenuSurfaceView01);
 		
 		mRunnable = new MenuRunnable();
-		mRunnable.setGameManager(new MenuManager());
+		mRunnable.setGameManager(new MenuManager(metrics));
 		mRunnable.setGameRenderer(mGLView.getRenderer());
 		start();
 	}
@@ -61,17 +69,19 @@ public class Menu extends Activity {
 	private void createUIElements() {
 		// sets badges on level icons
 		Resources res = this.getResources();
-		Drawable blueBadgeDrawable = res.getDrawable(R.drawable.blue_badge);
-		Drawable redBadgeDrawable = res.getDrawable(R.drawable.red_badge);
+		
+		Drawable redBadgeDrawable = res.getDrawable(R.drawable.badge_red);
+		Drawable greenBadgeDrawable = res.getDrawable(R.drawable.badge_green);
+		Drawable blueBadgeDrawable = res.getDrawable(R.drawable.badge_blue);
 
 		LayerDrawable layerDrawable = (LayerDrawable) res.getDrawable(R.layout.level01_button);
 		layerDrawable.setDrawableByLayerId(R.id.red_badge_id, redBadgeDrawable);
+		layerDrawable.setDrawableByLayerId(R.id.green_badge_id, greenBadgeDrawable);
 		layerDrawable.setDrawableByLayerId(R.id.blue_badge_id, blueBadgeDrawable);
 
 		setContentView(R.layout.main);
 
 		HorizontalScrollView sView1 = (HorizontalScrollView) findViewById(R.id.ScrollView01);
-		// Hide the Scollbar
 		sView1.setVerticalScrollBarEnabled(false);
 		sView1.setHorizontalScrollBarEnabled(false);
 

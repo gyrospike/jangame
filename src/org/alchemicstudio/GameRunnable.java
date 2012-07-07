@@ -5,11 +5,17 @@ import android.util.Log;
 
 class GameRunnable implements Runnable {
 
+	/** updates per second debug counter */
+	public static int mDebugUPSCounter = 0;
+	
+	/** number of milliseconds in a second */
+	public static final int MILLISECONDS_PER_SECOND = 1000;
+	
 	/** minimum time that must elapse before the game can be updated again */
 	private static final int MIN_TIME_DELTA_MS = 16;
 	
-	/** number of milliseconds in a second */
-	private static final int MILLISECONDS_PER_SECOND = 1000;
+	/** maximum time that can elapse and be used to update the game */
+	private static final int MAX_TIME_DELTA_MS = 48;
 	
 	/** game time at last update */
 	private long mLastTime;
@@ -31,7 +37,7 @@ class GameRunnable implements Runnable {
 	
 	/** debugging window shows debug text */
 	private DebugWindow mDWindow;
-
+	
 	/**
 	 * controls the main update loop, has hooks into the game manager, which updates game logic, and
 	 * the game renderer, which draws the game
@@ -68,9 +74,17 @@ class GameRunnable implements Runnable {
 		mLastTime = SystemClock.uptimeMillis();
 		long fpsTime = SystemClock.uptimeMillis();
 		while (!mFinished) {
-			if (mGameManager != null) {
-				mGameRenderer.waitDrawingComplete();
-
+			if(mGameManager.getInitialized() == false) {
+				if(mGameRenderer.isLoadAllComplete()) {
+					mGameManager.init();
+				} else {
+					try {
+						// TODO - be careful here, is it OK to have the thread only check if loading
+						//		  is done once every second?
+						Thread.sleep(MILLISECONDS_PER_SECOND);
+					} catch (InterruptedException e) {}
+				}
+			} else {
 				final long time = SystemClock.uptimeMillis();
 				final long timeDelta = time - mLastTime;
 				long finalDelta = timeDelta;
@@ -78,17 +92,24 @@ class GameRunnable implements Runnable {
 				if(time - fpsTime >= MILLISECONDS_PER_SECOND) {
 					fpsTime = time;
 					mDWindow.updateTextBlock("FPS", Integer.toString(GameRenderer.mDebugFPSCounter));
+					mDWindow.updateTextBlock("UPS", Integer.toString(mDebugUPSCounter));
 					GameRenderer.mDebugFPSCounter = 0;
-				}
-				
-				if (timeDelta > MIN_TIME_DELTA_MS) {
-					mLastTime = time;
-					mGameManager.update(timeDelta);
-					mDWindow.update(timeDelta);
-					BaseObject.sSystemRegistry.mRenderSystem.sendUpdates(mGameRenderer);
+					mDebugUPSCounter = 0;
 				}
 
-				
+				//Log.d("DEBUG", "time delta: " + finalDelta);
+				if(finalDelta > MAX_TIME_DELTA_MS) {
+					finalDelta = MAX_TIME_DELTA_MS;
+				}
+				if (finalDelta > MIN_TIME_DELTA_MS) {
+					mLastTime = time;
+					mGameManager.update(finalDelta);
+					mDWindow.update(finalDelta);
+					mGameRenderer.waitDrawingComplete();
+					BaseObject.sSystemRegistry.mRenderSystem.sendUpdates(mGameRenderer);
+					mDebugUPSCounter++;
+				}
+
 				if (finalDelta < MIN_TIME_DELTA_MS) {
 					try {
 						Thread.sleep(MIN_TIME_DELTA_MS - finalDelta);
@@ -96,7 +117,7 @@ class GameRunnable implements Runnable {
 						// Interruptions here are no big deal.
 					}
 				}
-				
+
 				// Log.d("DEBUG", "right before pause block");
 				synchronized (mPauseLock) {
 					if (mPaused) {

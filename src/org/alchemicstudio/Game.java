@@ -39,7 +39,6 @@ public class Game {
 	public Game(int sWidth, int sHeight) {
 		mScreenWidth = sWidth;
 		mScreenHeight = sHeight;
-		mGameManager = new GameManager();
 	}
 
 	/**
@@ -80,11 +79,13 @@ public class Game {
 			
 			DebugWindow mDWindow = new DebugWindow();
 			
+			mGameManager = new GameManager();
+			
 			mGameThread = new GameRunnable(mDWindow);
 			mGameThread.setGameRenderer(mSurfaceView.getGameRenderer());
 			mGameThread.setGameManager(mGameManager);
 			
-			mGameManager.initGame(context, parsedMapData, mScreenWidth, mScreenHeight, mDWindow);
+			mGameManager.loadData(context, parsedMapData, mScreenWidth, mScreenHeight, mDWindow);
 			start();
 		} catch (Exception e) {
 			Log.e("DEBUG", "QueryError", e);
