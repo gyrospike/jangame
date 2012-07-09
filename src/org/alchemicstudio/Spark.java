@@ -1,5 +1,6 @@
 package org.alchemicstudio;
 
+import android.graphics.Color;
 import android.util.Log;
 
 
@@ -62,6 +63,8 @@ public class Spark extends BaseObject {
 		Texture[] textures = BaseObject.sSystemRegistry.mAssetLibrary.getTexturesByResources(ids);
 		mSprite = new Sprite(textures, 2, textures[0].width, textures[0].height);
 		mMillisecondPerFrame = 100;
+		
+		mPhysicsObject = new OnRailsPhysicsObject();
 	}
 	
 	/**
@@ -94,6 +97,10 @@ public class Spark extends BaseObject {
 	 */
 	public void setStartingSpeed(float d) {
 		mPhysicsObject.setStartingSpeed(d * mTargetVectorNormalX, d * mTargetVectorNormalY);
+	}
+	
+	public double getCurrentSpeed() {
+		return mPhysicsObject.getVelocity();
 	}
 	
 	/**
@@ -190,6 +197,7 @@ public class Spark extends BaseObject {
 	public void update(long timeDelta) {
 		calculateForce();
 		mPhysicsObject.updateState(timeDelta, mDistanceToTargetX, mDistanceToTargetY);
+		HUD.getInstance().modifyTextElement("Spark Speed: " + (int) getCurrentSpeed(), "sparkSpeed");
 		if(!mPhysicsObject.hasRemainder()) {
 			updateSprite(timeDelta);
 		}

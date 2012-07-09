@@ -4,9 +4,6 @@ public class ParsedDataSet {
 
 	/** the nodes that make up the game board */
 	public FixedSizeArray<NodeTemplate> mNodes;
-	
-	/** the nodes that make up the border around the game board */
-	public FixedSizeArray<NodeTemplate> mBorderNodes;
 
 	/** map number we are currently processing */
 	public int mMapNumber;
@@ -20,32 +17,19 @@ public class ParsedDataSet {
 	/** space in pixels? between the nodes */
 	public int mMapSpacing;
 	
-	/** is this where the cart starts? */
-	public int mBorderStartIndex;
-	
-	/** is this where the cart ends? */
-	public int mBorderEndIndex;
-	
 	/**
 	 * create the array of nodes, no special attributes have been set yet
 	 */
 	public void initializeNodes() {
-		mNodes = new FixedSizeArray<NodeTemplate>(mMapWidth * mMapHeight);
+		int totalBorderLength = 2*mMapWidth + 2*mMapHeight;
+		mNodes = new FixedSizeArray<NodeTemplate>((mMapWidth * mMapHeight) + totalBorderLength);
 		for(int i = 0; i < mMapWidth; i++) {
 			for(int j = 0; j < mMapHeight; j++) {
-				mNodes.add(new NodeTemplate(i, j));
+				mNodes.add(new NodeTemplate(i, j, -1));
 			}
 		}
-	}
-	
-	/**
-	 * create the array of border nodes, no special attributes have been set yet
-	 */
-	public void initializeBorderNodes() {
-		int totalBorderLength = 2*mMapWidth + 2*mMapHeight;
-		mBorderNodes = new FixedSizeArray<NodeTemplate>(totalBorderLength);
 		for(int i = 0; i < totalBorderLength; i++) {
-			mBorderNodes.add(new NodeTemplate(-1, -1));
+			mNodes.add(new NodeTemplate(-1, -1, i));
 		}
 	}
 
@@ -82,34 +66,19 @@ public class ParsedDataSet {
 	}
 
 	/**
-	 * designate two border nodes to be the start and end node
-	 */
-	public void setStartAndEndIndices() {
-		for (int i = 0; i < mBorderNodes.getCount(); i++) {
-			if (mBorderNodes.get(i).order == Node.BORDER_TYPE_START) {
-				mBorderStartIndex = i;
-			} else if(mBorderNodes.get(i).order == Node.BORDER_TYPE_START) {
-				mBorderEndIndex = i;
-			}
-		}
-	}
-
-	/**
 	 * Template class for nodes used in parsing node/map data
 	 * 
 	 * @author Joe
 	 */
 	public class NodeTemplate {
-		public int type = 0;
-		public int link = 0;
+		public String type = Node.NODE_TYPE_STANDARD;
 		public int minSpeed = 0;
 		public int maxSpeed = 0;
 		public int i;
 		public int j;
-		public int borderIndex;
-		public int order;
+		public int k;
 
-		public FixedSizeArray<NodeTemplate> pretargets = new FixedSizeArray<NodeTemplate>(Node.CONNECTION_LIMIT_DEFAULT);
+		public FixedSizeArray<NodeTemplate> mPreconnections = new FixedSizeArray<NodeTemplate>(Node.CONNECTION_LIMIT_DEFAULT);
 		
 		/**
 		 * template for a node, used for data parsing
@@ -117,9 +86,10 @@ public class ParsedDataSet {
 		 * @param i
 		 * @param j
 		 */
-		public NodeTemplate(int i, int j) {
+		public NodeTemplate(int i, int j, int k) {
 			this.i = i;
 			this.j = j;
+			this.k = k;
 		}
 		
 		/**
@@ -129,11 +99,9 @@ public class ParsedDataSet {
 		 * @param index
 		 * @param order
 		 */
-		public void addPreTarget(int index, int order) {
-			NodeTemplate newPreTarget = new NodeTemplate(-1, -1);
-			newPreTarget.borderIndex = index;
-			newPreTarget.order = order;
-			pretargets.add(newPreTarget);
+		public void addPreconnection(int i, int j, int k) {
+			NodeTemplate newPreTarget = new NodeTemplate(i, j, k);
+			mPreconnections.add(newPreTarget);
 		}
 	}
 }

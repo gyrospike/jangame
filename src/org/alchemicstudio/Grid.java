@@ -31,7 +31,7 @@ public class Grid extends BaseObject {
 	/** dragable track offset y */
 	private final static float TRACK_OFFSET_Y = 14.0f;
 	
-	/** the amount to hide the border nodes beyond the screen by */
+	/** the amount to hide the border nodes beyond the screen by 30.0f */
 	private final static float BORDER_NODE_OFFSET = 30.0f;
 
 	/** current index for particle array */
@@ -112,35 +112,51 @@ public class Grid extends BaseObject {
 		mSideBufferX = (screenWidth - ((mWidth*NODE_DIMENSION) + ((mWidth-1)*mSpacing)))/2;
 		mSideBufferY = (screenHeight - ((mHeight*NODE_DIMENSION) + ((mHeight-1)*mSpacing)))/2;
 		
-		for (int k = 0; k < dataSet.mNodes.getCount(); k++) {
+		int nodeDataLen = dataSet.mNodes.getCount();
+		
+		// create nodes from data
+		for (int k = 0; k < nodeDataLen; k++) {
 			int tempI = dataSet.mNodes.get(k).i;
 			int tempJ = dataSet.mNodes.get(k).j;
+			int tempK = dataSet.mNodes.get(k).k;
 
 			int maxSpeedLimit = dataSet.mNodes.get(k).maxSpeed;
 			int minSpeedLimit = dataSet.mNodes.get(k).minSpeed;
-			int link = dataSet.mNodes.get(k).link;
-			int type = dataSet.mNodes.get(k).type;
+			String type = dataSet.mNodes.get(k).type;
 
-			Vector2 nodePosition = new Vector2(mSideBufferX + ((mSpacing + NODE_DIMENSION) * tempI), mSideBufferY + ((mSpacing + NODE_DIMENSION) * tempJ));
-			mNodes[tempI][tempJ] = new Node(tempI,tempJ, nodePosition, maxSpeedLimit, minSpeedLimit, link, type);
+			if(type.equals(Node.NODE_TYPE_EMPTY)) {
+				mNodes[tempI][tempJ] = null;
+			} else if(tempK == -1) {
+				Vector2 nodePosition = new Vector2(mSideBufferX + ((mSpacing + NODE_DIMENSION) * tempI), mSideBufferY + ((mSpacing + NODE_DIMENSION) * tempJ));
+				mNodes[tempI][tempJ] = new Node(tempI,tempJ, nodePosition, maxSpeedLimit, minSpeedLimit, type);
+			}
 		}
 		
-		Vector2[] nodePositions = getBorderNodePositions();
-		for (int m = 0; m < dataSet.mBorderNodes.getCount(); m++) {
-			Vector2 nodePosition = nodePositions[m];
-			mBorderNodes[m] = new Node(-1,-1, nodePosition, 0, 0, 0, 0);
+		// create border nodes from data
+		Vector2[] borderNodePositions = getBorderNodePositions();
+		for (int k = 0; k < nodeDataLen; k++) {
+			int tempK = dataSet.mNodes.get(k).k;
+			String type = dataSet.mNodes.get(k).type;
+			if(tempK != -1) {
+				Vector2 nodePosition = borderNodePositions[tempK];
+				mBorderNodes[tempK] = new Node(-1,-1, nodePosition, 0, 0, type);
+			}
 		}
 		
-		for (int k = 0; k < dataSet.mNodes.getCount(); k++) {
-			
+		// create preconnections, must wait until previous loop is complete
+		// NOTE - for this block we assume no border node has a preconnection defined
+		for (int k = 0; k < nodeDataLen; k++) {
 			int tempI = dataSet.mNodes.get(k).i;
 			int tempJ = dataSet.mNodes.get(k).j;
-			
-			for(int p = 0; p < dataSet.mNodes.get(k).pretargets.getCount(); p++) {
-				int order = dataSet.mNodes.get(k).pretargets.get(p).order;
-				int borderIndex = dataSet.mNodes.get(k).pretargets.get(p).borderIndex;
-				mBorderNodes[borderIndex].setOrder(order);
-				conditionallyCreateConnectionWithBorder(tempI, tempJ, borderIndex);
+			for(int p = 0; p < dataSet.mNodes.get(k).mPreconnections.getCount(); p++) {
+				int preconnectionIIndex = dataSet.mNodes.get(k).mPreconnections.get(p).i;
+				int preconnectionJIndex = dataSet.mNodes.get(k).mPreconnections.get(p).j;
+				int preconnectionKIndex = dataSet.mNodes.get(k).mPreconnections.get(p).k;
+				if(preconnectionKIndex == -1) {
+					conditionallyCreateConnectionBetweenNodes(tempI, tempJ, preconnectionIIndex, preconnectionJIndex, true);
+				} else {
+					conditionallyCreateConnectionWithBorder(tempI, tempJ, preconnectionKIndex, true);
+				}
 			}
 		}
 
@@ -178,9 +194,10 @@ public class Grid extends BaseObject {
 	private Vector2[] getBorderNodePositions() {
 		Vector2[] result = new Vector2[mBorderNodes.length];
 		int index = 0;
+		// new Vector2(mSideBufferX + ((mSpacing + NODE_DIMENSION) * i), mSideBufferY + ((mSpacing + NODE_DIMENSION) * i));
 		// North
 		for( int i = 0; i < mWidth; i++) {
-			float x = mNodes[i][0].getPosition().x;
+			float x = mSideBufferX + ((mSpacing + NODE_DIMENSION) * i);
 			float y = -BORDER_NODE_OFFSET;
 			result[index] = new Vector2(x, y);
 			index++;
@@ -188,13 +205,13 @@ public class Grid extends BaseObject {
 		// East
 		for( int i = 0; i < mHeight; i++) {
 			float x = mScreenWidth + BORDER_NODE_OFFSET;
-			float y = mNodes[mWidth-1][i].getPosition().y;
+			float y = mSideBufferY + ((mSpacing + NODE_DIMENSION) * i);
 			result[index] = new Vector2(x, y);
 			index++;
 		}
 		// South
 		for( int i = mWidth-1; i > -1; i--) {
-			float x = mNodes[i][mHeight-1].getPosition().x;
+			float x = mSideBufferX + ((mSpacing + NODE_DIMENSION) * i);
 			float y = mScreenHeight + BORDER_NODE_OFFSET;
 			result[index] = new Vector2(x, y);
 			index++;
@@ -202,7 +219,7 @@ public class Grid extends BaseObject {
 		// West
 		for( int i = mHeight-1; i > -1; i--) {
 			float x = -BORDER_NODE_OFFSET; 
-			float y = mNodes[0][i].getPosition().y;
+			float y = mSideBufferY + ((mSpacing + NODE_DIMENSION) * i);
 			result[index] = new Vector2(x, y);
 			index++;
 		}
@@ -216,7 +233,7 @@ public class Grid extends BaseObject {
 	 * @param aj
 	 * @param borderIndex
 	 */
-	private void conditionallyCreateConnectionWithBorder(int ai, int aj, int borderIndex) {
+	private void conditionallyCreateConnectionWithBorder(int ai, int aj, int borderIndex, boolean fixed) {
 		if (mNumTrackSegments < mMaxTrackSegments) {
 			
 			float ax = mNodes[ai][aj].getPosition().x + TRACK_OFFSET_X;
@@ -227,8 +244,8 @@ public class Grid extends BaseObject {
 			
 			int trackID = createTrackSegmentBetweenPoints(ax, ay, bx, by);
 			
-			mNodes[ai][aj].setConnection(-1, -1, borderIndex, trackID);
-			mBorderNodes[borderIndex].setConnection(ai, aj, -1, trackID);
+			mNodes[ai][aj].setConnection(-1, -1, borderIndex, trackID, fixed);
+			mBorderNodes[borderIndex].setConnection(ai, aj, -1, trackID, fixed);
 		}
 	}
 
@@ -239,9 +256,8 @@ public class Grid extends BaseObject {
 	 * @param aj				node a, j index
 	 * @param bi				node b, i index
 	 * @param bj				node b, j index
-	 * @param offScreenTrack	if true then can't remove the track and has special case logic TODO - should be data driven
 	 */
-	private void conditionallyCreateConnectionBetweenNodes(int ai, int aj, int bi, int bj, boolean offScreenTrack) {
+	private void conditionallyCreateConnectionBetweenNodes(int ai, int aj, int bi, int bj, boolean fixed) {
 		if(!mNodes[ai][aj].hasMaxConnections()) {
 			if(!mNodes[bi][bj].hasMaxConnections()) {
 				if(!connectionBetween(ai, aj, bi, bj)) {
@@ -255,8 +271,8 @@ public class Grid extends BaseObject {
 
 						int trackID = createTrackSegmentBetweenPoints(ax, ay, bx, by);
 
-						mNodes[ai][aj].setConnection(bi,bj,-1,trackID);
-						mNodes[bi][bj].setConnection(ai,aj,-1,trackID);
+						mNodes[ai][aj].setConnection(bi,bj,-1,trackID, fixed);
+						mNodes[bi][bj].setConnection(ai,aj,-1,trackID, fixed);
 
 						Log.d("DEBUG", "Created connection between: ("+ai+","+aj+") and ("+bi+","+bj+")");
 					} else {
@@ -332,29 +348,88 @@ public class Grid extends BaseObject {
 	 * @param j		the j index for node being touched up
 	 */
 	private void nodeReleased(int i, int j) {
-		Log.d("DEBUG", "Connection between: " + connectionBetween(mCurrentTrackSourceNodeI, mCurrentTrackSourceNodeJ, i, j));
-		
-		// if the user clicked a released the same node
-		if (mCurrentTrackSourceNodeI == i && mCurrentTrackSourceNodeJ == j) {
-			deactivateNode(i, j);
-			createParticle((int) (mNodes[i][j].getPosition().x + 16.0f), (int) (mNodes[i][j].getPosition().y - 16.0f), SPARKS_PER_TOUCH);
-		}
-		// if the user clicked a node and released on a node to the direct left or right, or above or below (just not diagonal)
-		else if ((mCurrentTrackSourceNodeI == i && mCurrentTrackSourceNodeJ != j) || (mCurrentTrackSourceNodeI != i && mCurrentTrackSourceNodeJ == j)) {
-			if (mCurrentTrackSourceNodeI == i) {
-				int difJ = Math.abs(mCurrentTrackSourceNodeJ - j);
-				int smallerJ = Math.min(j, mCurrentTrackSourceNodeJ);
-				for (int p = 1; p <= difJ; p++) {
-					conditionallyCreateConnectionBetweenNodes(i, smallerJ + p, i, smallerJ + p - 1, false);
-				}
-			} else if (mCurrentTrackSourceNodeJ == j) {
-				int difI = Math.abs(mCurrentTrackSourceNodeI - i);
-				int smallerI = Math.min(i, mCurrentTrackSourceNodeI);
-				for (int p = 1; p <= difI; p++) {
-					conditionallyCreateConnectionBetweenNodes(smallerI + p, j, smallerI + p - 1, j, false);
+		if(mNodes[i][j] != null) {
+			Log.d("DEBUG", "Attempting connection between: " + connectionBetween(mCurrentTrackSourceNodeI, mCurrentTrackSourceNodeJ, i, j));
+			// if the user clicked a released the same node
+			if (mCurrentTrackSourceNodeI == i && mCurrentTrackSourceNodeJ == j) {
+				deactivateNode(i, j);
+				createParticle((int) (mNodes[i][j].getPosition().x + 16.0f), (int) (mNodes[i][j].getPosition().y - 16.0f), SPARKS_PER_TOUCH);
+			}
+			// if the user clicked a node and released on a node to the direct left or right, or above or below (just not diagonal)
+			else if ((mCurrentTrackSourceNodeI == i && mCurrentTrackSourceNodeJ != j) || (mCurrentTrackSourceNodeI != i && mCurrentTrackSourceNodeJ == j)) {
+				int startI = -1;
+				int startJ = -1;
+				int endI = -1;
+				int endJ = -1;
+				if (mCurrentTrackSourceNodeI == i) {
+					int bigJ = Math.max(mCurrentTrackSourceNodeJ, j);
+					int littleJ = Math.min(mCurrentTrackSourceNodeJ, j);
+					int diff = bigJ - littleJ;
+					for(int p = 0; p < diff+1; p++) {
+						if(reachedDeadNode(i, littleJ+p) && startI != -1 && startJ != -1) {
+							startI = -1;
+							startJ = -1;
+						} else if(eligibleToMakeConnection(i, littleJ+p)) {
+							if(startI == -1 && startJ == -1) {
+								startI = i;
+								startJ = littleJ+p;
+							} else {
+								endI = i;
+								endJ = littleJ+p;
+							}
+							if(endI != -1 && endJ != -1) {
+								conditionallyCreateConnectionBetweenNodes(startI, startJ, endI, endJ, false);
+								startI = endI;
+								startJ = endJ;
+							}
+						}
+					}
+				} else if (mCurrentTrackSourceNodeJ == j) {
+					int bigI = Math.max(mCurrentTrackSourceNodeI, i);
+					int littleI = Math.min(mCurrentTrackSourceNodeI, i);
+					int diff = bigI - littleI;
+					for(int p = 0; p < diff+1; p++) {
+						if(reachedDeadNode(littleI+p, j) && startI != -1 && startJ != -1) {
+							startI = -1;
+							startJ = -1;
+						} else if(eligibleToMakeConnection(littleI+p, j)) {
+							if(startI == -1 && startJ == -1) {
+								startI = littleI+p;
+								startJ = j;
+							} else {
+								endI = littleI+p;
+								endJ = j;
+							}
+							if(endI != -1 && endJ != -1) {
+								conditionallyCreateConnectionBetweenNodes(startI, startJ, endI, endJ, false);
+								startI = endI;
+								startJ = endJ;
+							}
+						}
+					}
 				}
 			}
 		}
+	}
+	
+	private boolean eligibleToMakeConnection(int i, int j) {
+		boolean result = false;
+		if(mNodes[i][j] != null) {
+			if(!mNodes[i][j].getType().equals(Node.NODE_TYPE_DEAD)) {
+				result = true;
+			}
+		}
+		return result;
+	}
+	
+	private boolean reachedDeadNode(int i, int j) {
+		boolean result = false;
+		if(mNodes[i][j] != null) {
+			if(mNodes[i][j].getType().equals(Node.NODE_TYPE_DEAD)) {
+				result = true;
+			}
+		}
+		return result;
 	}
 	
 	/**
@@ -366,30 +441,29 @@ public class Grid extends BaseObject {
 	private void deactivateNode(int i, int j) {
 		NodeConnection[] nodeConnections = mNodes[i][j].getConnections();
 		for(int n = 0; n < nodeConnections.length; n++) {
-			//TODO - this makes it so you could never remove a border connection, this should be shaped up a bit
-			if(nodeConnections[n].getI() != -1 && nodeConnections[n].getJ() != -1) {
+			if(!nodeConnections[n].getFixed()) {
 				mNodes[nodeConnections[n].getI()][nodeConnections[n].getJ()].removeConnection(i, j);
 				mTrackSegments[nodeConnections[n].getTrackID()].setInUse(false);
 			}
-		}
-		
+		}	
 		mNodes[i][j].removeAllConnections();
 	}
 
 	/**
 	 * translates a position (x,y) the user touches to the nearest node
+	 * NOTE: CAN return a null node location
 	 * 
 	 * @param x		position user is touching, x
 	 * @param y		position user is touching, y
 	 * @return		Point that is closest to the above coordinates
 	 */
 	private NodeConnection determineNodeTouched(int x, int y) {
-		Log.d("DEBUG", "x, y : " + x + ", " + y);
-		Log.d("DEBUG", "mSpacing : " + mSpacing);
-		Log.d("DEBUG", "xSideBuffer, ySideBuffer : " + mSideBufferX + ", " + mSideBufferY);
+		//Log.d("DEBUG", "x, y : " + x + ", " + y);
+		//Log.d("DEBUG", "mSpacing : " + mSpacing);
+		//Log.d("DEBUG", "xSideBuffer, ySideBuffer : " + mSideBufferX + ", " + mSideBufferY);
 		int xIndex = (int) Math.round((x - mSideBufferX) / (mSpacing + 32));
 		int yIndex = (int) Math.round((y - mSideBufferY) / (mSpacing + 32));
-		Log.d("DEBUG", "xIndex, yIndex : " + xIndex + ", " + yIndex);
+		//Log.d("DEBUG", "xIndex, yIndex : " + xIndex + ", " + yIndex);
 
 		if (xIndex < 0) {
 			xIndex = 0;
@@ -402,7 +476,7 @@ public class Grid extends BaseObject {
 		} else if (yIndex > mHeight - 1) {
 			yIndex = mHeight - 1;
 		}
-
+		
 		return new NodeConnection(xIndex, yIndex, -1);
 	}
 	
@@ -440,9 +514,11 @@ public class Grid extends BaseObject {
 	 */
 	public void checkNodePress(int x, int y) {
 		NodeConnection node = determineNodeTouched(x, y);
-		mCurrentTrackSourceNodeI = node.getI();
-		mCurrentTrackSourceNodeJ = node.getJ();
-		Log.d("DEBUG", "You pressed node: (" + mCurrentTrackSourceNodeI + ", " + mCurrentTrackSourceNodeJ + ")");
+		if(mNodes[node.getI()][node.getJ()] != null) {
+			mCurrentTrackSourceNodeI = node.getI();
+			mCurrentTrackSourceNodeJ = node.getJ();
+			Log.d("DEBUG", "You pressed node: (" + mCurrentTrackSourceNodeI + ", " + mCurrentTrackSourceNodeJ + ")");
+		}
 	}
 	
 	/**
@@ -479,8 +555,29 @@ public class Grid extends BaseObject {
 	 * @param y
 	 */
 	public void startTrackSwitchChain(int x, int y) {
-		mNodeChain[mNodeChainIndex] = determineNodeTouched(x, y);
-		mNodeChainIndex++;
+		NodeConnection node = determineNodeTouched(x, y);
+		if(mNodes[node.getI()][node.getJ()] != null) {
+			mNodeChain[mNodeChainIndex] = node;
+			mNodeChainIndex++;
+		}
+	}
+	
+	private boolean eligibleToCreatePreferredConnection(NodeConnection nodeOrigin, NodeConnection nodeChild) {
+		boolean result = false;
+		if(mNodes[nodeChild.getI()][nodeChild.getJ()].getConnections().length == Node.PREFERRED_CONNECTION_REQ_NUM) {
+			if(nodeOrigin.getI() == nodeChild.getI()) {
+				int difference = nodeChild.getJ() - nodeOrigin.getJ();
+				if(!mNodes[nodeChild.getI()][nodeChild.getJ()].hasConnectionTo(nodeChild.getI(), nodeChild.getJ()+difference)) {
+					result = true;
+				}
+			} else {
+				int difference = nodeChild.getI() - nodeOrigin.getI();
+				if(!mNodes[nodeChild.getI()][nodeChild.getJ()].hasConnectionTo(nodeChild.getI()+difference, nodeChild.getJ())) {
+					result = true;
+				}
+			}
+		}
+		return result;
 	}
 	
 	/**
@@ -488,9 +585,11 @@ public class Grid extends BaseObject {
 	 * 
 	 */
 	public void stopTrackSwitchChain() {
-		for(int i = 0; i < mNodeChain.length-1; i++) {
-			if(mNodeChain[i+1] != null) {
-				mNodes[mNodeChain[i].getI()][mNodeChain[i].getJ()].setPreferredConnection(mNodeChain[i+1]);
+		for(int i = 1; i < mNodeChain.length-1; i++) {
+			if(mNodeChain[i-1] != null && mNodeChain[i+1] != null) {
+				if(eligibleToCreatePreferredConnection(mNodeChain[i-1], mNodeChain[i])) {
+					mNodes[mNodeChain[i].getI()][mNodeChain[i].getJ()].setPreferredConnection(mNodeChain[i-1], mNodeChain[i+1]);
+				}
 			}
 			mNodeChain[i] = null;
 		}
@@ -504,14 +603,16 @@ public class Grid extends BaseObject {
 	 * @param x
 	 * @param y
 	 */
-	public void growTrackSwitchChain(int x, int y) {
+	public void growTrackSwitchChain(int x, int y) {	
 		NodeConnection newNodeConnection = determineNodeTouched(x, y);
-		if(mNodeChainIndex < MAX_CHAIN_LENGTH) {
-			if(!containsConnection(mNodeChain, newNodeConnection)) {
-				NodeConnection lastLink = mNodeChain[mNodeChainIndex-1];
-				if(mNodes[lastLink.getI()][lastLink.getJ()].hasConnectionTo(newNodeConnection.getI(), newNodeConnection.getJ())) {
-					mNodeChain[mNodeChainIndex] = newNodeConnection;
-					mNodeChainIndex++;
+		if(mNodes[newNodeConnection.getI()][newNodeConnection.getJ()] != null) {
+			if(mNodeChainIndex < MAX_CHAIN_LENGTH) {
+				if(!containsConnection(mNodeChain, newNodeConnection)) {
+					NodeConnection lastLink = mNodeChain[mNodeChainIndex-1];
+					if(mNodes[lastLink.getI()][lastLink.getJ()].hasConnectionTo(newNodeConnection.getI(), newNodeConnection.getJ())) {
+						mNodeChain[mNodeChainIndex] = newNodeConnection;
+						mNodeChainIndex++;
+					}
 				}
 			}
 		}
@@ -542,13 +643,15 @@ public class Grid extends BaseObject {
 		
 		for(int w = 0; w < mNodes.length; w++) {
 			for(int q = 0; q < mNodes[w].length; q++) {
-				mNodes[w][q].update(timeDelta);
+				if(mNodes[w][q] != null) {
+					mNodes[w][q].update(timeDelta);
+				}
 			}
 		}
 		
 		/*
-		Uncomment this when you need to debug the border nodes, also remember to set the offset
-		BORDER_NODE_OFFSET = -50.0f seems to work
+		//Uncomment this when you need to debug the border nodes, also remember to set the offset
+		//BORDER_NODE_OFFSET = -50.0f seems to work
 		  
 		for(int q = 0; q < mBorderNodes.length; q++) {
 			mBorderNodes[q].update(timeDelta);

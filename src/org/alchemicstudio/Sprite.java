@@ -10,6 +10,7 @@ import org.alchemicstudio.Texture;
 
 public class Sprite {
 
+	/** signifies we don't need to scale the texture to fit multiple times inside the poly */
 	private final float TEXTURE_FITS_POLY = 1.0f;
 	
 	/** the x offset of the sprite */
@@ -205,14 +206,22 @@ public class Sprite {
 		return new Vector2(mWidthScale, mHeightScale);
 	}
 
+	/**
+	 * Sprites are drawn from the bottom left corner of the poly
+	 * 
+	 * @param gl
+	 * @param x
+	 * @param y
+	 */
 	public void draw(GL10 gl, float x, float y) {
 		gl.glBindTexture(GL10.GL_TEXTURE_2D, mTexture[mCurrentTextureIndex].name);
+		
 		gl.glEnableClientState(GL10.GL_VERTEX_ARRAY);
 		gl.glEnableClientState(GL10.GL_TEXTURE_COORD_ARRAY);
 		
 		gl.glVertexPointer(2, GL10.GL_FLOAT, 0, mVertexBuffer);
 		gl.glTexCoordPointer(2, GL10.GL_FLOAT, 0, mTextureBuffer);
-		gl.glColor4f(mOpacity, mOpacity, mOpacity, mOpacity);
+		gl.glColor4f(1.0f, 1.0f, 1.0f, mOpacity);
 		
 		//gl.glTexParameterf(GL10.GL_TEXTURE_2D,GL10.GL_TEXTURE_WRAP_S,GL10.GL_REPEAT);
 		//gl.glTexParameterf(GL10.GL_TEXTURE_2D,GL10.GL_TEXTURE_WRAP_T,GL10.GL_REPEAT);
@@ -228,9 +237,12 @@ public class Sprite {
 		gl.glTranslatef(-mWidthScale/2, -mHeightScale/2, 0);
 		
 		gl.glScalef(mWidthScale * mXScale, mHeightScale * mYScale, 0);
-
+		
+		// draws from top left as origin
 		gl.glDrawElements(GL10.GL_TRIANGLE_STRIP, 4, GL10.GL_UNSIGNED_BYTE, mIndexBuffer);
 		gl.glLoadIdentity();
+		
+		gl.glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
 
 		gl.glDisableClientState(GL10.GL_VERTEX_ARRAY);
 		gl.glDisableClientState(GL10.GL_TEXTURE_COORD_ARRAY);

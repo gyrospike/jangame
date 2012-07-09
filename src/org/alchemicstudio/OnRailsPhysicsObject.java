@@ -1,6 +1,8 @@
 
 package org.alchemicstudio;
 
+import android.util.Log;
+
 
 public class OnRailsPhysicsObject extends PhysicsObject {
 
@@ -84,7 +86,7 @@ public class OnRailsPhysicsObject extends PhysicsObject {
 	 * gets the total velocity of this object
 	 */
 	public double getVelocity() {
-		return Math.pow((Math.pow((double) mState.dx, 2) + Math.pow((double) mState.dx, 2)), 0.5);
+		return Math.pow((Math.pow(mState.dx, 2) + Math.pow(mState.dy, 2)), 0.5);
 	}
 	
 	/**

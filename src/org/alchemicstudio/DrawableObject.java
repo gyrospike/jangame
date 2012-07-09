@@ -16,6 +16,9 @@ public class DrawableObject extends BaseObject {
 	/** how fast should this object rotate */
 	private float mRotationSpeed = 0.0f;
 	
+	/** the base level of opacity */
+	private float mBaseOpacityDeficit = 0.0f;
+	
 
 	public DrawableObject(Texture texture, int drawPriority) {
 		mMillisecondPerFrame = 0;
@@ -47,6 +50,16 @@ public class DrawableObject extends BaseObject {
 	}
 	
 	/**
+	 * Certain drawable objects are slightly transparent, this setting
+	 * determines how transparent they are
+	 * 
+	 * @param num
+	 */
+	public void setBaseOpacityDeficit(float num) {
+		mBaseOpacityDeficit = num;
+	}
+	
+	/**
 	 * 
 	 * @param speed		the rotation speed in degrees
 	 */
@@ -60,6 +73,15 @@ public class DrawableObject extends BaseObject {
 	 */
 	public void setRelativePosition(Vector2 newPos) {
 		mSprite.setPosition(newPos.x, newPos.y);
+	}
+	
+	/**
+	 * how much of the base opacity deficit should be used
+	 * 
+	 * @param frac
+	 */
+	public void setFlashOpacity(float frac) {
+		mSprite.setOpacity((1.0f-mBaseOpacityDeficit) + (mBaseOpacityDeficit*frac));
 	}
 	
 	@Override

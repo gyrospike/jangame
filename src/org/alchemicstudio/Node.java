@@ -1,5 +1,6 @@
 package org.alchemicstudio;
 
+import android.graphics.Color;
 import android.util.Log;
 
 
@@ -8,14 +9,19 @@ public class Node extends BaseObject {
 	/** the number of connections a node may have by default */
 	public final static int CONNECTION_LIMIT_DEFAULT = 4;
 	
-	/** constant representing a node being neither start nor end */
-	public final static int BORDER_TYPE_NONE = 0;
+	public final static int PREFERRED_CONNECTION_REQ_NUM = 3;
 	
-	/** constant representing a node being of type start */
-	public final static int BORDER_TYPE_START = 1;
+	public final static String NODE_TYPE_STANDARD = "NODE_TYPE_STANDARD";
 	
-	/** constant representing a node being of type end */
-	public final static int BORDER_TYPE_END = 2;
+	public final static String NODE_TYPE_START = "NODE_TYPE_START";
+	
+	public final static String NODE_TYPE_END = "NODE_TYPE_END";
+	
+	public final static String NODE_TYPE_EMPTY = "NODE_TYPE_EMPTY";
+	
+	public final static String NODE_TYPE_DEAD = "NODE_TYPE_DEAD";
+	
+	public final static String NODE_TYPE_SPEED_TRAP = "NODE_TYPE_SPEED_TRAP";
 	
 	/** const for angles */
 	private final static double ANGLE_EAST = Math.PI;
@@ -30,17 +36,33 @@ public class Node extends BaseObject {
 	private final static double ANGLE_NORTH = (3.0/2.0)*Math.PI;
 	
 	/** how far the preferred node arrow indicator is from it's node */
-	private final static int PREFERRED_ARROW_OFFSET = 35;
+	private final static int PREFERRED_ARROW_OFFSET = 25;
+	
+	/** how far the speed indicator is from it's node */
+	private final static int SPEED_OFFSET_RIGHT = 35;
+	
+	/** how far the speed indicator is from it's node */
+	private final static int SPEED_OFFSET_LEFT = 25;
+	
+	private final static String NODE_TYPE_KEY = "NODE_TYPE_KEY";
+	
+	private final static String NODE_TYPE_GATE = "NODE_TYPE_GATE";
+	
+	private final static String HUD_SPEED_TRAP_MAX_UNIQUE_ID_PREFIX = "ST_MAX:";
+	
+	private final static String HUD_SPEED_TRAP_MIN_UNIQUE_ID_PREFIX = "ST_MIN:";
 	
 	/** sprite for the node */
 	private Sprite mSprite;
 	
-	// TODO - remove
-	public int sourceKey;
-	public int type;
-	public int link;
-	public float minSpeedLimit;
-	public float maxSpeedLimit;
+	/** stores the nodes type */
+	private String mType;
+	
+	/** speed limits for speed trap nodes */
+	private int mMinSpeedLimit;
+	
+	/** speed limits for speed trap nodes */
+	private int mMaxSpeedLimit;
 	
 	/** the number of connections a node may have if it is an off/on ramp */
 	private final static int CONNECTION_LIMIT_TERMINAL = 1;
@@ -66,31 +88,42 @@ public class Node extends BaseObject {
 	/** in case of multiple possible paths, use this path */
 	private NodeConnection mPreferredConnection = null;
 	
-	/** is this the end, start, or neither type of node */
-	private int mOrder = 0;
-	
 	/** the vector position of this node */
 	private Vector2 mPosition = null;
 
-	public Node(int i, int j, Vector2 vec, float maxSpeedLimit, float minSpeedLimit, int link, int type) {
+	public Node(int i, int j, Vector2 vec, int maxSpeedLimit, int minSpeedLimit, String type) {
 		mI = i;
 		mJ = j;
-		
-		this.type = type;
-		this.link = link;
-		this.maxSpeedLimit = maxSpeedLimit;
-		this.minSpeedLimit = minSpeedLimit;
+		mPosition = vec;
+		mType = type;
+		mMaxSpeedLimit = maxSpeedLimit;
+		mMinSpeedLimit = minSpeedLimit;
 
 		mNumCurrentConnections = 0;
-		// create an array of connections so we can have {i, j, k} - k being used for the border array
-		mNodeConnections = new NodeConnection[4];
+		mMaxConnections = CONNECTION_LIMIT_DEFAULT;
+		mNodeConnections = new NodeConnection[mMaxConnections];
+		mTrackIdArray = new int[CONNECTION_LIMIT_DEFAULT];
 
 		for (int k = 0; k < mNodeConnections.length; k++) {
 			mNodeConnections[k] = new NodeConnection(-1, -1, -1);
 		}
-
-		if(this.type==2) {
+		
+		if(mType.equals(NODE_TYPE_SPEED_TRAP)) {
 			int[] ids = {R.drawable.grey_gate_node, R.drawable.yellow_gate_node, R.drawable.green_gate_node};
+			Texture[] textures = BaseObject.sSystemRegistry.mAssetLibrary.getTexturesByResources(ids);
+			mSprite = new Sprite(textures, 1);
+			HUD.getInstance().addTextElement(-1, Integer.toString(mMaxSpeedLimit), 24, Color.GREEN, mPosition.x + SPEED_OFFSET_RIGHT, mPosition.y, true, HUD.NOT_UNIQUE_ELEMENT);
+			HUD.getInstance().addTextElement(-1, Integer.toString(mMinSpeedLimit), 24, Color.RED, mPosition.x - SPEED_OFFSET_LEFT, mPosition.y, true, HUD.NOT_UNIQUE_ELEMENT);
+		} else if(mType.equals(NODE_TYPE_DEAD)){
+			int id = R.drawable.node_dead;
+			Texture texture = BaseObject.sSystemRegistry.mAssetLibrary.getTextureByResource(id);
+			mSprite = new Sprite(texture, 1);
+		} else if(mType.equals(NODE_TYPE_KEY)) {
+			int[] ids = {R.drawable.grey_node, R.drawable.yellow_node, R.drawable.green_node};
+			Texture[] textures = BaseObject.sSystemRegistry.mAssetLibrary.getTexturesByResources(ids);
+			mSprite = new Sprite(textures, 1);
+		} else if(mType.equals(NODE_TYPE_GATE)) {
+			int[] ids = {R.drawable.grey_node, R.drawable.yellow_node, R.drawable.green_node};
 			Texture[] textures = BaseObject.sSystemRegistry.mAssetLibrary.getTexturesByResources(ids);
 			mSprite = new Sprite(textures, 1);
 		} else {
@@ -98,20 +131,9 @@ public class Node extends BaseObject {
 			Texture[] textures = BaseObject.sSystemRegistry.mAssetLibrary.getTexturesByResources(ids);
 			mSprite = new Sprite(textures, 1);
 		}
-		
-		mPosition = vec;
+
 		mSprite.setPosition(vec.x, vec.y);
 		mSprite.setTextureIndex(0);
-		
-		
-		if(mOrder == BORDER_TYPE_START || mOrder == BORDER_TYPE_END) {
-			mMaxConnections = CONNECTION_LIMIT_TERMINAL;
-			mTrackIdArray = new int[CONNECTION_LIMIT_TERMINAL];
-			mSprite.setTextureIndex(2);
-		} else {
-			mMaxConnections = CONNECTION_LIMIT_DEFAULT;
-			mTrackIdArray = new int[CONNECTION_LIMIT_DEFAULT];
-		}
 		
 		for(int h = 0; h < mTrackIdArray.length; h++) {
 			mTrackIdArray[h] = -1;
@@ -120,19 +142,20 @@ public class Node extends BaseObject {
 		//Log.d("DEBUG", "Node placed at: (" + i + ", " + j + ") ");
 	}
 	
-	/**
-	 * @return	the order for this node
-	 */
-	public int getOrder() {
-		return mOrder;
+	public void setType(String type) {
+		mType = type;
 	}
 	
-	/**
-	 * 
-	 * @param order		order to set this node to
-	 */
-	public void setOrder(int order) {
-		mOrder = order;
+	public String getType() {
+		return mType;
+	}
+	
+	public int getMinSpeedLimit() {
+		return mMinSpeedLimit;
+	}
+	
+	public int getMaxSpeedLimit() {
+		return mMaxSpeedLimit;
 	}
 	
 	/**
@@ -150,15 +173,17 @@ public class Node extends BaseObject {
 	 * @param k			the k index of the other node (used for the border nodes)
 	 * @param trackID	the id for the track segment that represents the visual component of a connection
 	 */
-	public void setConnection(int i, int j, int k, int trackID) {
+	public void setConnection(int i, int j, int k, int trackID, boolean fixed) {
 		for (int p = 0; p < mNodeConnections.length; p++) {
 			if (mNodeConnections[p].isEmptyNodeConnection()) {
 				mNodeConnections[p] = new NodeConnection(i, j, k);
 				mNodeConnections[p].setTrackID(trackID);
+				mNodeConnections[p].setFixed(fixed);
 				mNumCurrentConnections++;
 				break;
 			}
 		}
+		conditionallyRemovePreferredConnection();
 	}
 
 	/**
@@ -176,7 +201,7 @@ public class Node extends BaseObject {
 			}
 		}
 		if(mPreferredConnection != null && mPreferredConnection.getI() == i && mPreferredConnection.getJ() == j) {
-			mPreferredConnection = null;
+			conditionallyRemovePreferredConnection();
 		}
 	}
 
@@ -185,12 +210,22 @@ public class Node extends BaseObject {
 	 */
 	public void removeAllConnections() {
 		for (int i = 0; i < mNodeConnections.length; i++) {
-			if((mNodeConnections[i].getI() != -1 || mNodeConnections[i].getJ() != -1) && mNodeConnections[i].getK() == -1) {
-				mNodeConnections[i] = new NodeConnection(-1, -1, -1);
-				mNumCurrentConnections--;
-			}	
+			if(mNodeConnections[i].getI() != -1 || mNodeConnections[i].getJ() != -1 || mNodeConnections[i].getK() != -1) {
+				if(!mNodeConnections[i].getFixed()) {
+					mNodeConnections[i] = new NodeConnection(-1, -1, -1);
+					mNumCurrentConnections--;
+				}
+			}
 		}
-		mPreferredConnection = null;
+		conditionallyRemovePreferredConnection();
+	}
+	
+	public void conditionallyRemovePreferredConnection() {
+		if(mPreferredConnection != null) {
+			String uniqueID = Integer.toString(getI()) + Integer.toString(getJ());
+			HUD.getInstance().removeElement(uniqueID);
+			mPreferredConnection = null;
+		}
 	}
 	
 	/**
@@ -265,35 +300,48 @@ public class Node extends BaseObject {
 	 * 
 	 * @param node
 	 */
-	public void setPreferredConnection(NodeConnection node) {
-		mPreferredConnection = node;
+	public void setPreferredConnection(NodeConnection nodeStart, NodeConnection nodeEnd) {
+		mPreferredConnection = nodeEnd;
 		double angle = ANGLE_EAST;
 		float posX = 0;
 		float posY = 0;
+		int originI = nodeStart.getI();
+		int originJ = nodeStart.getJ();
+		int yOriginOffset = PREFERRED_ARROW_OFFSET;
+		int xOriginOffset = PREFERRED_ARROW_OFFSET;
+		if(originI == getI()) {
+			if(originJ < getJ()) {
+				yOriginOffset *= -1;
+			}
+		} else {
+			if(originI < getI()) {
+				xOriginOffset *= -1;
+			}
+		}
 		if(mPreferredConnection.getJ() == getJ()) {
 			if(mPreferredConnection.getI() > getI()) {
 				angle = ANGLE_EAST;
 				posX = mPosition.x + PREFERRED_ARROW_OFFSET;
-				posY = mPosition.y;
+				posY = mPosition.y + yOriginOffset;
 			} else {
 				angle = ANGLE_WEST;
 				posX = mPosition.x - PREFERRED_ARROW_OFFSET;
-				posY = mPosition.y;
+				posY = mPosition.y + yOriginOffset;
 			}
 		} else {
 			if(mPreferredConnection.getJ() > getJ()) {
 				angle = ANGLE_SOUTH;
-				posX = mPosition.x;
+				posX = mPosition.x + xOriginOffset;
 				posY = mPosition.y + PREFERRED_ARROW_OFFSET;
 			} else {
 				angle = ANGLE_NORTH;
-				posX = mPosition.x;
+				posX = mPosition.x + xOriginOffset;
 				posY = mPosition.y - PREFERRED_ARROW_OFFSET;
 			}
 		}
 		Texture texture = BaseObject.sSystemRegistry.mAssetLibrary.getTextureByResource(R.drawable.arrow);
 		String uniqueID = Integer.toString(getI()) + Integer.toString(getJ());
-		HUD.getInstance().addElement(GameManager.GAME_MODE_RELEASE, texture, posX, posY, angle, 300, true, uniqueID);
+		HUD.getInstance().addElement(-1, texture, posX, posY, angle, 300, true, uniqueID);
 		//Log.d("DEBUG", "Node: (" + getI() + ", " + getJ() + ") now prefers to connect to node: (" + mPreferredConnection.getI() + ", " + mPreferredConnection.getJ() + ")");
 	}
 	

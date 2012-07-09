@@ -54,25 +54,28 @@ public class GameRenderer implements Renderer {
 	}
 
 	public void onSurfaceCreated(GL10 gl, EGLConfig config) {
-		Log.d("DEBUG", "onSurfaceCreated was called");
+		//Blending
+		//gl.glColor4f(1.0f, 1.0f, 1.0f, 0.5f);				//Full Brightness. 50% Alpha ( NEW )
+		gl.glBlendFunc(GL10.GL_SRC_ALPHA, GL10.GL_ONE_MINUS_SRC_ALPHA);		//Set The Blending Function For Translucency ( NEW )
+
+		//Settings
+		gl.glDisable(GL10.GL_DITHER);				//Disable dithering
+		gl.glEnable(GL10.GL_TEXTURE_2D);			//Enable Texture Mapping
+		gl.glShadeModel(GL10.GL_SMOOTH); 			//Enable Smooth Shading
+		gl.glClearColor(0.0f, 0.0f, 0.0f, 0.5f); 	//Black Background
+		gl.glClearDepthf(1.0f); 					//Depth Buffer Setup
+		gl.glEnable(GL10.GL_DEPTH_TEST); 			//Enables Depth Testing
+		gl.glDepthFunc(GL10.GL_LEQUAL); 			//The Type Of Depth Testing To Do
+		
+		//Really Nice Perspective Calculations
+		gl.glHint(GL10.GL_PERSPECTIVE_CORRECTION_HINT, GL10.GL_NICEST); 
+		
 		loadTextures(gl);
-
-		gl.glShadeModel(GL10.GL_SMOOTH);
-		gl.glEnable(GL10.GL_TEXTURE_2D);
-
-		gl.glEnable(GL10.GL_BLEND);
-		gl.glBlendFunc(GL10.GL_SRC_ALPHA, GL10.GL_ONE_MINUS_SRC_ALPHA);
-
-		gl.glClearColor(0.0f, 0.0f, 0.0f, 0.5f);
-		gl.glClearDepthf(1.0f);
-		gl.glEnable(GL10.GL_DEPTH_TEST);
-		gl.glDepthFunc(GL10.GL_LEQUAL);
-		gl.glHint(GL10.GL_PERSPECTIVE_CORRECTION_HINT, GL10.GL_NICEST);
 
 		if (mLabels != null) {
 			mLabels.shutdown(gl);
 		} else {
-			mLabels = new LabelMaker(512, 256);
+			mLabels = new LabelMaker();
 		}
 		mLabels.initialize(gl);
 	}
@@ -95,12 +98,10 @@ public class GameRenderer implements Renderer {
 	}
 
 	private void viewOrtho(GL10 gl, int w, int h) {
-		gl.glEnable(GL10.GL_BLEND);
 		gl.glMatrixMode(GL10.GL_PROJECTION);
 		gl.glPushMatrix();
 		gl.glLoadIdentity();
 		gl.glOrthof(0, w, -h, 0, -1, 1);
-		// Log.d("DEBUG", "w, h: " + w + ", " + h);
 		gl.glMatrixMode(GL10.GL_MODELVIEW);
 		gl.glPushMatrix();
 		gl.glLoadIdentity();
@@ -134,6 +135,10 @@ public class GameRenderer implements Renderer {
 		}
 
 		viewOrtho(gl, mWidth, mHeight);
+		
+		
+		gl.glEnable(GL10.GL_BLEND);
+		gl.glDisable(GL10.GL_DEPTH_TEST);
 
 		synchronized (this) {
 			if (spriteList != null) {
@@ -160,6 +165,7 @@ public class GameRenderer implements Renderer {
 			viewPerspective(gl);
 			
 			//having the text drawing done outside of the sync caused flickering
+			
 			if (textBoxList != null) {
 				Object[] objectArray = textBoxList.getArray();
 				final int len = objectArray.length;
@@ -175,13 +181,16 @@ public class GameRenderer implements Renderer {
 				for (int g = 0; g < len; g++) {
 					if (objectArray[g] != null) {
 						TextBox currentTextBox = (TextBox) objectArray[g];
-						mLabels.draw(gl, currentTextBox.getX(), currentTextBox.getY(), currentTextBox.getIndex());
+						// NOTE - mHeight - currentTextBox.y is to allow the y coords to match using both glDrawElements
+						// 		  and glDrawTexfOES (glDrawTexfOES draws from bottom left, glDrawElements from top left)
+						mLabels.draw(gl, currentTextBox.getX(), mHeight - currentTextBox.getY(), currentTextBox.getIndex());
 					}
 				}
 				mLabels.endDrawing(gl);
 			} else if (textBoxList == null) {
 				gl.glClear(GL10.GL_COLOR_BUFFER_BIT | GL10.GL_DEPTH_BUFFER_BIT);
 			}
+			
 		}
 		mDebugFPSCounter++;
 	}

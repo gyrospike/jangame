@@ -31,9 +31,6 @@ public class MenuManager {
 	/** string reference to title TODO - remove */
 	private final String mGameName = "CIRCUIT";
 
-	/** the title text */
-	private SimpleText mTitle;
-
 	/** fixed array of static deco for menu background */
 	private FixedSizeArray<DrawableObject> mStaticDeco = new FixedSizeArray<DrawableObject>(MAX_NUM_STATIC_DECO);
 	
@@ -60,15 +57,6 @@ public class MenuManager {
 	 * 
 	 */
 	public void init() {
-		
-		mTitle = new SimpleText(mGameName);
-		mTitle.setTextSize(170);
-		Rect bounds = new Rect();
-		Paint titlePaint = mTitle.getTextBox().getPaint();
-		titlePaint.getTextBounds(mGameName, 0, mGameName.length(), bounds);
-		Vector2 boxScale = new Vector2(bounds.width(), bounds.height());
-		Vector2 relPos = getRelativePosition(boxScale, 0.0f, 0.0f, ORIGIN_CENTER);
-		mTitle.setPosition(relPos.x, mSMetrics.heightPixels - relPos.y);
 
 		Texture borderTop = BaseObject.sSystemRegistry.mAssetLibrary.getTextureByResource(R.drawable.bg_head_border_top);
 		mStaticDeco.add(new DrawableObject(borderTop, 0, mSMetrics.widthPixels, borderTop.height));
@@ -166,7 +154,6 @@ public class MenuManager {
 		return mInitialized;
 	}
 
-	// origin point is bottom left
 	/**
 	 * Returns a vector location given the corner or center you want to make your reference point for aligning a sprite
 	 * 
@@ -223,7 +210,6 @@ public class MenuManager {
 		for(int i = 0; i < animLen; i++) {
 			mAnimDeco.get(i).update(timeDelta);
 		}
-		mTitle.update(timeDelta);
 	}
 
 }

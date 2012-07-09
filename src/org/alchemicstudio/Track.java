@@ -1,5 +1,6 @@
 package org.alchemicstudio;
 
+import android.graphics.Color;
 import android.util.Log;
 
 public class Track extends BaseObject {
@@ -21,6 +22,8 @@ public class Track extends BaseObject {
 	
 	public Track() {
 		mSpark = new Spark();
+		
+		HUD.getInstance().addTextElement(-1, "Spark Speed: 0", 24, Color.YELLOW, 500, 40, true, "sparkSpeed");
 	}
 	
 	/**
@@ -33,7 +36,7 @@ public class Track extends BaseObject {
 		mBorderNodes = borderNodes;
 		int len = borderNodes.length;
 		for(int i = 0; i < len; i++) {
-			if(borderNodes[i].getOrder() == Node.BORDER_TYPE_START) {
+			if(borderNodes[i].getType().equals(Node.NODE_TYPE_START)) {
 				mStartNode = borderNodes[i];
 			}
 		}
@@ -66,10 +69,28 @@ public class Track extends BaseObject {
 		if(mSpark.getReleased()) {
 			mSpark.update(timeDelta);
 			if(mSpark.getReadyForNextTarget()) {
-				mSpark.setTarget(resolveNextTargetNode(mSpark.getTarget()));
-				mSpark.updateSprite(timeDelta);
+				Node currentNode = mSpark.getTarget();
+				if(canAdvancePastThisNode(currentNode)) {
+					mSpark.setTarget(resolveNextTargetNode(currentNode));
+					mSpark.updateSprite(timeDelta);
+				} else {
+					resetSpark();
+				}
 			}
 		}
+	}
+	
+	private boolean canAdvancePastThisNode(Node currentNode) {
+		boolean result = false;
+		if(currentNode.getType().equals(Node.NODE_TYPE_SPEED_TRAP)) {
+			double speed = mSpark.getCurrentSpeed();
+			if(currentNode.getMinSpeedLimit() < speed && currentNode.getMaxSpeedLimit() > speed) {
+				result = true;
+			}
+		} else {
+			result = true;
+		}
+		return result;
 	}
 	
 	/**
@@ -86,20 +107,27 @@ public class Track extends BaseObject {
 			result = getNodeFromConnection(pConnection);
 		} else {
 			NodeConnection[] connections = currentNode.getConnections();
+			int lastResortNodeIndex = -1;
 			for(int i = 0; i < connections.length; i++) {
 				// if there is no previous connection we assume we are just starting
 				if(mPreviousNode == null) {
 					result = getNodeFromConnection(connections[i]);
-				} else if (mPreviousNode.getI() != connections[i].getI() || mPreviousNode.getJ() != connections[i].getJ()) {
-					// don't allow us to get to end node through this flow, wait until last check
-					// TODO - we'll probably want to allow this flow later
+				// if there is a node straight ahead, take that one, ^ is the exclusive or (XOR) operator in java
+				} else if(mPreviousNode.getI() == connections[i].getI() ^ mPreviousNode.getJ() == connections[i].getJ()) {
 					result = getNodeFromConnection(connections[i]);
 					break;
+				// else use any node not including the one you just came from
+				} else if(mPreviousNode.getI() != connections[i].getI() || mPreviousNode.getJ() != connections[i].getJ()) {
+					lastResortNodeIndex = i;
 				}
 			}
 			if(result == null) {
-				Log.d("DEBUG", "spark reached the end of the line");
-				mSpark.resetSpark();
+				if(lastResortNodeIndex > -1) {
+					result = getNodeFromConnection(connections[lastResortNodeIndex]);
+				} else {
+					Log.d("DEBUG", "spark reached the end of the line");
+					mSpark.resetSpark();
+				}
 			}
 		}
 		mPreviousNode = currentNode;

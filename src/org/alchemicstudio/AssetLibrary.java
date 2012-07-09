@@ -118,6 +118,7 @@ public class AssetLibrary extends BaseObject {
 	 */
 	public void loadGameTextures() {
 		int[] textureArray = {
+				R.drawable.node_dead,
 				R.drawable.grey_gate_node,
 				R.drawable.yellow_gate_node,
 				R.drawable.green_gate_node,
@@ -223,7 +224,7 @@ public class AssetLibrary extends BaseObject {
 			assert error == GL10.GL_NO_ERROR;
 
 			int textureName = mTextureNameWorkspace[0];
-
+		
 			gl.glBindTexture(GL10.GL_TEXTURE_2D, textureName);
 
 			error = gl.glGetError();
@@ -233,7 +234,7 @@ public class AssetLibrary extends BaseObject {
 
 			assert error == GL10.GL_NO_ERROR;
 
-			gl.glTexParameterf(GL10.GL_TEXTURE_2D, GL10.GL_TEXTURE_MIN_FILTER, GL10.GL_LINEAR);
+			gl.glTexParameterf(GL10.GL_TEXTURE_2D, GL10.GL_TEXTURE_MIN_FILTER, GL10.GL_NEAREST);
 			gl.glTexParameterf(GL10.GL_TEXTURE_2D, GL10.GL_TEXTURE_MAG_FILTER, GL10.GL_LINEAR);
 
 			// original texture -> [-0-]
@@ -247,16 +248,17 @@ public class AssetLibrary extends BaseObject {
 			//gl.glTexParameterf(GL10.GL_TEXTURE_2D, GL10.GL_TEXTURE_WRAP_T, GL10.GL_CLAMP_TO_EDGE);
 
 			// I think this is only used when dealing with lighting
-			//gl.glTexEnvf(GL10.GL_TEXTURE_ENV, GL10.GL_TEXTURE_ENV_MODE, GL10.GL_DECAL); 
+			// using GL_REPLACE instead of GL_MODULATE makes it so only PNGs with no alpha channel could be transparent
+			gl.glTexEnvf(GL10.GL_TEXTURE_ENV, GL10.GL_TEXTURE_ENV_MODE, GL10.GL_MODULATE);
 
 			InputStream is = context.getResources().openRawResource(texture.resource);
 			Bitmap bitmap;
 			try {
 				BitmapFactory.Options opts = new BitmapFactory.Options();
 				opts.inScaled = false;
+				opts.inPreferredConfig  =  Bitmap.Config.RGB_565;
 				//Log.d("DEBUG", "Resource: " + texture.resource);
-				bitmap = BitmapFactory.decodeStream(is, null, opts);
-				//bitmap = BitmapFactory.decodeResource(context.getResources(), texture.resource, opts);
+				bitmap = BitmapFactory.decodeResource(context.getResources(), texture.resource, opts);
 			} finally {
 				try {
 					is.close();

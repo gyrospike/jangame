@@ -10,6 +10,8 @@ public class NodeConnection {
 	
 	private int mTrackID = -1;
 	
+	private boolean mFixed = false;
+	
 	public NodeConnection(int i, int j, int k) {
 		mI = i;
 		mJ = j;
@@ -34,6 +36,14 @@ public class NodeConnection {
 	
 	public int getTrackID() {
 		return mTrackID;
+	}
+	
+	public void setFixed(boolean val) {
+		mFixed = val;
+	}
+	
+	public boolean getFixed() {
+		return mFixed;
 	}
 	
 	public boolean hasValueOf(int i, int j, int k) {

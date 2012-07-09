@@ -2,6 +2,7 @@ package org.alchemicstudio;
 
 import android.app.Activity;
 import android.content.Context;
+import android.graphics.Color;
 import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -29,13 +30,13 @@ public class GMRelease extends GameMode {
 		mTrack = new Track();
 		
 		Texture red = BaseObject.sSystemRegistry.mAssetLibrary.getTextureByResource(R.drawable.hud_gear_red);
-		HUD.getInstance().addElement(GameManager.GAME_MODE_RELEASE, red, 30, 60, 0, 300, false, HUD.NOT_UNIQUE_ELEMENT);
+		HUD.getInstance().addElement(GameManager.GAME_MODE_RELEASE, red, 30, 60, 0, 0, false, HUD.NOT_UNIQUE_ELEMENT);
 		
 		Texture green = BaseObject.sSystemRegistry.mAssetLibrary.getTextureByResource(R.drawable.hud_gear_green);
-		HUD.getInstance().addElement(GameManager.GAME_MODE_RELEASE, green, 150, 60, 0, 300, false, HUD.NOT_UNIQUE_ELEMENT);
+		HUD.getInstance().addElement(GameManager.GAME_MODE_RELEASE, green, 150, 60, 0, 0, false, HUD.NOT_UNIQUE_ELEMENT);
 		
 		Texture blue = BaseObject.sSystemRegistry.mAssetLibrary.getTextureByResource(R.drawable.hud_gear_blue);
-		HUD.getInstance().addElement(GameManager.GAME_MODE_RELEASE, blue, 270, 60, 0, 300, false, HUD.NOT_UNIQUE_ELEMENT);
+		HUD.getInstance().addElement(GameManager.GAME_MODE_RELEASE, blue, 270, 60, 0, 0, false, HUD.NOT_UNIQUE_ELEMENT);
 
 		sparkReleaseButton = (Button) ((Activity) context).findViewById(R.id.sparkReleaseButton);
 		sparkReleaseButton.setOnClickListener(new OnClickListener() {
@@ -86,6 +87,7 @@ public class GMRelease extends GameMode {
 	public void makeActive() {
 		sparkReleaseButton.setVisibility(View.VISIBLE);
 		HUD.getInstance().setElementsVisibility(GameManager.GAME_MODE_RELEASE, true);
+		mTrack.loadNodes(mGrid.getNodes(), mGrid.getBorderNodes());
 	}
 
 	@Override
@@ -99,7 +101,6 @@ public class GMRelease extends GameMode {
 	 * releases the spark into the track
 	 */
 	private void releaseSpark() {
-		mTrack.loadNodes(mGrid.getNodes(), mGrid.getBorderNodes());
 		mTrack.releaseSpark();
 	}
 }

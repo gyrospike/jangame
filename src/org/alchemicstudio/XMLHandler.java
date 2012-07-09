@@ -14,6 +14,9 @@ public class XMLHandler extends DefaultHandler {
 	/** the most recent node index j to be parsed */
 	private int mCurrentJ;
 	
+	/** the most recent node index k to be parsed */
+	private int mCurrentK;
+	
 	/** the index of the most recent node to be parsed */
 	private int mCurrentNodeIndex;
 
@@ -38,7 +41,6 @@ public class XMLHandler extends DefaultHandler {
 		mParsedDataSet.setHeight(Integer.parseInt(atts.getValue("HEIGHT")));
 		mParsedDataSet.setSpacing(Integer.parseInt(atts.getValue("SPACING")));
 		mParsedDataSet.initializeNodes();
-		mParsedDataSet.initializeBorderNodes();
 	}
 	
 	/**
@@ -48,7 +50,8 @@ public class XMLHandler extends DefaultHandler {
 	private void parseNode(Attributes atts) {
 		mCurrentI = Integer.parseInt(atts.getValue("I"));
 		mCurrentJ = Integer.parseInt(atts.getValue("J"));
-		mCurrentNodeIndex = getNodeIndex(mCurrentI, mCurrentJ);
+		mCurrentK = Integer.parseInt(atts.getValue("K"));
+		mCurrentNodeIndex = getCurrentNodeIndex(mCurrentI, mCurrentJ, mCurrentK);
 	}
 	
 	/**
@@ -57,35 +60,40 @@ public class XMLHandler extends DefaultHandler {
 	 */
 	private void parseStats(Attributes atts) {
 		Log.d("DEBUG", "Parsing : " + mParsedDataSet.mNodes.getCount());
-		mParsedDataSet.mNodes.get(mCurrentNodeIndex).type = Integer.parseInt(atts.getValue("TYPE"));
-		mParsedDataSet.mNodes.get(mCurrentNodeIndex).link = Integer.parseInt(atts.getValue("LINK"));
-		mParsedDataSet.mNodes.get(mCurrentNodeIndex).minSpeed = Integer.parseInt(atts.getValue("MIN_SPEED"));
-		mParsedDataSet.mNodes.get(mCurrentNodeIndex).maxSpeed = Integer.parseInt(atts.getValue("MAX_SPEED"));
+		mParsedDataSet.mNodes.get(mCurrentNodeIndex).type = atts.getValue("TYPE");
+		if(atts.getValue("MIN_SPEED") != null) {
+			mParsedDataSet.mNodes.get(mCurrentNodeIndex).minSpeed = Integer.parseInt(atts.getValue("MIN_SPEED"));
+		}
+		if(atts.getValue("MAX_SPEED") != null) {
+			mParsedDataSet.mNodes.get(mCurrentNodeIndex).maxSpeed = Integer.parseInt(atts.getValue("MAX_SPEED"));
+		}
 	}
 	
 	/**
 	 * helper parsing function for the PRETARGET tag
 	 * @param atts
 	 */
-	private void parsePretarget(Attributes atts) {
+	private void parsePreconnection(Attributes atts) {
 		Log.d("DEBUG", "Parsing : " + mParsedDataSet.mNodes.getCount());
-		mParsedDataSet.mNodes.get(mCurrentNodeIndex).addPreTarget(
-				Integer.parseInt(atts.getValue("INDEX")),
-				Integer.parseInt(atts.getValue("ORDER")));
+		mParsedDataSet.mNodes.get(mCurrentNodeIndex).addPreconnection(
+				Integer.parseInt(atts.getValue("I")),
+				Integer.parseInt(atts.getValue("J")),
+				Integer.parseInt(atts.getValue("K")));
 	}
-	
+
 	/**
-	 * get the node template parsed data set index based on it's i and j index
+	 * get the node template parsed data set index based on it's i, j, and k index
 	 * 
 	 * @param i
 	 * @param j
+	 * @param k
 	 * @return
 	 */
-	private int getNodeIndex(int i, int j) {
+	private int getCurrentNodeIndex(int i, int j, int k) {
 		int result = -1;
 		int totalNodeCount =  mParsedDataSet.mNodes.getCount();
 		for(int index = 0; index < totalNodeCount; index++) {
-			if(mParsedDataSet.mNodes.get(index).i == i && mParsedDataSet.mNodes.get(index).j == j) {
+			if(mParsedDataSet.mNodes.get(index).i == i && mParsedDataSet.mNodes.get(index).j == j && mParsedDataSet.mNodes.get(index).k == k) {
 				result = index;
 			}
 		}
@@ -101,7 +109,7 @@ public class XMLHandler extends DefaultHandler {
 	@Override
 	public void endDocument() throws SAXException {
 		Log.d("DEBUG", "enddocument called");
-		mParsedDataSet.setStartAndEndIndices();
+		//mParsedDataSet.setStartAndEndIndices();
 	}
 
 	@Override
@@ -113,8 +121,8 @@ public class XMLHandler extends DefaultHandler {
 			parseNode(atts);
 		} else if (localName.equals("STATS")) {
 			parseStats(atts);
-		} else if (localName.equals("PRETARGET")) {
-			parsePretarget(atts);
+		} else if (localName.equals("PRECONNECTION")) {
+			parsePreconnection(atts);
 		} 
 	}
 
