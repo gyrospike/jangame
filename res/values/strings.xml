@@ -1,5 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="hello">Hello World, BaseActivity!</string>
     <string name="app_name">Circuit</string>
+    <string name="app_title">CIRCUIT</string>
+    <string name="speed_meter">Spark Speed:\u0020</string>
+    <string name="circuit_complete">Circuit Complete</string>
+    <string name="circuit_incomplete">Circuit Incomplete</string>
 </resources>

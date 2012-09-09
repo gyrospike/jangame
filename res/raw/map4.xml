@@ -1,0 +1,80 @@
+<?xml version="1.0" ?>
+<MAP NUMBER="4" WIDTH="5" HEIGHT="8" SPACING="60">
+    <NODE I="-1" J="1" K="24">
+  		<STATS TYPE="NODE_TYPE_START" />
+  	</NODE>
+  	<NODE I="0" J="1" K="-1">
+  		<PRECONNECTION I="-1" J="1" K="24" />
+  	</NODE>
+  	<NODE I="2" J="7" K="-1">
+  		<PRECONNECTION I="2" J="8" K="15" />
+  	</NODE>
+  	<NODE I="2" J="8" K="15">
+  		<STATS TYPE="NODE_TYPE_END" />
+  	</NODE>
+  	<NODE I="1" J="1" K="-1">
+  		<STATS TYPE="NODE_TYPE_DEAD" />
+  	</NODE>
+  	<NODE I="3" J="1" K="-1">
+  		<STATS TYPE="NODE_TYPE_DEAD" />
+  	</NODE>
+  	<NODE I="1" J="3" K="-1">
+  		<STATS TYPE="NODE_TYPE_DEAD" />
+  	</NODE>
+  	<NODE I="3" J="3" K="-1">
+  		<STATS TYPE="NODE_TYPE_DEAD" />
+  	</NODE>
+  	<NODE I="2" J="6" K="-1">
+  		<STATS TYPE="NODE_TYPE_DEAD" />
+  	</NODE>
+  	<NODE I="1" J="0" K="-1">
+  		<STATS TYPE="NODE_TYPE_EMPTY" />
+  	</NODE>
+  	<NODE I="3" J="0" K="-1">
+  		<STATS TYPE="NODE_TYPE_EMPTY" />
+  	</NODE>
+  	<NODE I="0" J="3" K="-1">
+  		<STATS TYPE="NODE_TYPE_EMPTY" />
+  	</NODE>
+  	<NODE I="0" J="4" K="-1">
+  		<STATS TYPE="NODE_TYPE_EMPTY" />
+  	</NODE>
+  	<NODE I="1" J="4" K="-1">
+  		<STATS TYPE="NODE_TYPE_EMPTY" />
+  	</NODE>
+  	<NODE I="4" J="3" K="-1">
+  		<STATS TYPE="NODE_TYPE_EMPTY" />
+  	</NODE>
+  	<NODE I="4" J="4" K="-1">
+  		<STATS TYPE="NODE_TYPE_EMPTY" />
+  	</NODE>
+  	<NODE I="3" J="4" K="-1">
+  		<STATS TYPE="NODE_TYPE_EMPTY" />
+  	</NODE>
+  	<NODE I="2" J="5" K="-1">
+  		<STATS TYPE="NODE_TYPE_EMPTY" />
+  	</NODE>
+  	<NODE I="1" J="7" K="-1">
+  		<STATS TYPE="NODE_TYPE_EMPTY" />
+  	</NODE>
+  	<NODE I="3" J="7" K="-1">
+  		<STATS TYPE="NODE_TYPE_EMPTY" />
+  	</NODE>
+  	<NODE I="0" J="5" K="-1">
+  		<STATS TYPE="NODE_TYPE_KEY" KEY_ID="1" />
+  	</NODE>
+  	<NODE I="4" J="7" K="-1">
+  		<STATS TYPE="NODE_TYPE_GATE" KEY_ID="1" />
+  	</NODE>
+  	<NODE I="4" J="5" K="-1">
+  		<STATS TYPE="NODE_TYPE_KEY" KEY_ID="2" />
+  	</NODE>
+  	<NODE I="0" J="7" K="-1">
+  		<STATS TYPE="NODE_TYPE_GATE" KEY_ID="2" />
+  	</NODE>
+    <badges>
+        <badge type="0">
+            <requirement type="time" value="8000" />
+        </badge>
+    </badges>
+</MAP>

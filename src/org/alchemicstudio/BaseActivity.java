@@ -3,7 +3,11 @@ package org.alchemicstudio;
 import java.util.concurrent.ArrayBlockingQueue;
 
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.app.Dialog;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.KeyEvent;
@@ -11,6 +15,9 @@ import android.view.MotionEvent;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Button;
+import android.widget.ImageView;
+import android.widget.ListView;
+import android.widget.TextView;
 
 public class BaseActivity extends Activity {
 
@@ -44,12 +51,44 @@ public class BaseActivity extends Activity {
 		setContentView(R.layout.game);
 		mGLView = (GameSurfaceView)findViewById(R.id.GameSurfaceView01);
 
+        Handler levelCompleteHandler = new Handler() {
+            public void handleMessage(Message msg) {
+                String title = msg.getData().getString("title");
+                String[] textBlocks = msg.getData().getStringArray("textArray");
+                int[] resIDBlocks = msg.getData().getIntArray("resIDArray");
+                showLevelCompleteDialog(title, textBlocks, resIDBlocks);
+            }
+        };
+
 		mGame = new Game(metrics.widthPixels, metrics.heightPixels);
 		mGame.setSurfaceView((GameSurfaceView) mGLView);
-		mGame.bootstrap(this, getIntent().getExtras());
+		mGame.bootstrap(this, getIntent().getExtras(), levelCompleteHandler);
 
 		createInputObjectPool();
 	}
+
+    /**
+     * Display the custom level complete dialog alerting users to any badges the earned
+     *
+     * @param title         the title of the dialog
+     * @param textBlocks    the text to append to the list element
+     * @param resIDBlocks   the resource id for the image to append to the list element
+     */
+    private void showLevelCompleteDialog(String title, String[] textBlocks, int[] resIDBlocks) {
+
+        Dialog dialog = new Dialog(this, R.style.CircuitDialogStyle);
+        dialog.setContentView(R.layout.complete_dialog);
+
+        TextView titleTextView = (TextView) dialog.findViewById(R.id.title);
+        titleTextView.setText(title);
+
+        ListView list=(ListView)dialog.findViewById(R.id.list);
+        CompleteDialogAdapter adapter=new CompleteDialogAdapter(this, textBlocks, resIDBlocks);
+        list.setAdapter(adapter);
+
+        dialog.setCanceledOnTouchOutside(true);
+        dialog.show();
+    }
 
 	@Override
 	protected void onPause() {
@@ -114,4 +153,5 @@ public class BaseActivity extends Activity {
 			mInputObjectPool.add(new InputObject(mInputObjectPool));
 		}
 	}
+
 }

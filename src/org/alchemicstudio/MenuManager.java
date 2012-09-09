@@ -1,11 +1,8 @@
 package org.alchemicstudio;
 
-import android.graphics.Paint;
-import android.graphics.Rect;
 import android.util.DisplayMetrics;
-import android.util.Log;
 
-public class MenuManager {
+public class MenuManager extends BaseManager {
 
 	/** const representing origin method of aligning an object */
 	public static final int ORIGIN_CENTER = 0;
@@ -27,9 +24,6 @@ public class MenuManager {
 	
 	/** max number of static deco objects on the menu */
 	private static final int MAX_NUM_STATIC_DECO = 50;
-	
-	/** string reference to title TODO - remove */
-	private final String mGameName = "CIRCUIT";
 
 	/** fixed array of static deco for menu background */
 	private FixedSizeArray<DrawableObject> mStaticDeco = new FixedSizeArray<DrawableObject>(MAX_NUM_STATIC_DECO);
@@ -37,8 +31,8 @@ public class MenuManager {
 	/** fixed array of animated deco for menu background */
 	private FixedSizeArray<DrawableObject> mAnimDeco = new FixedSizeArray<DrawableObject>(MAX_NUM_ANIM_DECO);
 
-	/** has the manager been initialized */
-	private boolean mInitialized = false;
+	/** the reference to the title which is a stored static texture rendered on game init */
+	private HUDStaticTextElement mTitle;
 
 	/** contains information about the screen */
 	private DisplayMetrics mSMetrics;
@@ -58,6 +52,8 @@ public class MenuManager {
 	 */
 	public void init() {
 
+		mTitle  = new HUDStaticTextElement(HUD.NOT_UNIQUE_ELEMENT, 205, 190, AssetLibrary.PRERENDERED_TEXT_INDEX_CIRCUIT);
+		
 		Texture borderTop = BaseObject.sSystemRegistry.mAssetLibrary.getTextureByResource(R.drawable.bg_head_border_top);
 		mStaticDeco.add(new DrawableObject(borderTop, 0, mSMetrics.widthPixels, borderTop.height));
 		mStaticDeco.getLast().setRelativePosition(getRelativePosition(mStaticDeco.getLast().mSprite.getPolyScale(), 0.0f, 0.0f, ORIGIN_TOP_LEFT));
@@ -133,7 +129,7 @@ public class MenuManager {
 		mAnimDeco.getLast().setRotationSpeed(-4.0f);
 		mAnimDeco.getLast().mSprite.setPolyScale(0.6f, 0.6f);
 		
-		mInitialized = true;
+		super.init();
 	}
 	
 	/**
@@ -145,13 +141,6 @@ public class MenuManager {
 	private float dipToPx(float dip) {
 		float px = dip * (mSMetrics.densityDpi / mSMetrics.DENSITY_DEFAULT);
 		return px;
-	}
-
-	/**
-	 * @return	true if initialized
-	 */
-	public boolean getInitialized() {
-		return mInitialized;
 	}
 
 	/**
@@ -210,6 +199,8 @@ public class MenuManager {
 		for(int i = 0; i < animLen; i++) {
 			mAnimDeco.get(i).update(timeDelta);
 		}
+		
+		mTitle.update(timeDelta);
 	}
 
 }

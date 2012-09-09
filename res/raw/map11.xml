@@ -1,12 +1,42 @@
 <?xml version="1.0" ?>
-<MAP NUMBER="2" WIDTH="4" HEIGHT="6" SPACING="70">
-	<NODE I="0" J="0">
-  		<STATS TYPE="1" LINK="0" MIN_SPEED="0" MAX_SPEED="100" SOURCE="true"/>
+<MAP NUMBER="11" WIDTH="5" HEIGHT="4" SPACING="60">
+    <NODE I="-1" J="1" K="16" >
+        <STATS TYPE="NODE_TYPE_START" />
+    </NODE>
+    <NODE I="5" J="2" K="7" >
+        <STATS TYPE="NODE_TYPE_END" />
+    </NODE>
+	<NODE I="1" J="2" K="-1" >
+  		<STATS TYPE="NODE_TYPE_DEAD" />
   	</NODE>
-  	<NODE I="2" J="5">
-  		<STATS TYPE="2" LINK="0" MIN_SPEED="10" MAX_SPEED="50" SOURCE="false"/>
+  	<NODE I="2" J="1" K="-1" >
+  		<STATS TYPE="NODE_TYPE_EMPTY" />
   	</NODE>
-  	<NODE I="3" J="5">
-  		<STATS TYPE="1" LINK="0" MIN_SPEED="0" MAX_SPEED="100" SOURCE="true"/>
+  	<NODE I="3" J="1" K="-1" >
+  		<STATS TYPE="NODE_TYPE_EMPTY" />
   	</NODE>
+  	<NODE I="4" J="1" K="-1" >
+  		<STATS TYPE="NODE_TYPE_EMPTY" />
+  	</NODE>
+  	<NODE I="4" J="2" K="-1" >
+  		<STATS TYPE="NODE_TYPE_EMPTY" />
+  	</NODE>
+  	<NODE I="0" J="0" K="-1" >
+  		<STATS TYPE="NODE_TYPE_KEY" KEY_ID="1" />
+  	</NODE>
+  	<NODE I="2" J="2" K="-1" >
+  		<STATS TYPE="NODE_TYPE_GATE" KEY_ID="1" />
+  	</NODE>
+  	<NODE I="3" J="2" K="-1" >
+  	    <PRECONNECTION I="5" J="2" K="7" />
+  		<STATS TYPE="NODE_TYPE_SPEED_TRAP" MIN_SPEED="200" MAX_SPEED="250" />
+  	</NODE>
+  	<NODE I="0" J="1" K="-1" >
+  		<PRECONNECTION I="-1" J="1" K="16" />
+  	</NODE>
+    <badges>
+        <badge type="0">
+            <requirement type="time" value="8000" />
+        </badge>
+    </badges>
 </MAP>

@@ -11,12 +11,15 @@ import java.util.concurrent.ArrayBlockingQueue;
 
 import android.app.Activity;
 import android.content.Context;
+import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 
-public class GameManager {
+public class GameManager extends BaseManager {
 
 	/** game mode constant for build */
 	public final static int GAME_MODE_BUILD = 0;
@@ -42,17 +45,11 @@ public class GameManager {
 	/** current active game mode */
 	private int mActiveGameMode;
 	
-	/** debugging window shows debug text */
-	private DebugWindow mDWindow;
-	
-	/** has the manager been initialized */
-	private boolean mInitialized = false;
-	
 	/** the context of the activity creating this manager */
 	private Context mContext;
 	
 	/** the data set containing all the level data */
-	private ParsedDataSet mDataSet;
+	private ParsedMapData mDataSet;
 	
 	/** width of the screen */
 	private int mScreenWidth;
@@ -60,48 +57,54 @@ public class GameManager {
 	/** height of the screen */
 	private int mScreenHeight;
 	
+	/** the effects overlay */
+	private DrawableOverlay mOverlay;
+
+    /** handler for the on level complete ui event */
+    private Handler mHandler;
+
+    /**
+     *
+     * @param context   reference to the base activity
+     */
+    public GameManager(Context context, Handler handler) {
+        mContext = context;
+        mHandler = handler;
+    }
+
 	/**
 	 * create the primary logical entities for the game
-	 * 
-	 * @param context		reference to the base activity
+	 *
 	 * @param dataSet		the game's grid data loaded from xml
 	 * @param screenWidth
 	 * @param screenHeight
 	 */
-	public void loadData(Context context, ParsedDataSet dataSet, int screenWidth, int screenHeight, DebugWindow dWindow) {
-		mContext = context;
+	public void loadData(ParsedMapData dataSet, int screenWidth, int screenHeight) {
 		mDataSet = dataSet;
 		mScreenWidth = screenWidth;
 		mScreenHeight = screenHeight;
-		
-		mDWindow = dWindow;
-		mDWindow.updateTextBlock("Game Mode", DEBUG_GAME_MODE_BUILD);
 	}
 	
 	/**
 	 * start the game manager now that we now the assets are loaded
 	 */
 	public void init() {
-		Grid gameGrid = new Grid(mDataSet, mScreenWidth, mScreenHeight);
+		mOverlay = new DrawableOverlay();
+		Grid gameGrid = new Grid(mDataSet, mScreenWidth, mScreenHeight, mOverlay);
+		ReleaseManager releaseManager = new ReleaseManager(mOverlay, mContext, mHandler, mDataSet);
 
 		mGameModeArray[GAME_MODE_BUILD] = new GMGridBuild(gameGrid);
-		mGameModeArray[GAME_MODE_RELEASE] = new GMRelease(gameGrid, mContext);
+		mGameModeArray[GAME_MODE_RELEASE] = new GMRelease(gameGrid, releaseManager, mContext);
 		mActiveGameMode = GAME_MODE_BUILD;
 
 		Button gameModeToggleButton = (Button) ((Activity) mContext).findViewById(R.id.gameModeToggleButton);
-
 		gameModeToggleButton.setOnClickListener(new OnClickListener() {
 			public void onClick(View v) {
-				Log.d("DEBUG", "you pushed my button");
 				toggleGameModes();
 			}
 		});
 
-		mInitialized = true;
-	}
-
-	public boolean getInitialized() {
-		return mInitialized;
+		super.init();
 	}
 
 	/**
@@ -112,6 +115,7 @@ public class GameManager {
 	public void update(long timeDelta) {
 		processInput();
 		mGameModeArray[mActiveGameMode].update(timeDelta);
+		mOverlay.update(timeDelta);
 		HUD.getInstance().update(timeDelta);
 	}
 	
@@ -167,13 +171,10 @@ public class GameManager {
 	 * switch between game modes
 	 */
 	private void toggleGameModes() {
-		String updateText = "";
 		if(mActiveGameMode == GAME_MODE_BUILD) {
 			mActiveGameMode = GAME_MODE_RELEASE;
-			updateText = DEBUG_GAME_MODE_RELEASE;
 		} else {
 			mActiveGameMode = GAME_MODE_BUILD;
-			updateText = DEBUG_GAME_MODE_BUILD;
 		}
 		for(int i = 0; i < mGameModeArray.length; i++) {
 			if(i == mActiveGameMode) {
@@ -182,7 +183,5 @@ public class GameManager {
 				mGameModeArray[i].makeInactive();
 			}
 		}
-		mDWindow.updateTextBlock("Game Mode", updateText);
 	}
-
 }

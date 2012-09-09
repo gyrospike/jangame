@@ -13,14 +13,11 @@ public class Grid extends BaseObject {
 	/** number of sparks to be released on touch */
 	private final static int SPARKS_PER_TOUCH = 5;
 	
-	/** max number of particles we can have on screen */
-	private final static int MAX_PARTICLE_ARRAY_SIZE = 30;
-	
 	/** max number of node connections that can be stored in the chain */
 	private final static int MAX_CHAIN_LENGTH = 30;
 	
 	/** TODO - what? */
-	private final static float TRACK_SCALAR = (7.0f / 27.0f);
+	private final static float TRACK_SCALAR = (7.0f / 28.0f);
 	
 	/** node size */
 	private final static float NODE_DIMENSION = 32.0f;
@@ -33,9 +30,6 @@ public class Grid extends BaseObject {
 	
 	/** the amount to hide the border nodes beyond the screen by 30.0f */
 	private final static float BORDER_NODE_OFFSET = 30.0f;
-
-	/** current index for particle array */
-	private int mParticleIndex = 0;
 
 	/** current number of track segments we have */
 	private int mNumTrackSegments = 1;
@@ -85,10 +79,11 @@ public class Grid extends BaseObject {
 	/** index for the node chain array */
 	private int mNodeChainIndex = 0;
 	
-	/** array of particles */
-	private Particle[] mParticleArray;
+	/** reference to effects overlay */
+	private DrawableOverlay mOverlay;
 	
-	public Grid(ParsedDataSet dataSet, float screenWidth, float screenHeight) {
+	
+	public Grid(ParsedMapData dataSet, float screenWidth, float screenHeight, DrawableOverlay overlay) {
 		mHeight = dataSet.mMapHeight;
 		mWidth = dataSet.mMapWidth;
 		mSpacing = dataSet.mMapSpacing;
@@ -97,6 +92,8 @@ public class Grid extends BaseObject {
 
 		mScreenWidth = screenWidth;
 		mScreenHeight = screenHeight;
+		
+		mOverlay = overlay;
 
 		mNodes = new Node[mWidth][mHeight];
 		mBorderNodes = new Node[2*mWidth + 2*mHeight];
@@ -122,24 +119,27 @@ public class Grid extends BaseObject {
 
 			int maxSpeedLimit = dataSet.mNodes.get(k).maxSpeed;
 			int minSpeedLimit = dataSet.mNodes.get(k).minSpeed;
+			int keyId = dataSet.mNodes.get(k).keyId;
 			String type = dataSet.mNodes.get(k).type;
 
 			if(type.equals(Node.NODE_TYPE_EMPTY)) {
 				mNodes[tempI][tempJ] = null;
 			} else if(tempK == -1) {
 				Vector2 nodePosition = new Vector2(mSideBufferX + ((mSpacing + NODE_DIMENSION) * tempI), mSideBufferY + ((mSpacing + NODE_DIMENSION) * tempJ));
-				mNodes[tempI][tempJ] = new Node(tempI,tempJ, nodePosition, maxSpeedLimit, minSpeedLimit, type);
+				mNodes[tempI][tempJ] = new Node(tempI, tempJ, tempK, nodePosition, maxSpeedLimit, minSpeedLimit, keyId, type);
 			}
 		}
 		
 		// create border nodes from data
 		Vector2[] borderNodePositions = getBorderNodePositions();
 		for (int k = 0; k < nodeDataLen; k++) {
+			int tempI = dataSet.mNodes.get(k).i;
+			int tempJ = dataSet.mNodes.get(k).j;
 			int tempK = dataSet.mNodes.get(k).k;
 			String type = dataSet.mNodes.get(k).type;
 			if(tempK != -1) {
 				Vector2 nodePosition = borderNodePositions[tempK];
-				mBorderNodes[tempK] = new Node(-1,-1, nodePosition, 0, 0, type);
+				mBorderNodes[tempK] = new Node(tempI, tempJ, tempK, nodePosition, 0, 0, 0, type);
 			}
 		}
 		
@@ -148,6 +148,7 @@ public class Grid extends BaseObject {
 		for (int k = 0; k < nodeDataLen; k++) {
 			int tempI = dataSet.mNodes.get(k).i;
 			int tempJ = dataSet.mNodes.get(k).j;
+			int tempK = dataSet.mNodes.get(k).k;
 			for(int p = 0; p < dataSet.mNodes.get(k).mPreconnections.getCount(); p++) {
 				int preconnectionIIndex = dataSet.mNodes.get(k).mPreconnections.get(p).i;
 				int preconnectionJIndex = dataSet.mNodes.get(k).mPreconnections.get(p).j;
@@ -155,31 +156,8 @@ public class Grid extends BaseObject {
 				if(preconnectionKIndex == -1) {
 					conditionallyCreateConnectionBetweenNodes(tempI, tempJ, preconnectionIIndex, preconnectionJIndex, true);
 				} else {
-					conditionallyCreateConnectionWithBorder(tempI, tempJ, preconnectionKIndex, true);
+					conditionallyCreateConnectionWithBorder(tempI, tempJ, tempK, preconnectionKIndex, true);
 				}
-			}
-		}
-
-		mParticleArray = new Particle[MAX_PARTICLE_ARRAY_SIZE];
-		for (int i = 0; i < MAX_PARTICLE_ARRAY_SIZE; i++) {
-			mParticleArray[i] = new Particle();
-		}
-	}
-
-	/**
-	 * Creates a shower of spark particles at the passed on position 
-	 *
-	 * @param x		x position
-	 * @param y		y position
-	 * @param num	how many particles to make
-	 */
-	private void createParticle(int x, int y, int num) {
-		if (mParticleArray != null) {
-			for (int i = 0; i < num; i++) {
-				mParticleArray[mParticleIndex].createParticle(x, y);
-				mParticleIndex++;
-				if (mParticleIndex > mParticleArray.length - 1)
-					mParticleIndex = 0;
 			}
 		}
 	}
@@ -233,7 +211,7 @@ public class Grid extends BaseObject {
 	 * @param aj
 	 * @param borderIndex
 	 */
-	private void conditionallyCreateConnectionWithBorder(int ai, int aj, int borderIndex, boolean fixed) {
+	private void conditionallyCreateConnectionWithBorder(int ai, int aj, int ak, int borderIndex, boolean fixed) {
 		if (mNumTrackSegments < mMaxTrackSegments) {
 			
 			float ax = mNodes[ai][aj].getPosition().x + TRACK_OFFSET_X;
@@ -244,8 +222,8 @@ public class Grid extends BaseObject {
 			
 			int trackID = createTrackSegmentBetweenPoints(ax, ay, bx, by);
 			
-			mNodes[ai][aj].setConnection(-1, -1, borderIndex, trackID, fixed);
-			mBorderNodes[borderIndex].setConnection(ai, aj, -1, trackID, fixed);
+			mNodes[ai][aj].setConnection(mBorderNodes[borderIndex].getI(), mBorderNodes[borderIndex].getJ(), borderIndex, trackID, fixed);
+			mBorderNodes[borderIndex].setConnection(ai, aj, ak, trackID, fixed);
 		}
 	}
 
@@ -353,7 +331,7 @@ public class Grid extends BaseObject {
 			// if the user clicked a released the same node
 			if (mCurrentTrackSourceNodeI == i && mCurrentTrackSourceNodeJ == j) {
 				deactivateNode(i, j);
-				createParticle((int) (mNodes[i][j].getPosition().x + 16.0f), (int) (mNodes[i][j].getPosition().y - 16.0f), SPARKS_PER_TOUCH);
+				mOverlay.createParticle((int) (mNodes[i][j].getPosition().x + 16.0f), (int) (mNodes[i][j].getPosition().y - 16.0f), SPARKS_PER_TOUCH);
 			}
 			// if the user clicked a node and released on a node to the direct left or right, or above or below (just not diagonal)
 			else if ((mCurrentTrackSourceNodeI == i && mCurrentTrackSourceNodeJ != j) || (mCurrentTrackSourceNodeI != i && mCurrentTrackSourceNodeJ == j)) {
@@ -381,6 +359,8 @@ public class Grid extends BaseObject {
 								conditionallyCreateConnectionBetweenNodes(startI, startJ, endI, endJ, false);
 								startI = endI;
 								startJ = endJ;
+								endI = -1;
+								endJ = -1;
 							}
 						}
 					}
@@ -404,6 +384,8 @@ public class Grid extends BaseObject {
 								conditionallyCreateConnectionBetweenNodes(startI, startJ, endI, endJ, false);
 								startI = endI;
 								startJ = endJ;
+								endI = -1;
+								endJ = -1;
 							}
 						}
 					}
@@ -660,10 +642,6 @@ public class Grid extends BaseObject {
 		
 		for(int e = 0; e < mTrackSegments.length; e++) {
 			mTrackSegments[e].update(timeDelta);
-		}
-		
-		for(int r = 0; r < mParticleArray.length; r++) {
-			mParticleArray[r].update(timeDelta);
 		}
 	}
 }

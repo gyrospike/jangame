@@ -1,6 +1,12 @@
 package org.alchemicstudio;
 
 public class BaseObject {
+
+    static final String SHARED_PREFS_KEY = "CircuitSave";
+
+    static final String SAVE_POSTFIX_BADGE  = "_badge_";
+
+    static final String SAVE_POSTFIX_BEST_TIME  = "_besttime";
 	
 	/** global objects reference */
 	static ObjectRegistry sSystemRegistry = new ObjectRegistry();

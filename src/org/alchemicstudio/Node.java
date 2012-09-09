@@ -23,6 +23,10 @@ public class Node extends BaseObject {
 	
 	public final static String NODE_TYPE_SPEED_TRAP = "NODE_TYPE_SPEED_TRAP";
 	
+	public final static String NODE_TYPE_GATE = "NODE_TYPE_GATE";
+	
+	public final static String NODE_TYPE_KEY = "NODE_TYPE_KEY";
+	
 	/** const for angles */
 	private final static double ANGLE_EAST = Math.PI;
 	
@@ -44,14 +48,6 @@ public class Node extends BaseObject {
 	/** how far the speed indicator is from it's node */
 	private final static int SPEED_OFFSET_LEFT = 25;
 	
-	private final static String NODE_TYPE_KEY = "NODE_TYPE_KEY";
-	
-	private final static String NODE_TYPE_GATE = "NODE_TYPE_GATE";
-	
-	private final static String HUD_SPEED_TRAP_MAX_UNIQUE_ID_PREFIX = "ST_MAX:";
-	
-	private final static String HUD_SPEED_TRAP_MIN_UNIQUE_ID_PREFIX = "ST_MIN:";
-	
 	/** sprite for the node */
 	private Sprite mSprite;
 	
@@ -64,6 +60,9 @@ public class Node extends BaseObject {
 	/** speed limits for speed trap nodes */
 	private int mMaxSpeedLimit;
 	
+	/** key id for gate and key nodes */
+	private int mKeyId;
+	
 	/** the number of connections a node may have if it is an off/on ramp */
 	private final static int CONNECTION_LIMIT_TERMINAL = 1;
 	
@@ -75,6 +74,9 @@ public class Node extends BaseObject {
 	
 	/** the j index for this node's position in the grid */
 	private int mJ;
+	
+	/** the k index for this node's position in the grid */
+	private int mK;
 	
 	/** the maximum number of connections to other nodes this node can have */
 	private int mMaxConnections;
@@ -91,25 +93,27 @@ public class Node extends BaseObject {
 	/** the vector position of this node */
 	private Vector2 mPosition = null;
 
-	public Node(int i, int j, Vector2 vec, int maxSpeedLimit, int minSpeedLimit, String type) {
+	public Node(int i, int j, int k, Vector2 vec, int maxSpeedLimit, int minSpeedLimit, int keyId, String type) {
 		mI = i;
 		mJ = j;
+		mK = k;
 		mPosition = vec;
 		mType = type;
 		mMaxSpeedLimit = maxSpeedLimit;
 		mMinSpeedLimit = minSpeedLimit;
+		mKeyId = keyId;
 
 		mNumCurrentConnections = 0;
 		mMaxConnections = CONNECTION_LIMIT_DEFAULT;
 		mNodeConnections = new NodeConnection[mMaxConnections];
 		mTrackIdArray = new int[CONNECTION_LIMIT_DEFAULT];
 
-		for (int k = 0; k < mNodeConnections.length; k++) {
-			mNodeConnections[k] = new NodeConnection(-1, -1, -1);
+		for (int p = 0; p < mNodeConnections.length; p++) {
+			mNodeConnections[p] = new NodeConnection(-1, -1, -1);
 		}
 		
 		if(mType.equals(NODE_TYPE_SPEED_TRAP)) {
-			int[] ids = {R.drawable.grey_gate_node, R.drawable.yellow_gate_node, R.drawable.green_gate_node};
+			int[] ids = {R.drawable.node_trap_grey, R.drawable.node_trap_yellow, R.drawable.node_trap_green};
 			Texture[] textures = BaseObject.sSystemRegistry.mAssetLibrary.getTexturesByResources(ids);
 			mSprite = new Sprite(textures, 1);
 			HUD.getInstance().addTextElement(-1, Integer.toString(mMaxSpeedLimit), 24, Color.GREEN, mPosition.x + SPEED_OFFSET_RIGHT, mPosition.y, true, HUD.NOT_UNIQUE_ELEMENT);
@@ -119,17 +123,17 @@ public class Node extends BaseObject {
 			Texture texture = BaseObject.sSystemRegistry.mAssetLibrary.getTextureByResource(id);
 			mSprite = new Sprite(texture, 1);
 		} else if(mType.equals(NODE_TYPE_KEY)) {
-			int[] ids = {R.drawable.grey_node, R.drawable.yellow_node, R.drawable.green_node};
-			Texture[] textures = BaseObject.sSystemRegistry.mAssetLibrary.getTexturesByResources(ids);
-			mSprite = new Sprite(textures, 1);
+			int id = R.drawable.node_simple_green;
+			Texture texture = BaseObject.sSystemRegistry.mAssetLibrary.getTextureByResource(id);
+			mSprite = new Sprite(texture, 1);
 		} else if(mType.equals(NODE_TYPE_GATE)) {
-			int[] ids = {R.drawable.grey_node, R.drawable.yellow_node, R.drawable.green_node};
-			Texture[] textures = BaseObject.sSystemRegistry.mAssetLibrary.getTexturesByResources(ids);
-			mSprite = new Sprite(textures, 1);
+			int id = R.drawable.node_gate_green;
+			Texture texture = BaseObject.sSystemRegistry.mAssetLibrary.getTextureByResource(id);
+			mSprite = new Sprite(texture, 1);
 		} else {
-			int[] ids = {R.drawable.grey_node, R.drawable.yellow_node, R.drawable.green_node};
-			Texture[] textures = BaseObject.sSystemRegistry.mAssetLibrary.getTexturesByResources(ids);
-			mSprite = new Sprite(textures, 1);
+			int id = R.drawable.node_simple_grey;
+			Texture texture = BaseObject.sSystemRegistry.mAssetLibrary.getTextureByResource(id);
+			mSprite = new Sprite(texture, 1);
 		}
 
 		mSprite.setPosition(vec.x, vec.y);
@@ -156,6 +160,10 @@ public class Node extends BaseObject {
 	
 	public int getMaxSpeedLimit() {
 		return mMaxSpeedLimit;
+	}
+	
+	public int getKeyId() {
+		return mKeyId;
 	}
 	
 	/**
@@ -206,15 +214,14 @@ public class Node extends BaseObject {
 	}
 
 	/**
-	 * remove all non-border node connections from this node
+	 * remove all non-fixed node connections from this node
 	 */
 	public void removeAllConnections() {
 		for (int i = 0; i < mNodeConnections.length; i++) {
-			if(mNodeConnections[i].getI() != -1 || mNodeConnections[i].getJ() != -1 || mNodeConnections[i].getK() != -1) {
-				if(!mNodeConnections[i].getFixed()) {
-					mNodeConnections[i] = new NodeConnection(-1, -1, -1);
-					mNumCurrentConnections--;
-				}
+			// if not a fixed connection and not already an empty connection
+			if(!mNodeConnections[i].getFixed() && mNodeConnections[i].getI() != -1 && mNodeConnections[i].getJ() != -1) {
+				mNodeConnections[i] = new NodeConnection(-1, -1, -1);
+				mNumCurrentConnections--;
 			}
 		}
 		conditionallyRemovePreferredConnection();
@@ -258,6 +265,13 @@ public class Node extends BaseObject {
 	 */
 	public int getJ() {
 		return mJ;
+	}
+	
+	/**
+	 * @return	the j index
+	 */
+	public int getK() {
+		return mK;
 	}
 	
 	/**

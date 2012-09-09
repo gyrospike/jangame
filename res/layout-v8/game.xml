@@ -1,33 +1,34 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="fill_parent"
-    android:layout_height="fill_parent"
-    android:orientation="vertical" >
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent"
+                android:orientation="vertical" >
 
-        <org.alchemicstudio.GameSurfaceView
+    <org.alchemicstudio.GameSurfaceView
             xmlns:android="http://schemas.android.com/apk/res/android"
             android:id="@+id/GameSurfaceView01"
             android:layout_width="match_parent"
             android:layout_height="match_parent" >
-        </org.alchemicstudio.GameSurfaceView>
+    </org.alchemicstudio.GameSurfaceView>
+
+    <LinearLayout android:layout_width="wrap_content"
+                  android:layout_height="wrap_content"
+                  android:layout_marginBottom="20dp"
+                  android:layout_alignParentBottom="true"
+                  android:layout_centerHorizontal="true" >
 
         <Button
-            android:id="@+id/gameModeToggleButton"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentBottom="true"
-            android:layout_centerHorizontal="true"
-            android:layout_marginBottom="10dp"
-            android:text="Switch GM" />
-        
+                android:id="@+id/gameModeToggleButton"
+                android:text="Switch Mode"
+                style="@style/circuit_button"
+                />
+
         <Button
-            android:visibility="gone"
-            android:id="@+id/sparkReleaseButton"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentBottom="true"
-            android:layout_centerHorizontal="true"
-            android:layout_marginBottom="60dp"
-            android:text="Release Spark" />
+                android:id="@+id/sparkReleaseButton"
+                android:text="Release Spark"
+                style="@style/circuit_button"
+                android:enabled="false"
+                />
+    </LinearLayout>
 
 </RelativeLayout>

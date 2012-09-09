@@ -20,7 +20,10 @@ public class GameRenderer implements Renderer {
 	private FixedSizeArray<Sprite> spriteList;
 	
 	/** list of the text boxes to be drawn */
-	private FixedSizeArray<TextBox> textBoxList;
+	private FixedSizeArray<TextBox> mDynamicTextBoxList;
+	
+	/** list of the text boxes to be drawn */
+	private FixedSizeArray<StaticTextReference> mStaticTextBoxList;
 	
 	/** lock object - TODO - study this more */
 	private Object mDrawLock;
@@ -35,7 +38,7 @@ public class GameRenderer implements Renderer {
 	private int mWidth;
 
 	/** handles open GL implementation of text boxes, polys with text textures */
-	private LabelMaker mLabels;
+	private LabelMaker mLabelMaker;
 	
 	/** has the renderer loaded all the textures yet? */
 	private boolean mLoadAllComplete = false;
@@ -72,12 +75,12 @@ public class GameRenderer implements Renderer {
 		
 		loadTextures(gl);
 
-		if (mLabels != null) {
-			mLabels.shutdown(gl);
+		if (mLabelMaker != null) {
+			mLabelMaker.shutdown(gl);
 		} else {
-			mLabels = new LabelMaker();
+			mLabelMaker = new LabelMaker();
 		}
-		mLabels.initialize(gl);
+		mLabelMaker.initialize(gl);
 	}
 
 	public void onSurfaceChanged(GL10 gl, int width, int height) {
@@ -163,34 +166,47 @@ public class GameRenderer implements Renderer {
 			}
 
 			viewPerspective(gl);
-			
-			//having the text drawing done outside of the sync caused flickering
-			
-			if (textBoxList != null) {
-				Object[] objectArray = textBoxList.getArray();
-				final int len = objectArray.length;
-				mLabels.beginAdding(gl);
-				for (int h = 0; h < len; h++) {
-					if (objectArray[h] != null) {
-						TextBox currentTextBox = (TextBox) objectArray[h];
-						currentTextBox.setIndex(mLabels.add(gl, currentTextBox.getText(), currentTextBox.getPaint()));
+			if (mDynamicTextBoxList != null) {
+				Object[] dynamicText = mDynamicTextBoxList.getArray();
+				final int dynamicLen = dynamicText.length;
+				mLabelMaker.beginAdding(gl);
+				for (int h = 0; h < dynamicLen; h++) {
+					if (dynamicText[h] != null) {
+						TextBox currentTextBox = (TextBox) dynamicText[h];
+						currentTextBox.setIndex(mLabelMaker.addDynamic(gl, currentTextBox.getText(), currentTextBox.getPaint()));
 					}
 				}
-				mLabels.endAdding(gl);
-				mLabels.beginDrawing(gl, mWidth, mHeight);
-				for (int g = 0; g < len; g++) {
-					if (objectArray[g] != null) {
-						TextBox currentTextBox = (TextBox) objectArray[g];
+				mLabelMaker.endAdding(gl);
+				mLabelMaker.beginDrawing(gl, mWidth, mHeight);
+				for (int g = 0; g < dynamicLen; g++) {
+					if (dynamicText[g] != null) {
+						TextBox currentTextBox = (TextBox) dynamicText[g];
 						// NOTE - mHeight - currentTextBox.y is to allow the y coords to match using both glDrawElements
 						// 		  and glDrawTexfOES (glDrawTexfOES draws from bottom left, glDrawElements from top left)
-						mLabels.draw(gl, currentTextBox.getX(), mHeight - currentTextBox.getY(), currentTextBox.getIndex());
+						mLabelMaker.draw(gl, currentTextBox.getX(), mHeight - currentTextBox.getY(), currentTextBox.getIndex());
 					}
 				}
-				mLabels.endDrawing(gl);
-			} else if (textBoxList == null) {
+			}
+			if (mStaticTextBoxList != null) {
+				mLabelMaker.switchToStaticLabels(gl);
+				//having the text drawing done outside of the sync caused flickering
+				if (mStaticTextBoxList != null) {
+					Object[] staticText = mStaticTextBoxList.getArray();
+					final int staticLen = staticText.length;
+					for (int f = 0; f < staticLen; f++) {
+						if (staticText[f] != null) {
+							StaticTextReference currentTextRef = (StaticTextReference) staticText[f];
+							mLabelMaker.drawStatic(gl, currentTextRef.getX(), mHeight - currentTextRef.getY(), currentTextRef.getId());
+						}
+					}
+				}
+			}
+			mLabelMaker.endDrawing(gl);
+
+			if (mDynamicTextBoxList == null && mStaticTextBoxList == null) {
 				gl.glClear(GL10.GL_COLOR_BUFFER_BIT | GL10.GL_DEPTH_BUFFER_BIT);
 			}
-			
+
 		}
 		mDebugFPSCounter++;
 	}
@@ -214,8 +230,16 @@ public class GameRenderer implements Renderer {
 		}
 	}
 
-	public synchronized void setTextBoxQueue(FixedSizeArray<TextBox> tList) {
-		textBoxList = tList;
+	public synchronized void setTextBoxQueue(FixedSizeArray<TextBox> dTextList) {
+		mDynamicTextBoxList = dTextList;
+		synchronized (mDrawLock) {
+			mDrawQueueChanged = true;
+			mDrawLock.notify();
+		}
+	}
+	
+	public synchronized void setStaticTextReferenceQueue(FixedSizeArray<StaticTextReference> sTextList) {
+		mStaticTextBoxList = sTextList;
 		synchronized (mDrawLock) {
 			mDrawQueueChanged = true;
 			mDrawLock.notify();

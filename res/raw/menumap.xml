@@ -1,0 +1,21 @@
+<?xml version="1.0" ?>
+<menuMap>
+    <row>
+        <entry mapNumber="0" buttonId="Button00" sourceFile="R.raw.map0" />
+        <entry mapNumber="1" buttonId="Button01" sourceFile="R.raw.map1" />
+        <entry mapNumber="2" buttonId="Button02" sourceFile="R.raw.map2" />
+        <entry mapNumber="3" buttonId="Button03" sourceFile="R.raw.map3" />
+    </row>
+    <row>
+        <entry mapNumber="4" buttonId="Button10" sourceFile="R.raw.map4" />
+        <entry mapNumber="5" buttonId="Button11" sourceFile="R.raw.map5" />
+        <entry mapNumber="6" buttonId="Button12" sourceFile="R.raw.map6" />
+        <entry mapNumber="7" buttonId="Button13" sourceFile="R.raw.map7" />
+    </row>
+    <row>
+        <entry mapNumber="8" buttonId="Button20" sourceFile="R.raw.map8" />
+        <entry mapNumber="9" buttonId="Button21" sourceFile="R.raw.map9" />
+        <entry mapNumber="10" buttonId="Button22" sourceFile="R.raw.map10" />
+        <entry mapNumber="11" buttonId="Button23" sourceFile="R.raw.map11" />
+    </row>
+</menuMap>

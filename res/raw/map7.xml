@@ -1,0 +1,39 @@
+<?xml version="1.0" ?>
+<MAP NUMBER="7" WIDTH="6" HEIGHT="5" SPACING="60">
+    <NODE I="-1" J="2" K="19">
+        <STATS TYPE="NODE_TYPE_START" />
+    </NODE>
+    <NODE I="6" J="2" K="8">
+        <STATS TYPE="NODE_TYPE_END" />
+    </NODE>
+    <NODE I="1" J="2" K="-1">
+  		<PRECONNECTION I="-1" J="2" K="19" />
+  	</NODE>
+  	<NODE I="0" J="2" K="-1">
+  		<STATS TYPE="NODE_TYPE_EMPTY" />
+  	</NODE>
+  	<NODE I="2" J="1" K="-1">
+  		<STATS TYPE="NODE_TYPE_EMPTY" />
+  	</NODE>
+  	<NODE I="3" J="1" K="-1">
+  		<STATS TYPE="NODE_TYPE_EMPTY" />
+  	</NODE>
+  	<NODE I="2" J="3" K="-1">
+  		<STATS TYPE="NODE_TYPE_EMPTY" />
+  	</NODE>
+  	<NODE I="3" J="3" K="-1">
+  		<STATS TYPE="NODE_TYPE_EMPTY" />
+  	</NODE>
+  	<NODE I="5" J="2" K="-1">
+  		<STATS TYPE="NODE_TYPE_EMPTY" />
+  	</NODE>
+  	<NODE I="4" J="2" K="-1">
+  	    <PRECONNECTION I="6" J="2" K="8" />
+  		<STATS TYPE="NODE_TYPE_SPEED_TRAP" MIN_SPEED="300" MAX_SPEED="350" />
+  	</NODE>
+    <badges>
+        <badge type="0">
+            <requirement type="time" value="8000" />
+        </badge>
+    </badges>
+</MAP>

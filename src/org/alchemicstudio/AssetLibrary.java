@@ -10,6 +10,7 @@ import javax.microedition.khronos.opengles.GL10;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Paint;
 import android.graphics.Rect;
 import android.graphics.Typeface;
 import android.opengl.GLU;
@@ -40,6 +41,14 @@ public class AssetLibrary extends BaseObject {
 
 	/** identifier for game textures, used when loading or unloading only a subset of the texture hash */
 	public static final int TEXTURE_TYPE_GAME = 1;
+	
+	public static final int PRERENDERED_TEXT_INDEX_CIRCUIT = 0;
+	
+	public static final int PRERENDERED_TEXT_INDEX_COMPLETE = 1;
+	
+	public static final int PRERENDERED_TEXT_INDEX_INCOMPLETE = 2;
+	
+	public static final int PRERENDERED_TEXT_INDEX_METER = 3;
 
 	private static BitmapFactory.Options sBitmapOptions  = new BitmapFactory.Options();
 
@@ -55,6 +64,9 @@ public class AssetLibrary extends BaseObject {
 
 	/** font name hash, fonts can be accessed from anywhere in the game through the object registry */
 	private HashMap<String, Typeface> mFontHashMap = null;
+	
+	/** font name hash, fonts can be accessed from anywhere in the game through the object registry */
+	private HashMap<Integer, String> mStringHashMap = null;
 
 	public AssetLibrary() {
 		super();
@@ -74,6 +86,45 @@ public class AssetLibrary extends BaseObject {
 			mFontHashMap = new HashMap<String, Typeface>();
 			mFontHashMap.put("agency", Typeface.createFromAsset(context.getAssets(), "fonts/AGENCYR.TTF"));
 		}
+		
+		loadStrings(context);
+	}
+	
+	private void loadStrings(Context context) {
+		int[] stringArray = {
+				R.string.app_title,
+				R.string.circuit_complete,
+				R.string.circuit_incomplete,
+				R.string.speed_meter
+		};
+		mStringHashMap = new HashMap<Integer, String>();
+		for(int i = 0; i < stringArray.length; i++) {
+			mStringHashMap.put(stringArray[i], context.getString(stringArray[i]));
+		}
+	}
+	
+	public TextBoxBase[] getPrerenderedText() {
+		TextBoxBase[] mBoxes = new TextBoxBase[3];
+		mBoxes[PRERENDERED_TEXT_INDEX_CIRCUIT] = new TextBoxBase();
+		mBoxes[PRERENDERED_TEXT_INDEX_CIRCUIT].setText(getStringById(R.string.app_title));
+		mBoxes[PRERENDERED_TEXT_INDEX_CIRCUIT].setARGB(255, 255, 255, 255);
+		mBoxes[PRERENDERED_TEXT_INDEX_CIRCUIT].setTextSize(128);
+		
+		mBoxes[PRERENDERED_TEXT_INDEX_COMPLETE] = new TextBoxBase();
+		mBoxes[PRERENDERED_TEXT_INDEX_COMPLETE].setText(getStringById(R.string.circuit_complete));
+		mBoxes[PRERENDERED_TEXT_INDEX_COMPLETE].setARGB(255, 0, 255, 0);
+		mBoxes[PRERENDERED_TEXT_INDEX_COMPLETE].setTextSize(48);
+		
+		mBoxes[PRERENDERED_TEXT_INDEX_INCOMPLETE] = new TextBoxBase();
+		mBoxes[PRERENDERED_TEXT_INDEX_INCOMPLETE].setText(getStringById(R.string.circuit_incomplete));
+		mBoxes[PRERENDERED_TEXT_INDEX_INCOMPLETE].setARGB(255, 255, 0, 0);
+		mBoxes[PRERENDERED_TEXT_INDEX_INCOMPLETE].setTextSize(48);
+		
+		return mBoxes;
+	}
+	
+	public String getStringById(int id) {
+		return mStringHashMap.get(id);
 	}
 
 	public Typeface getTypeFace(String tName) {
@@ -119,17 +170,17 @@ public class AssetLibrary extends BaseObject {
 	public void loadGameTextures() {
 		int[] textureArray = {
 				R.drawable.node_dead,
-				R.drawable.grey_gate_node,
-				R.drawable.yellow_gate_node,
-				R.drawable.green_gate_node,
-				R.drawable.grey_node,
-				R.drawable.yellow_node,
-				R.drawable.green_node,
+				R.drawable.node_trap_grey,
+				R.drawable.node_trap_yellow,
+				R.drawable.node_trap_green,
+				R.drawable.node_simple_grey,
+				R.drawable.node_simple_yellow,
+				R.drawable.node_simple_green,
+				R.drawable.node_gate_green,
 				R.drawable.white_box,
 				R.drawable.wire_segment,
-				R.drawable.spark1,
-				R.drawable.spark2,
-				R.drawable.spark3,
+				R.drawable.spark_white,
+				R.drawable.spark_green,
 				R.drawable.arrow,
 				R.drawable.hud_gear_red,
 				R.drawable.hud_gear_blue,
@@ -376,3 +427,4 @@ public class AssetLibrary extends BaseObject {
 	}
 
 }
+

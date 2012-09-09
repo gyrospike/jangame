@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<selector xmlns:android="http://schemas.android.com/apk/res/android"
+          android:constantSize="false"
+          android:dither="false"
+          android:variablePadding="true" >
+    <item
+            android:drawable="@drawable/circuit"
+            android:state_pressed="false"
+            android:state_enabled="true"
+            />
+
+    <item
+            android:drawable="@drawable/circuit_inactive"
+            android:state_enabled="false"
+            />
+
+    <item
+            android:drawable="@drawable/circuit_pressed"
+            android:state_pressed="true"
+            />
+</selector>

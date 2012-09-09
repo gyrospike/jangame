@@ -1,9 +1,9 @@
 <?xml version="1.0" ?>
-<MAP NUMBER="2" WIDTH="8" HEIGHT="5" SPACING="50">
-    <NODE I="-1" J="-1" K="7">
+<MAP NUMBER="0" WIDTH="5" HEIGHT="5" SPACING="60">
+    <NODE I="-1" J="1" K="18">
         <STATS TYPE="NODE_TYPE_START" />
     </NODE>
-    <NODE I="-1" J="-1" K="16">
+    <NODE I="4" J="5" K="10">
         <STATS TYPE="NODE_TYPE_END" />
     </NODE>
 	<NODE I="0" J="0" K="-1">
@@ -18,11 +18,17 @@
   	<NODE I="1" J="3" K="-1">
   		<STATS TYPE="NODE_TYPE_DEAD" />
   	</NODE>
-	<NODE I="7" J="0" K="-1">
-  		<PRECONNECTION I="-1" J="-1" K="7" />
+	<NODE I="0" J="1" K="-1">
+  		<PRECONNECTION I="-1" J="1" K="18" />
+  	</NODE>
+  	<NODE I="2" J="1" K="-1">
+  		<STATS TYPE="NODE_TYPE_KEY" KEY_ID="1" />
+  	</NODE>
+  	<NODE I="3" J="1" K="-1">
+  		<STATS TYPE="NODE_TYPE_GATE" KEY_ID="1" />
   	</NODE>
   	<NODE I="4" J="4" K="-1">
-  		<PRECONNECTION I="-1" J="-1" K="16" />
+  		<PRECONNECTION I="4" J="5" K="10" />
   	</NODE>
   	<NODE I="4" J="3" K="-1">
   		<STATS TYPE="NODE_TYPE_SPEED_TRAP" MIN_SPEED="50" MAX_SPEED="250" />
@@ -34,4 +40,9 @@
   	<NODE I="1" J="4" K="-1">
   		<STATS TYPE="NODE_TYPE_SPEED_TRAP" MIN_SPEED="50" MAX_SPEED="79" />
   	</NODE>
+    <badges>
+        <badge type="0">
+            <requirement type="time" value="8000" />
+        </badge>
+    </badges>
 </MAP>

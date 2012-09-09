@@ -1,0 +1,65 @@
+<?xml version="1.0" ?>
+<MAP NUMBER="1" WIDTH="6" HEIGHT="6" SPACING="60">
+    <NODE I="-1" J="0" K="23">
+        <STATS TYPE="NODE_TYPE_START" />
+    </NODE>
+    <NODE I="6" J="5" K="11">
+        <STATS TYPE="NODE_TYPE_END" />
+    </NODE>
+    <NODE I="0" J="0" K="-1">
+  		<PRECONNECTION I="-1" J="0" K="23" />
+  	</NODE>
+  	<NODE I="5" J="5" K="-1">
+  		<PRECONNECTION I="6" J="5" K="11" />
+  	</NODE>
+  	<NODE I="1" J="1" K="-1">
+  		<STATS TYPE="NODE_TYPE_DEAD" />
+  	</NODE>
+  	<NODE I="2" J="1" K="-1">
+  		<STATS TYPE="NODE_TYPE_DEAD" />
+  	</NODE>
+  	<NODE I="1" J="2" K="-1">
+  		<STATS TYPE="NODE_TYPE_DEAD" />
+  	</NODE>
+  	<NODE I="2" J="2" K="-1">
+  		<STATS TYPE="NODE_TYPE_DEAD" />
+  	</NODE>
+  	<NODE I="4" J="1" K="-1">
+  		<STATS TYPE="NODE_TYPE_DEAD" />
+  	</NODE>
+  	<NODE I="1" J="4" K="-1">
+  		<STATS TYPE="NODE_TYPE_DEAD" />
+  	</NODE>
+  	<NODE I="3" J="4" K="-1">
+  		<STATS TYPE="NODE_TYPE_DEAD" />
+  	</NODE>
+  	<NODE I="4" J="4" K="-1">
+  		<STATS TYPE="NODE_TYPE_DEAD" />
+  	</NODE>
+  	<NODE I="4" J="3" K="-1">
+  		<STATS TYPE="NODE_TYPE_DEAD" />
+  	</NODE>
+  	<NODE I="1" J="4" K="-1">
+  		<STATS TYPE="NODE_TYPE_DEAD" />
+  	</NODE>
+  	<NODE I="4" J="1" K="-1">
+  		<STATS TYPE="NODE_TYPE_DEAD" />
+  	</NODE>
+  	<NODE I="5" J="3" K="-1">
+  		<STATS TYPE="NODE_TYPE_SPEED_TRAP" MIN_SPEED="250" MAX_SPEED="300" />
+  	</NODE>
+  	<NODE I="3" J="5" K="-1">
+  		<STATS TYPE="NODE_TYPE_SPEED_TRAP" MIN_SPEED="250" MAX_SPEED="300" />
+  	</NODE>
+  	<NODE I="3" J="2" K="-1">
+  		<STATS TYPE="NODE_TYPE_KEY" KEY_ID="1" />
+  	</NODE>
+  	<NODE I="5" J="5" K="-1">
+  		<STATS TYPE="NODE_TYPE_GATE" KEY_ID="1" />
+  	</NODE>
+    <badges>
+        <badge type="0">
+            <requirement type="time" value="8000" />
+        </badge>
+    </badges>
+</MAP>

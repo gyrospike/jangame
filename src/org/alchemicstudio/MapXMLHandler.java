@@ -6,7 +6,7 @@ import org.xml.sax.helpers.DefaultHandler;
 
 import android.util.Log;
 
-public class XMLHandler extends DefaultHandler {
+public class MapXMLHandler extends DefaultHandler {
 
 	/** the most recent node index i to be parsed */
 	private int mCurrentI;
@@ -21,13 +21,13 @@ public class XMLHandler extends DefaultHandler {
 	private int mCurrentNodeIndex;
 
 	/** the entire data set of what we are parsing */
-	private ParsedDataSet mParsedDataSet = new ParsedDataSet();
+	private ParsedMapData mParsedDataSet = new ParsedMapData();
 
 	/**
 	 * getter
 	 * @return	get the parsed data for this level
 	 */
-	public ParsedDataSet getParsedData() {
+	public ParsedMapData getParsedData() {
 		return mParsedDataSet;
 	}
 	
@@ -59,13 +59,16 @@ public class XMLHandler extends DefaultHandler {
 	 * @param atts
 	 */
 	private void parseStats(Attributes atts) {
-		Log.d("DEBUG", "Parsing : " + mParsedDataSet.mNodes.getCount());
+		Log.d("DEBUG", "Parsing : " + mCurrentI + ", " + mCurrentJ + ", " + mCurrentK);
 		mParsedDataSet.mNodes.get(mCurrentNodeIndex).type = atts.getValue("TYPE");
 		if(atts.getValue("MIN_SPEED") != null) {
 			mParsedDataSet.mNodes.get(mCurrentNodeIndex).minSpeed = Integer.parseInt(atts.getValue("MIN_SPEED"));
 		}
 		if(atts.getValue("MAX_SPEED") != null) {
 			mParsedDataSet.mNodes.get(mCurrentNodeIndex).maxSpeed = Integer.parseInt(atts.getValue("MAX_SPEED"));
+		}
+		if(atts.getValue("KEY_ID") != null) {
+			mParsedDataSet.mNodes.get(mCurrentNodeIndex).keyId = Integer.parseInt(atts.getValue("KEY_ID"));
 		}
 	}
 	
@@ -81,6 +84,30 @@ public class XMLHandler extends DefaultHandler {
 				Integer.parseInt(atts.getValue("K")));
 	}
 
+    /**
+     * begin adding badges to the map data
+     */
+    private void parseBadges() {
+        mParsedDataSet.initBadges();
+    }
+
+    /**
+     * parse a new badge
+     * @param atts
+     */
+    private void parseBadge(Attributes atts) {
+        mParsedDataSet.addBadge(Integer.parseInt(atts.getValue("type")));
+
+    }
+
+    /**
+     * parse a requirements node
+     * @param atts  the type and value for the requirement
+     */
+    private void parseRequirement(Attributes atts) {
+        mParsedDataSet.addRequirementToCurrentBadge(atts.getValue("type"), Integer.parseInt(atts.getValue("value")));
+    }
+
 	/**
 	 * get the node template parsed data set index based on it's i, j, and k index
 	 * 
@@ -91,8 +118,7 @@ public class XMLHandler extends DefaultHandler {
 	 */
 	private int getCurrentNodeIndex(int i, int j, int k) {
 		int result = -1;
-		int totalNodeCount =  mParsedDataSet.mNodes.getCount();
-		for(int index = 0; index < totalNodeCount; index++) {
+		for(int index = 0; index < mParsedDataSet.mTotalNumNodes; index++) {
 			if(mParsedDataSet.mNodes.get(index).i == i && mParsedDataSet.mNodes.get(index).j == j && mParsedDataSet.mNodes.get(index).k == k) {
 				result = index;
 			}
@@ -103,7 +129,7 @@ public class XMLHandler extends DefaultHandler {
 
 	@Override
 	public void startDocument() throws SAXException {
-		mParsedDataSet = new ParsedDataSet();
+		mParsedDataSet = new ParsedMapData();
 	}
 
 	@Override
@@ -123,37 +149,12 @@ public class XMLHandler extends DefaultHandler {
 			parseStats(atts);
 		} else if (localName.equals("PRECONNECTION")) {
 			parsePreconnection(atts);
-		} 
-	}
-
-	//TODO - need this still?
-	@Override
-	public void endElement(String namespaceURI, String localName, String qName) throws SAXException {
-		Log.d("DEBUG", "endElement called, localName: " + localName);
-		/*
-		if (localName.equals("MAP")) {
-			in_map = false;
-		} else if (localName.equals("NODE")) {
-			in_node = false;
-		} else if (localName.equals("STATS")) {
-			in_stats = false;
-		}
-		*/
-	}
-
-	//TODO - need this still?
-	/**
-	 * Gets be called on the following structure: <tag>characters</tag>
-	 */
-	@Override
-	public void characters(char ch[], int start, int length) {
-		//Log.d("DEBUG", "characters called: " + ch.length);
-		/*
-		if (in_mytag) {
-			Log.d("DEBUG", "string gettting extracted!");
-			myParsedExampleDataSet.setExtractedString(new String(ch, start, length));
-			Log.d("DEBUG", "string: " + myParsedExampleDataSet.getExtractedString());
-		}
-		*/
+		} else if (localName.equals("badges")) {
+            parseBadges();
+        } else if (localName.equals("badge")) {
+            parseBadge(atts);
+        } else if (localName.equals("requirement")) {
+            parseRequirement(atts);
+        }
 	}
 }

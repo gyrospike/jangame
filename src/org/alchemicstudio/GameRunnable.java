@@ -23,8 +23,8 @@ class GameRunnable implements Runnable {
 	/** true when the game loop is over */
 	private boolean mFinished;
 	
-	/** reference to the game manager, the game logic admin */
-	private GameManager mGameManager;
+	/** reference to the game or menu manager, the game logic admin */
+	private BaseManager mGameManager;
 	
 	/** reference to the game renderer, the game drawer */
 	private GameRenderer mGameRenderer;
@@ -42,10 +42,10 @@ class GameRunnable implements Runnable {
 	 * controls the main update loop, has hooks into the game manager, which updates game logic, and
 	 * the game renderer, which draws the game
 	 */
-	public GameRunnable(DebugWindow dWindow) {
+	public GameRunnable() {
 		mPauseLock = new Object();
 		mFinished = false;
-		mDWindow = dWindow;
+		mDWindow = new DebugWindow();
 	}
 	
 	public void stopGame() {
@@ -150,7 +150,7 @@ class GameRunnable implements Runnable {
 		mGameRenderer = gRenderer;
 	}
 
-	public void setGameManager(GameManager gManager) {
+	public void setGameManager(BaseManager gManager) {
 		mGameManager = gManager;
 	}
 }

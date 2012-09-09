@@ -7,7 +7,7 @@ import android.util.Log;
 public class Spark extends BaseObject {
 	
 	/** the max velocity at which a spark will be able to move */
-	public static final float MAX_VELOCITY = 300.0f;
+	public static final float MAX_VELOCITY = 400.0f;
 	
 	/** the starting velocity at which a spark will move */
 	public static final float STARTING_VELOCITY = 70.0f;
@@ -57,9 +57,12 @@ public class Spark extends BaseObject {
 	/** tracking how much time has elapsed every update call for animation purposes */
 	private long mElapsedTime = 0;
 	
+	/** record the last key this spark acquired */
+	private int mCurrentKey = 0;
+	
 	
 	public Spark() {
-		int[] ids = {R.drawable.spark1, R.drawable.spark2, R.drawable.spark3};
+		int[] ids = {R.drawable.spark_white, R.drawable.spark_green};
 		Texture[] textures = BaseObject.sSystemRegistry.mAssetLibrary.getTexturesByResources(ids);
 		mSprite = new Sprite(textures, 2, textures[0].width, textures[0].height);
 		mMillisecondPerFrame = 100;
@@ -93,6 +96,13 @@ public class Spark extends BaseObject {
 	}
 	
 	/**
+	 * get the position of the sprite
+	*/
+	public Vector2 getPosition() {
+		return new Vector2(mPhysicsObject.getXPos(), mPhysicsObject.getYPos());
+	}
+	
+	/**
 	 * @param d	the starting velocity the spark should travel at
 	 */
 	public void setStartingSpeed(float d) {
@@ -101,6 +111,14 @@ public class Spark extends BaseObject {
 	
 	public double getCurrentSpeed() {
 		return mPhysicsObject.getVelocity();
+	}
+	
+	public int getCurrentKey() {
+		return mCurrentKey;
+	}
+	
+	public void setCurrentKey(int id) {
+		mCurrentKey = id;
 	}
 	
 	/**
@@ -141,6 +159,7 @@ public class Spark extends BaseObject {
 	 * reset the spark to its beginning state
 	 */
 	public void resetSpark() {
+		setCurrentKey(0);
 		mPhysicsObject = new OnRailsPhysicsObject();
 		mForce = 0.0f;
 		mDistanceToTargetX = 0.0;
@@ -183,6 +202,7 @@ public class Spark extends BaseObject {
 	 */
 	public void updateSprite(long timeDelta) {
 		mSprite.setPosition(mPhysicsObject.getXPos(), mPhysicsObject.getYPos());
+		/*
 		if (mMillisecondPerFrame != 0) {
 			mElapsedTime += timeDelta;
 			if (mElapsedTime > mMillisecondPerFrame) {
@@ -190,6 +210,7 @@ public class Spark extends BaseObject {
 				mSprite.incrementFrame();
 			}
 		}
+		*/
 		sSystemRegistry.mRenderSystem.scheduleForDraw(mSprite);
 	}
 	
@@ -197,7 +218,7 @@ public class Spark extends BaseObject {
 	public void update(long timeDelta) {
 		calculateForce();
 		mPhysicsObject.updateState(timeDelta, mDistanceToTargetX, mDistanceToTargetY);
-		HUD.getInstance().modifyTextElement("Spark Speed: " + (int) getCurrentSpeed(), "sparkSpeed");
+		HUD.getInstance().modifyTextElement(sSystemRegistry.mAssetLibrary.getStringById(R.string.speed_meter)+(int) getCurrentSpeed(), HUD.UNIQUE_ELEMENT_SPARK_SPEED);
 		if(!mPhysicsObject.hasRemainder()) {
 			updateSprite(timeDelta);
 		}

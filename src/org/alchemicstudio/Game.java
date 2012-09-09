@@ -4,8 +4,9 @@ import javax.xml.parsers.SAXParser;
 import javax.xml.parsers.SAXParserFactory;
 import android.content.Context;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.util.Log;
-import android.widget.Button;
 
 public class Game {
 	
@@ -47,13 +48,13 @@ public class Game {
 	 * @param context
 	 * @param extras	game specific info, like which level to load
 	 */
-	public void bootstrap(Context context, Bundle extras) {
-		ParsedDataSet parsedMapData = null;
+	public void bootstrap(Context context, Bundle extras, Handler handler) {
+		ParsedMapData parsedMapData = null;
 		try {
 			SAXParserFactory spf = SAXParserFactory.newInstance();
 			SAXParser sp = spf.newSAXParser();
 
-			XMLHandler myXMLHandler = new XMLHandler();
+			MapXMLHandler myMapXMLHandler = new MapXMLHandler();
 
 			// XMLReader xr = sp.getXMLReader();
 			// xr.setContentHandler(myExampleHandler);
@@ -69,24 +70,27 @@ public class Game {
 			 * sp.parse(new InputSource(isr), myExampleHandler);
 			 */
 			
-			int mapNumber = R.raw.map00;
+			int mapResource = R.raw.map0;
+            int mapNumber = 0;
 			if (extras != null) {
-				mapNumber = extras.getInt("mapNumber", R.raw.map00);
+				mapResource = extras.getInt(ParsedMenuData.MAP_RESOURCE_KEY, R.raw.map0);
+                mapNumber = extras.getInt(ParsedMenuData.MAP_NUMBER_KEY, 0);
 			}
 			
-			sp.parse(context.getResources().openRawResource(mapNumber), myXMLHandler);
-			parsedMapData = myXMLHandler.getParsedData();
+			sp.parse(context.getResources().openRawResource(mapResource), myMapXMLHandler);
+			parsedMapData = myMapXMLHandler.getParsedData();
+            // TODO - we only need one of the xml files to set this, right now the menumap is doing it
+            parsedMapData.setNumber(mapNumber);
 			
-			DebugWindow mDWindow = new DebugWindow();
-			
-			mGameManager = new GameManager();
-			
-			mGameThread = new GameRunnable(mDWindow);
+			mGameManager = new GameManager(context, handler);
+			mGameThread = new GameRunnable();
 			mGameThread.setGameRenderer(mSurfaceView.getGameRenderer());
 			mGameThread.setGameManager(mGameManager);
 			
-			mGameManager.loadData(context, parsedMapData, mScreenWidth, mScreenHeight, mDWindow);
+			mGameManager.loadData(parsedMapData, mScreenWidth, mScreenHeight);
+			HUD.getInstance().flushAll();
 			start();
+
 		} catch (Exception e) {
 			Log.e("DEBUG", "QueryError", e);
 		}

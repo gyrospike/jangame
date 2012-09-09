@@ -1,0 +1,80 @@
+<?xml version="1.0" ?>
+<MAP NUMBER="9" WIDTH="7" HEIGHT="7" SPACING="60">
+    <NODE I="-1" J="0" K="27">
+        <STATS TYPE="NODE_TYPE_START" />
+    </NODE>
+    <NODE I="7" J="6" K="13">
+        <STATS TYPE="NODE_TYPE_END" />
+    </NODE>
+    <NODE I="0" J="0" K="-1">
+  		<PRECONNECTION I="-1" J="0" K="27" />
+  	</NODE>
+  	<NODE I="6" J="6" K="-1">
+  		<PRECONNECTION I="7" J="6" K="13" />
+  	</NODE>
+  	<NODE I="1" J="1" K="-1">
+  		<STATS TYPE="NODE_TYPE_DEAD" />
+  	</NODE>
+  	<NODE I="2" J="1" K="-1">
+  		<STATS TYPE="NODE_TYPE_DEAD" />
+  	</NODE>
+  	<NODE I="1" J="2" K="-1">
+  		<STATS TYPE="NODE_TYPE_DEAD" />
+  	</NODE>
+  	<NODE I="1" J="4" K="-1">
+  		<STATS TYPE="NODE_TYPE_DEAD" />
+  	</NODE>
+  	<NODE I="1" J="5" K="-1">
+  		<STATS TYPE="NODE_TYPE_DEAD" />
+  	</NODE>
+  	<NODE I="4" J="1" K="-1">
+  		<STATS TYPE="NODE_TYPE_DEAD" />
+  	</NODE>
+  	<NODE I="5" J="1" K="-1">
+  		<STATS TYPE="NODE_TYPE_DEAD" />
+  	</NODE>
+  	<NODE I="4" J="4" K="-1">
+  		<STATS TYPE="NODE_TYPE_DEAD" />
+  	</NODE>
+  	<NODE I="0" J="4" K="-1">
+  		<STATS TYPE="NODE_TYPE_EMPTY" />
+  	</NODE>
+  	<NODE I="0" J="5" K="-1">
+  		<STATS TYPE="NODE_TYPE_EMPTY" />
+  	</NODE>
+  	<NODE I="4" J="0" K="-1">
+  		<STATS TYPE="NODE_TYPE_EMPTY" />
+  	</NODE>
+  	<NODE I="5" J="0" K="-1">
+  		<STATS TYPE="NODE_TYPE_EMPTY" />
+  	</NODE>
+  	<NODE I="6" J="4" K="-1">
+  		<STATS TYPE="NODE_TYPE_EMPTY" />
+  	</NODE>
+  	<NODE I="6" J="5" K="-1">
+  		<STATS TYPE="NODE_TYPE_EMPTY" />
+  	</NODE>
+  	<NODE I="4" J="6" K="-1">
+  		<STATS TYPE="NODE_TYPE_EMPTY" />
+  	</NODE>
+  	<NODE I="5" J="6" K="-1">
+  		<STATS TYPE="NODE_TYPE_EMPTY" />
+  	</NODE>
+  	<NODE I="3" J="3" K="-1">
+  		<STATS TYPE="NODE_TYPE_KEY" KEY_ID="1" />
+  	</NODE>
+  	<NODE I="5" J="5" K="-1">
+  		<STATS TYPE="NODE_TYPE_GATE" KEY_ID="1" />
+  	</NODE>
+  	<NODE I="6" J="3" K="-1">
+  		<STATS TYPE="NODE_TYPE_SPEED_TRAP" MIN_SPEED="100" MAX_SPEED="200" />
+  	</NODE>
+  	<NODE I="3" J="6" K="-1">
+  		<STATS TYPE="NODE_TYPE_SPEED_TRAP" MIN_SPEED="300" MAX_SPEED="400" />
+  	</NODE>
+    <badges>
+        <badge type="0">
+            <requirement type="time" value="8000" />
+        </badge>
+    </badges>
+</MAP>

@@ -2,7 +2,6 @@ package org.alchemicstudio;
 
 import android.app.Activity;
 import android.content.Context;
-import android.graphics.Color;
 import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -14,7 +13,7 @@ public class GMRelease extends GameMode {
 	private Grid mGrid = null;
 	
 	/** the track manages the spark navigation of the grid */
-	private Track mTrack = null;
+	private ReleaseManager mReleaseManager = null;
 	
 	/** the spark release button */
 	private Button sparkReleaseButton;
@@ -25,9 +24,9 @@ public class GMRelease extends GameMode {
 	 * @param grid
 	 * @param context
 	 */
-	public GMRelease(Grid grid, Context context) {
+	public GMRelease(Grid grid, ReleaseManager releaseManager, Context context) {
 		mGrid = grid;
-		mTrack = new Track();
+		mReleaseManager = releaseManager;
 		
 		Texture red = BaseObject.sSystemRegistry.mAssetLibrary.getTextureByResource(R.drawable.hud_gear_red);
 		HUD.getInstance().addElement(GameManager.GAME_MODE_RELEASE, red, 30, 60, 0, 0, false, HUD.NOT_UNIQUE_ELEMENT);
@@ -52,7 +51,7 @@ public class GMRelease extends GameMode {
 	 */
 	public void update(long timeDelta) {
 		mGrid.update(timeDelta);
-		mTrack.update(timeDelta);
+		mReleaseManager.update(timeDelta);
 	}
 
 	/**
@@ -80,27 +79,31 @@ public class GMRelease extends GameMode {
 	 */
 	public void processTouchUpEvent(InputObject input) {
 		mGrid.stopTrackSwitchChain();
-		mTrack.loadNodes(mGrid.getNodes(), mGrid.getBorderNodes());
+		mReleaseManager.loadNodes(mGrid.getNodes(), mGrid.getBorderNodes());
 	}
 
 	@Override
 	public void makeActive() {
-		sparkReleaseButton.setVisibility(View.VISIBLE);
+		//sparkReleaseButton.setVisibility(View.VISIBLE);
+        sparkReleaseButton.setEnabled(true);
 		HUD.getInstance().setElementsVisibility(GameManager.GAME_MODE_RELEASE, true);
-		mTrack.loadNodes(mGrid.getNodes(), mGrid.getBorderNodes());
+		mReleaseManager.loadNodes(mGrid.getNodes(), mGrid.getBorderNodes());
 	}
 
 	@Override
 	public void makeInactive() {
-		mTrack.resetSpark();
-		sparkReleaseButton.setVisibility(View.INVISIBLE);
+		mReleaseManager.resetSpark();
+		//sparkReleaseButton.setVisibility(View.INVISIBLE);
+        sparkReleaseButton.setEnabled(false);
 		HUD.getInstance().setElementsVisibility(GameManager.GAME_MODE_RELEASE, false);
+		//HUD.getInstance().removeStaticTextElement(HUD.UNIQUE_ELEMENT_COMPLETE);
 	}
 	
 	/**
 	 * releases the spark into the track
 	 */
 	private void releaseSpark() {
-		mTrack.releaseSpark();
+		//HUD.getInstance().removeStaticTextElement(HUD.UNIQUE_ELEMENT_COMPLETE);
+		mReleaseManager.releaseSpark();
 	}
 }
