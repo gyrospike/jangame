@@ -39,10 +39,10 @@ public class ReleaseManager extends BaseObject {
     /** the spark that traverses the track */
     private Spark mSpark = null;
 
-    /** the node at which the spark begins it's journey */
+    /** the node at which the spark begins its journey */
     private Node mStartNode = null;
 
-    /** the node at which the spark ends it's journey */
+    /** the node at which the spark ends its journey */
     private Node mEndNode = null;
 
     /** the node the spark just departed from */

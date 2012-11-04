@@ -7,37 +7,18 @@ public class DrawableObject extends BaseObject {
 	/** sprite for the drawable object */
 	public Sprite mSprite;
 	
-	/** the number of milliseconds that should elapse for each frame */
-	private int mMillisecondPerFrame;
-	
-	/** tracking how much time has elapsed every update call for animation purposes */
-	private float mElapsedTime;
-	
 	/** how fast should this object rotate */
 	private float mRotationSpeed = 0.0f;
 	
 	/** the base level of opacity */
 	private float mBaseOpacityDeficit = 0.0f;
 	
-
-	public DrawableObject(Texture texture, int drawPriority) {
-		mMillisecondPerFrame = 0;
-		mSprite = new Sprite(texture, drawPriority);
+	public DrawableObject(ImagePack imagePack, int drawPriority) {
+		mSprite = new Sprite(imagePack, drawPriority);
 	}
 	
-	public DrawableObject(Texture texture, int drawPriority, int polyWidth, int polyHeight) {
-		mMillisecondPerFrame = 0;
-		mSprite = new Sprite(texture, drawPriority, polyWidth, polyHeight);
-	}
-	
-	public DrawableObject(Texture[] textureArray, int drawPriority, int mspf) {
-		mMillisecondPerFrame = mspf;
-		mSprite = new Sprite(textureArray, drawPriority);
-	}
-	
-	public DrawableObject(Texture[] textureArray, int drawPriority, int polyWidth, int polyHeight, int mspf) {
-		mMillisecondPerFrame = mspf;
-		mSprite = new Sprite(textureArray, drawPriority, polyWidth, polyHeight);
+	public DrawableObject(ImagePack imagePack, int drawPriority, int polyWidth, int polyHeight) {
+		mSprite = new Sprite(imagePack, drawPriority, polyWidth, polyHeight);
 	}
 	
 	/**
@@ -86,19 +67,10 @@ public class DrawableObject extends BaseObject {
 	
 	@Override
 	public void update(long timeDelta) {
-		
-		if (mMillisecondPerFrame != 0) {
-			mElapsedTime += timeDelta;
-			if (mElapsedTime > mMillisecondPerFrame) {
-				mElapsedTime = mElapsedTime - mMillisecondPerFrame;
-				mSprite.incrementFrame();
-			}
-		}
-		
 		if(mRotationSpeed != 0.0f) {
 			mSprite.setRotationDegrees(mSprite.getRotation()+mRotationSpeed);
 		}
-		
+        mSprite.updateFrame(timeDelta);
 		sSystemRegistry.mRenderSystem.scheduleForDraw(mSprite);
 	}
 }

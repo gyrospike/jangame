@@ -1,0 +1,125 @@
+<ImagePacks>
+    <ImagePack id="borderTop" usage="0">
+        <Image id="idle">
+            <Textures>bg_head_border_top</Textures>
+        </Image>
+    </ImagePack>
+    <ImagePack id="borderBottom" usage="0">
+        <Image id="idle">
+            <Textures>bg_head_border_bottom</Textures>
+        </Image>
+    </ImagePack>
+    <ImagePack id="bg_head_left" usage="0">
+        <Image id="idle">
+            <Textures>bg_head_border_bottom</Textures>
+        </Image>
+    </ImagePack>
+    <ImagePack id="bg_head_left" usage="0">
+        <Image id="idle">
+            <Textures>bg_head_left</Textures>
+        </Image>
+    </ImagePack>
+    <ImagePack id="bg_head_right" usage="0">
+        <Image id="idle">
+            <Textures>bg_head_right</Textures>
+        </Image>
+    </ImagePack>
+    <ImagePack id="gold_robot" usage="0">
+        <Image id="idle" framesMS="300">
+            <Textures>gold1,gold2,gold3</Textures>
+        </Image>
+    </ImagePack>
+    <ImagePack id="bg_rail_segment" usage="0">
+        <Image id="idle">
+            <Textures>bg_rail_segment</Textures>
+        </Image>
+    </ImagePack>
+    <ImagePack id="bg_pipe" usage="0">
+        <Image id="idle">
+            <Textures>bg_pipe</Textures>
+        </Image>
+    </ImagePack>
+    <ImagePack id="bg_crane" usage="0">
+        <Image id="idle">
+            <Textures>bg_crane</Textures>
+        </Image>
+    </ImagePack>
+    <ImagePack id="bg_foot_left" usage="0">
+        <Image id="idle">
+            <Textures>bg_foot_left</Textures>
+        </Image>
+    </ImagePack>
+    <ImagePack id="bg_foot_right" usage="0">
+        <Image id="idle">
+            <Textures>bg_foot_right</Textures>
+        </Image>
+    </ImagePack>
+    <ImagePack id="bg_pink_gear" usage="0">
+        <Image id="idle">
+            <Textures>bg_pink_gear</Textures>
+        </Image>
+    </ImagePack>
+    <ImagePack id="bg_red_gear" usage="0">
+        <Image id="idle">
+            <Textures>bg_red_gear</Textures>
+        </Image>
+    </ImagePack>
+    <ImagePack id="bg_yellow_gear" usage="0">
+        <Image id="idle">
+            <Textures>bg_yellow_gear</Textures>
+        </Image>
+    </ImagePack>
+
+    <ImagePack id="marker" usage="-1">
+        <Image id="idle">
+            <Textures>white_box</Textures>
+        </Image>
+    </ImagePack>
+
+    <ImagePack id="arrow" usage="1">
+        <Image id="idle">
+            <Textures>arrow</Textures>
+        </Image>
+    </ImagePack>
+    <ImagePack id="track_segment" usage="1">
+        <Image id="idle">
+            <Textures>wire_segment</Textures>
+        </Image>
+    </ImagePack>
+    <ImagePack id="particle" usage="1">
+        <Image id="idle">
+            <Textures>white_box</Textures>
+        </Image>
+    </ImagePack>
+    <ImagePack id="spark" usage="1">
+        <Image id="idle" framesMS="200">
+            <Textures>spark_0,spark_1,spark_2</Textures>
+        </Image>
+        <Image id="blue" framesMS="300">
+            <Textures>spark_blue_0,spark_blue_1,spark_blue_2</Textures>
+        </Image>
+    </ImagePack>
+    <ImagePack id="node" usage="1">
+        <Image id="idle">
+            <Textures>node_simple_grey</Textures>
+        </Image>
+        <Image id="green" usage="1">
+            <Textures>node_simple_green</Textures>
+        </Image>
+        <Image id="green_gate" usage="1">
+            <Textures>node_gate_green</Textures>
+        </Image>
+        <Image id="green_trap" usage="1">
+            <Textures>node_trap_green</Textures>
+        </Image>
+        <Image id="grey_trap" usage="1">
+            <Textures>node_trap_grey</Textures>
+        </Image>
+        <Image id="yellow_trap" usage="1">
+            <Textures>node_trap_yellow</Textures>
+        </Image>
+        <Image id="dead" usage="1">
+            <Textures>node_dead</Textures>
+        </Image>
+    </ImagePack>
+</ImagePacks>

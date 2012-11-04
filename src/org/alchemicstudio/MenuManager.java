@@ -51,80 +51,78 @@ public class MenuManager extends BaseManager {
 	 * 
 	 */
 	public void init() {
+        int screenWidth = mSMetrics.widthPixels;
 
 		mTitle  = new HUDStaticTextElement(HUD.NOT_UNIQUE_ELEMENT, 205, 190, AssetLibrary.PRERENDERED_TEXT_INDEX_CIRCUIT);
-		
-		Texture borderTop = BaseObject.sSystemRegistry.mAssetLibrary.getTextureByResource(R.drawable.bg_head_border_top);
-		mStaticDeco.add(new DrawableObject(borderTop, 0, mSMetrics.widthPixels, borderTop.height));
+
+        ImagePack borderTop = BaseObject.sSystemRegistry.mAssetLibrary.getImagePack("borderTop");
+		mStaticDeco.add(new DrawableObject(borderTop, 0, screenWidth, -1));
 		mStaticDeco.getLast().setRelativePosition(getRelativePosition(mStaticDeco.getLast().mSprite.getPolyScale(), 0.0f, 0.0f, ORIGIN_TOP_LEFT));
-		
-		Texture borderBottom = BaseObject.sSystemRegistry.mAssetLibrary.getTextureByResource(R.drawable.bg_head_border_bottom);
-		mStaticDeco.add(new DrawableObject(borderBottom, 0, mSMetrics.widthPixels, borderBottom.height));
+
+        ImagePack borderBottom = BaseObject.sSystemRegistry.mAssetLibrary.getImagePack("borderBottom");
+		mStaticDeco.add(new DrawableObject(borderBottom, 0, screenWidth, -1));
 		mStaticDeco.getLast().setRelativePosition(getRelativePosition(mStaticDeco.getLast().mSprite.getPolyScale(), 0.0f, 168.0f, ORIGIN_TOP_LEFT));
 
-		mStaticDeco.add(new DrawableObject(BaseObject.sSystemRegistry.mAssetLibrary.getTextureByResource(R.drawable.bg_head_left), 0));
+		mStaticDeco.add(new DrawableObject(BaseObject.sSystemRegistry.mAssetLibrary.getImagePack("bg_head_left"), 0));
 		mStaticDeco.getLast().setRelativePosition(getRelativePosition(mStaticDeco.getLast().mSprite.getPolyScale(), 0.0f, 0.0f, ORIGIN_TOP_LEFT));
 		
-		mStaticDeco.add(new DrawableObject(BaseObject.sSystemRegistry.mAssetLibrary.getTextureByResource(R.drawable.bg_head_right), 0));
+		mStaticDeco.add(new DrawableObject(BaseObject.sSystemRegistry.mAssetLibrary.getImagePack("bg_head_right"), 0));
 		mStaticDeco.getLast().setRelativePosition(getRelativePosition(mStaticDeco.getLast().mSprite.getPolyScale(), 0.0f, 0.0f, ORIGIN_TOP_RIGHT));
 
-		int[] goldRobotTextureArray = {R.drawable.gold1, R.drawable.gold2, R.drawable.gold3};
-		Texture[] goldRobotTextures = BaseObject.sSystemRegistry.mAssetLibrary.getTexturesByResources(goldRobotTextureArray);
-		mStaticDeco.add(new DrawableObject(goldRobotTextures, 0, 300));
+        ImagePack goldRobot = BaseObject.sSystemRegistry.mAssetLibrary.getImagePack("gold_robot");
+		mStaticDeco.add(new DrawableObject(goldRobot, 0));
 		mStaticDeco.getLast().setRelativePosition(getRelativePosition(mStaticDeco.getLast().mSprite.getPolyScale(),  0.2f*mSMetrics.xdpi, 0.33f*mSMetrics.ydpi, ORIGIN_TOP_RIGHT));
-		
-		
-		Texture railTexture = BaseObject.sSystemRegistry.mAssetLibrary.getTextureByResource(R.drawable.bg_rail_segment);
-		
-		mStaticDeco.add(new DrawableObject(railTexture, 0, mSMetrics.widthPixels, railTexture.height));
+
+
+        ImagePack railImage = BaseObject.sSystemRegistry.mAssetLibrary.getImagePack("bg_rail_segment");
+		mStaticDeco.add(new DrawableObject(railImage, 0, screenWidth, -1));
 		// 136dpi is 126dpi + 10dpi, the xml dpi offsets, + 37px, the offset in the image to the point I want
 		mStaticDeco.getLast().setRelativePosition(getRelativePosition(mStaticDeco.getLast().mSprite.getPolyScale(), 0.0f, dipToPx(136.0f) + 37.0f, ORIGIN_TOP_LEFT));
 
-		mStaticDeco.add(new DrawableObject(railTexture, 0, mSMetrics.widthPixels, railTexture.height));
+		mStaticDeco.add(new DrawableObject(railImage, 0, screenWidth, -1));
 		// 241dpi is 231dpi + 10dpi, the xml dpi offsets, + 37px, the offset in the image to the point I want
 		mStaticDeco.getLast().setRelativePosition(getRelativePosition(mStaticDeco.getLast().mSprite.getPolyScale(), 0.0f, dipToPx(241.0f) + 37.0f, ORIGIN_TOP_LEFT));
 		
-		mStaticDeco.add(new DrawableObject(railTexture, 0, mSMetrics.widthPixels, railTexture.height));
+		mStaticDeco.add(new DrawableObject(railImage, 0, screenWidth, -1));
 		// 346dpi is 336dpi + 10dpi, the xml dpi offsets, + 37px, the offset in the image to the point I want
 		mStaticDeco.getLast().setRelativePosition(getRelativePosition(mStaticDeco.getLast().mSprite.getPolyScale(), 0.0f, dipToPx(346.0f) + 37.0f, ORIGIN_TOP_LEFT));
 
-		Texture pipeTexture = BaseObject.sSystemRegistry.mAssetLibrary.getTextureByResource(R.drawable.bg_pipe);
-		
-		mStaticDeco.add(new DrawableObject(pipeTexture, 0, mSMetrics.widthPixels, pipeTexture.height));
+        ImagePack pipeImage = BaseObject.sSystemRegistry.mAssetLibrary.getImagePack("bg_pipe");
+		mStaticDeco.add(new DrawableObject(pipeImage, 0, screenWidth, -1));
 		// 136dpi is 126dpi + 10dpi, the xml dpi offsets, + 37px, the offset in the image to the point I want
 		mStaticDeco.getLast().setRelativePosition(getRelativePosition(mStaticDeco.getLast().mSprite.getPolyScale(), 0.0f, dipToPx(136.0f) + 67.0f, ORIGIN_TOP_LEFT));
 
-		mStaticDeco.add(new DrawableObject(pipeTexture, 0, mSMetrics.widthPixels, pipeTexture.height));
+		mStaticDeco.add(new DrawableObject(pipeImage, 0, screenWidth, -1));
 		// 241dpi is 231dpi + 10dpi, the xml dpi offsets, + 37px, the offset in the image to the point I want
 		mStaticDeco.getLast().setRelativePosition(getRelativePosition(mStaticDeco.getLast().mSprite.getPolyScale(), 0.0f, dipToPx(241.0f) + 67.0f, ORIGIN_TOP_LEFT));
 		
-		mStaticDeco.add(new DrawableObject(pipeTexture, 0, mSMetrics.widthPixels, pipeTexture.height));
+		mStaticDeco.add(new DrawableObject(pipeImage, 0, screenWidth, -1));
 		// 346dpi is 336dpi + 10dpi, the xml dpi offsets, + 37px, the offset in the image to the point I want
 		mStaticDeco.getLast().setRelativePosition(getRelativePosition(mStaticDeco.getLast().mSprite.getPolyScale(), 0.0f, dipToPx(346.0f) + 67.0f, ORIGIN_TOP_LEFT));
 		
-		
-		mStaticDeco.add(new DrawableObject(BaseObject.sSystemRegistry.mAssetLibrary.getTextureByResource(R.drawable.bg_crane), 1));
+
+		mStaticDeco.add(new DrawableObject(BaseObject.sSystemRegistry.mAssetLibrary.getImagePack("bg_crane"), 1));
 		mStaticDeco.getLast().setRelativePosition(getRelativePosition(mStaticDeco.getLast().mSprite.getPolyScale(), 0.2f*mSMetrics.xdpi, 16.0f, ORIGIN_BOTTOM_RIGHT));
 		
-		mStaticDeco.add(new DrawableObject(borderBottom, 0, mSMetrics.widthPixels, borderBottom.height));
+		mStaticDeco.add(new DrawableObject(borderBottom, 0, screenWidth, -1));
 		mStaticDeco.getLast().setRelativePosition(getRelativePosition(mStaticDeco.getLast().mSprite.getPolyScale(), 0.0f, 0.0f, ORIGIN_BOTTOM_LEFT));
 		
-		mStaticDeco.add(new DrawableObject(BaseObject.sSystemRegistry.mAssetLibrary.getTextureByResource(R.drawable.bg_foot_left), 0));
+		mStaticDeco.add(new DrawableObject(BaseObject.sSystemRegistry.mAssetLibrary.getImagePack("bg_foot_left"), 0));
 		mStaticDeco.getLast().setRelativePosition(getRelativePosition(mStaticDeco.getLast().mSprite.getPolyScale(), 0.0f, 16.0f, ORIGIN_BOTTOM_LEFT));
 		
-		mStaticDeco.add(new DrawableObject(BaseObject.sSystemRegistry.mAssetLibrary.getTextureByResource(R.drawable.bg_foot_right), 0));
+		mStaticDeco.add(new DrawableObject(BaseObject.sSystemRegistry.mAssetLibrary.getImagePack("bg_foot_right"), 0));
 		mStaticDeco.getLast().setRelativePosition(getRelativePosition(mStaticDeco.getLast().mSprite.getPolyScale(), 0.0f, 16.0f, ORIGIN_BOTTOM_RIGHT));
 
 		
-		mAnimDeco.add(new DrawableObject(BaseObject.sSystemRegistry.mAssetLibrary.getTextureByResource(R.drawable.bg_pink_gear), 0));
+		mAnimDeco.add(new DrawableObject(BaseObject.sSystemRegistry.mAssetLibrary.getImagePack("bg_pink_gear"), 0));
 		mAnimDeco.getLast().setRelativePosition(getRelativePosition(mAnimDeco.getLast().mSprite.getPolyScale(), 0.0f*mSMetrics.xdpi, 0.11f*mSMetrics.ydpi, ORIGIN_BOTTOM_RIGHT));
 		mAnimDeco.getLast().setRotationSpeed(1.0f);
 		
-		mAnimDeco.add(new DrawableObject(BaseObject.sSystemRegistry.mAssetLibrary.getTextureByResource(R.drawable.bg_red_gear), 0));
+		mAnimDeco.add(new DrawableObject(BaseObject.sSystemRegistry.mAssetLibrary.getImagePack("bg_red_gear"), 0));
 		mAnimDeco.getLast().setRelativePosition(getRelativePosition(mAnimDeco.getLast().mSprite.getPolyScale(), 0.1f*mSMetrics.xdpi, 0.1f*mSMetrics.ydpi, ORIGIN_BOTTOM_LEFT));
 		mAnimDeco.getLast().setRotationSpeed(2.0f);
 		
-		mAnimDeco.add(new DrawableObject(BaseObject.sSystemRegistry.mAssetLibrary.getTextureByResource(R.drawable.bg_yellow_gear), 0));
+		mAnimDeco.add(new DrawableObject(BaseObject.sSystemRegistry.mAssetLibrary.getImagePack("bg_yellow_gear"), 0));
 		mAnimDeco.getLast().setRelativePosition(getRelativePosition(mAnimDeco.getLast().mSprite.getPolyScale(), 0.01f*mSMetrics.xdpi, 0.15f*mSMetrics.ydpi, ORIGIN_BOTTOM_LEFT));
 		mAnimDeco.getLast().setRotationSpeed(-4.0f);
 		mAnimDeco.getLast().mSprite.setPolyScale(0.6f, 0.6f);

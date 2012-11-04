@@ -16,7 +16,6 @@ import android.view.WindowManager;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.HorizontalScrollView;
-import android.widget.LinearLayout;
 
 import javax.xml.parsers.SAXParser;
 import javax.xml.parsers.SAXParserFactory;
@@ -59,11 +58,22 @@ public class Menu extends Activity {
 
         mSavedUserState = getSharedPreferences(BaseObject.SHARED_PREFS_KEY, 0);
 
-        try {
-            // parse the menumap.xml file
-            SAXParserFactory spf = SAXParserFactory.newInstance();
-            SAXParser sp = spf.newSAXParser();
+        // begin loading in XML data
+        SAXParserFactory spf = SAXParserFactory.newInstance();
 
+        // parse the image packs
+        try {
+            SAXParser sp = spf.newSAXParser();
+            ImagePackXMLHandler imagePackXMLHandler = new ImagePackXMLHandler();
+            sp.parse(this.getResources().openRawResource(R.raw.imagepacks), imagePackXMLHandler);
+            BaseObject.sSystemRegistry.mAssetLibrary.loadImagePacks(imagePackXMLHandler.getImagePacks());
+        } catch (Exception e) {
+            Log.e("joelog", "QueryError, imagepacks.xml could not be parsed", e);
+        }
+
+        // parse the menumap.xml file
+        try {
+            SAXParser sp = spf.newSAXParser();
             MenuXMLHandler menuXMLHandler = new MenuXMLHandler();
             sp.parse(this.getResources().openRawResource(R.raw.menumap), menuXMLHandler);
             mMenuData = menuXMLHandler.getParsedData();

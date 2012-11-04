@@ -36,7 +36,6 @@ public class GameSurfaceView extends GLSurfaceView {
 	 * @param context
 	 */
 	private void init(Context context) {
-		BaseObject.sSystemRegistry.mAssetLibrary.loadGameTextures();
 		mOpenGL = new GameRenderer(context, AssetLibrary.TEXTURE_TYPE_GAME);
 		setRenderer(mOpenGL);
 	}

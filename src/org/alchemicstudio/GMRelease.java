@@ -27,17 +27,19 @@ public class GMRelease extends GameMode {
 	public GMRelease(Grid grid, ReleaseManager releaseManager, Context context) {
 		mGrid = grid;
 		mReleaseManager = releaseManager;
-		
-		Texture red = BaseObject.sSystemRegistry.mAssetLibrary.getTextureByResource(R.drawable.hud_gear_red);
-		HUD.getInstance().addElement(GameManager.GAME_MODE_RELEASE, red, 30, 60, 0, 0, false, HUD.NOT_UNIQUE_ELEMENT);
-		
-		Texture green = BaseObject.sSystemRegistry.mAssetLibrary.getTextureByResource(R.drawable.hud_gear_green);
-		HUD.getInstance().addElement(GameManager.GAME_MODE_RELEASE, green, 150, 60, 0, 0, false, HUD.NOT_UNIQUE_ELEMENT);
-		
-		Texture blue = BaseObject.sSystemRegistry.mAssetLibrary.getTextureByResource(R.drawable.hud_gear_blue);
-		HUD.getInstance().addElement(GameManager.GAME_MODE_RELEASE, blue, 270, 60, 0, 0, false, HUD.NOT_UNIQUE_ELEMENT);
 
-		sparkReleaseButton = (Button) ((Activity) context).findViewById(R.id.sparkReleaseButton);
+        /*
+		ImagePack imagePackRed = BaseObject.sSystemRegistry.mAssetLibrary.getImagePack("gear_red");
+		HUD.getInstance().addElement(GameManager.GAME_MODE_RELEASE, imagePackRed, 30, 60, 0, 0, false, HUD.NOT_UNIQUE_ELEMENT);
+
+        ImagePack imagePackGreen = BaseObject.sSystemRegistry.mAssetLibrary.getImagePack("gear_green");
+		HUD.getInstance().addElement(GameManager.GAME_MODE_RELEASE, imagePackGreen, 150, 60, 0, 0, false, HUD.NOT_UNIQUE_ELEMENT);
+
+        ImagePack imagePackBlue = BaseObject.sSystemRegistry.mAssetLibrary.getImagePack("gear_blue");
+		HUD.getInstance().addElement(GameManager.GAME_MODE_RELEASE, imagePackBlue, 270, 60, 0, 0, false, HUD.NOT_UNIQUE_ELEMENT);
+        */
+
+        sparkReleaseButton = (Button) ((Activity) context).findViewById(R.id.sparkReleaseButton);
 		sparkReleaseButton.setOnClickListener(new OnClickListener() {
 			public void onClick(View v) {
 				Log.d("DEBUG", "released the spark");

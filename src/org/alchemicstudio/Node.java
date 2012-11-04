@@ -63,9 +63,6 @@ public class Node extends BaseObject {
 	/** key id for gate and key nodes */
 	private int mKeyId;
 	
-	/** the number of connections a node may have if it is an off/on ramp */
-	private final static int CONNECTION_LIMIT_TERMINAL = 1;
-	
 	/** track indices that linking this node to other nodes */
 	private int[] mTrackIdArray;
 	
@@ -111,43 +108,29 @@ public class Node extends BaseObject {
 		for (int p = 0; p < mNodeConnections.length; p++) {
 			mNodeConnections[p] = new NodeConnection(-1, -1, -1);
 		}
-		
+
+        ImagePack imagePack = BaseObject.sSystemRegistry.mAssetLibrary.getImagePack("node");
+        mSprite = new Sprite(imagePack, 1);
+
 		if(mType.equals(NODE_TYPE_SPEED_TRAP)) {
-			int[] ids = {R.drawable.node_trap_grey, R.drawable.node_trap_yellow, R.drawable.node_trap_green};
-			Texture[] textures = BaseObject.sSystemRegistry.mAssetLibrary.getTexturesByResources(ids);
-			mSprite = new Sprite(textures, 1);
 			HUD.getInstance().addTextElement(-1, Integer.toString(mMaxSpeedLimit), 24, Color.GREEN, mPosition.x + SPEED_OFFSET_RIGHT, mPosition.y, true, HUD.NOT_UNIQUE_ELEMENT);
 			HUD.getInstance().addTextElement(-1, Integer.toString(mMinSpeedLimit), 24, Color.RED, mPosition.x - SPEED_OFFSET_LEFT, mPosition.y, true, HUD.NOT_UNIQUE_ELEMENT);
+            mSprite.setImageId("dead");
 		} else if(mType.equals(NODE_TYPE_DEAD)){
-			int id = R.drawable.node_dead;
-			Texture texture = BaseObject.sSystemRegistry.mAssetLibrary.getTextureByResource(id);
-			mSprite = new Sprite(texture, 1);
+            mSprite.setImageId("dead");
 		} else if(mType.equals(NODE_TYPE_KEY)) {
-			int id = R.drawable.node_simple_green;
-			Texture texture = BaseObject.sSystemRegistry.mAssetLibrary.getTextureByResource(id);
-			mSprite = new Sprite(texture, 1);
+            mSprite.setImageId("green");
 		} else if(mType.equals(NODE_TYPE_GATE)) {
-			int id = R.drawable.node_gate_green;
-			Texture texture = BaseObject.sSystemRegistry.mAssetLibrary.getTextureByResource(id);
-			mSprite = new Sprite(texture, 1);
-		} else {
-			int id = R.drawable.node_simple_grey;
-			Texture texture = BaseObject.sSystemRegistry.mAssetLibrary.getTextureByResource(id);
-			mSprite = new Sprite(texture, 1);
+            mSprite.setImageId("green_gate");
 		}
 
 		mSprite.setPosition(vec.x, vec.y);
-		mSprite.setTextureIndex(0);
-		
+
 		for(int h = 0; h < mTrackIdArray.length; h++) {
 			mTrackIdArray[h] = -1;
 		}
 
 		//Log.d("DEBUG", "Node placed at: (" + i + ", " + j + ") ");
-	}
-	
-	public void setType(String type) {
-		mType = type;
 	}
 	
 	public String getType() {
@@ -239,11 +222,11 @@ public class Node extends BaseObject {
 	 * @return	true is this node has reached the maximum number of connections it can support
 	 */
 	public boolean hasMaxConnections() {
+        boolean result = false;
 		if(getNumConnections() >= mMaxConnections) {
-			return true;
-		} else {
-			return false;
+            result = true;
 		}
+        return result;
 	}
 	
 	/**
@@ -353,9 +336,9 @@ public class Node extends BaseObject {
 				posY = mPosition.y - PREFERRED_ARROW_OFFSET;
 			}
 		}
-		Texture texture = BaseObject.sSystemRegistry.mAssetLibrary.getTextureByResource(R.drawable.arrow);
+        ImagePack imagePack = BaseObject.sSystemRegistry.mAssetLibrary.getImagePack("arrow");
 		String uniqueID = Integer.toString(getI()) + Integer.toString(getJ());
-		HUD.getInstance().addElement(-1, texture, posX, posY, angle, 300, true, uniqueID);
+		HUD.getInstance().addElement(-1, imagePack, posX, posY, angle, 300, true, uniqueID);
 		//Log.d("DEBUG", "Node: (" + getI() + ", " + getJ() + ") now prefers to connect to node: (" + mPreferredConnection.getI() + ", " + mPreferredConnection.getJ() + ")");
 	}
 	
@@ -364,11 +347,6 @@ public class Node extends BaseObject {
 	 */
 	public NodeConnection getPreferredConnection() {
 		return mPreferredConnection;
-	}
-
-	// TODO - remove
-	public void removePower() {
-		mSprite.setTextureIndex(0);
 	}
 
 	@Override

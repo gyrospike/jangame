@@ -22,8 +22,8 @@ public class Particle extends BaseObject {
 	private float velocity_Y;
 
 	public Particle() {
-		Texture texture = BaseObject.sSystemRegistry.mAssetLibrary.getTextureByResource(R.drawable.white_box);
-		mSprite = new Sprite(texture, 0, texture.width, texture.height);
+        ImagePack imagePack = BaseObject.sSystemRegistry.mAssetLibrary.getImagePack("particle");
+        mSprite = new Sprite(imagePack, 0);
 	}
 
 	public void createParticle(int x, int y) {

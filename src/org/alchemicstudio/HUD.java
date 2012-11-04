@@ -30,12 +30,7 @@ public class HUD extends BaseObject {
 		return mInstance;
 	}
 
-	public void addElement(int elementType, Texture texture, float x, float y, double angle, int fadeTimeMS, boolean visible, String uniqueID) {
-		Texture[] temp = {texture};
-		addElement(elementType, temp, x, y, angle, fadeTimeMS, visible, uniqueID);
-	}
-
-	public void addElement(int elementType, Texture[] textures, float x, float y, double angle, int flashTimeMS, boolean visible, String uniqueID) {
+	public void addElement(int elementType, ImagePack imagePack, float x, float y, double angle, int flashTimeMS, boolean visible, String uniqueID) {
 		int elementsLen = mElements.getCount();
 		if(elementsLen < MAX_HUD_ELEMENTS) {
 			if(uniqueID != HUD.NOT_UNIQUE_ELEMENT) {
@@ -47,7 +42,7 @@ public class HUD extends BaseObject {
 					}
 				}
 			}
-			mElements.add(new HUDDrawableElement(elementType, flashTimeMS, x, y, angle, textures, 2, 0, visible, uniqueID));
+			mElements.add(new HUDDrawableElement(elementType, flashTimeMS, x, y, angle, imagePack, 2, 0, visible, uniqueID));
 		} else {
 			Log.d("DEBUG", "reached hud element limit");
 		}
@@ -267,11 +262,11 @@ class HUDDrawableElement extends HUDElement {
 
 	private DrawableObject mDrawableObject = null;
 
-	public HUDDrawableElement(int eType, int fTime, float x, float y, double rad, Texture[] tArray, int dP, int mspf, boolean visible, String uID) {
+	public HUDDrawableElement(int eType, int fTime, float x, float y, double rad, ImagePack imagePack, int dP, int mspf, boolean visible, String uID) {
 		super(eType, uID);
 		mFlashTime = fTime;
 		mFlashTimeTotal = fTime;
-		mDrawableObject = new DrawableObject(tArray, dP, mspf);
+		mDrawableObject = new DrawableObject(imagePack, dP);
 		mDrawableObject.setPosition(x, y);
 		mDrawableObject.mSprite.setRotation(rad);
 		setActive(visible);

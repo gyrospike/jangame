@@ -25,7 +25,6 @@ public class MenuSurfaceView extends GLSurfaceView {
 	 * @param context
 	 */
 	private void init(Context context) {
-		BaseObject.sSystemRegistry.mAssetLibrary.loadMenuTextures();
 		mOpenGL = new GameRenderer(context, AssetLibrary.TEXTURE_TYPE_MENU);
 		setRenderer(mOpenGL);
 	}

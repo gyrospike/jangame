@@ -5,8 +5,8 @@ public class Marker extends BaseObject {
 	public Sprite mSprite;
 	
 	public Marker(float x, float y) {
-		Texture texture = BaseObject.sSystemRegistry.mAssetLibrary.getTextureByResource(R.drawable.white_box);
-		mSprite = new Sprite(texture, 0);
+        ImagePack imagePack = BaseObject.sSystemRegistry.mAssetLibrary.getImagePack("marker");
+		mSprite = new Sprite(imagePack, 0);
 		mSprite.setPosition(x, y);
 	}
 	

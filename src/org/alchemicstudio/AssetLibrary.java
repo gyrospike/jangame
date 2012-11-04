@@ -2,16 +2,14 @@ package org.alchemicstudio;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map;
 
 import javax.microedition.khronos.opengles.GL10;
-//import javax.microedition.khronos.opengles.GL11;
-//import javax.microedition.khronos.opengles.GL11Ext;
 
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.graphics.Paint;
-import android.graphics.Rect;
 import android.graphics.Typeface;
 import android.opengl.GLU;
 import android.opengl.GLUtils;
@@ -54,6 +52,9 @@ public class AssetLibrary extends BaseObject {
 
 	private int[] mTextureNameWorkspace;
 
+    /** image packs contains all the available textures in game keyed off of id and then image id inside each pack */
+    private HashMap<String, ImagePack> mImagePacks;
+
 	//private int[] mCropWorkspace;
 
 	/** 
@@ -80,6 +81,46 @@ public class AssetLibrary extends BaseObject {
 
 		sBitmapOptions.inPreferredConfig = Bitmap.Config.RGB_565;
 	}
+
+    /**
+     * Loading of ImagePacks into memory for both accessing the images by name and also
+     * loading them into OpenGL memory
+     * @param imagePacks
+     */
+    public void loadImagePacks(HashMap<String, ImagePack> imagePacks) {
+        Iterator<Map.Entry<String, ImagePack>> packIterator = imagePacks.entrySet().iterator();
+        while(packIterator.hasNext()) {
+            Map.Entry<String, ImagePack> packs = (Map.Entry<String, ImagePack>)packIterator.next();
+            HashMap<String, Image> imageMap = packs.getValue().getImageMap();
+            Iterator<Map.Entry<String, Image>> imageIterator = imageMap.entrySet().iterator();
+            while(imageIterator.hasNext()) {
+                Map.Entry<String, Image> imagePairs = (Map.Entry<String, Image>)imageIterator.next();
+                int imageUsageCode = imagePairs.getValue().getImageUsageCode();
+                int[] resourceIds = imagePairs.getValue().getResourceIds();
+                int resourceIdLen = resourceIds.length;
+                Texture[] textureArray = new Texture[resourceIdLen];
+                for(int i = 0; i < resourceIdLen; i++) {
+                    textureArray[i] = allocateTexture(resourceIds[i], imageUsageCode);
+                }
+                imagePairs.getValue().setTextureArray(textureArray);
+            }
+        }
+        mImagePacks = imagePacks;
+    }
+
+    /**
+     * Retrieve an image pack by name
+     *
+     * @param id
+     * @return
+     */
+    public ImagePack getImagePack(String id) {
+        ImagePack result = mImagePacks.get(id);
+        if(result == null) {
+            Log.d("joelog", "Requested a non-existant image pack " + id);
+        }
+        return result;
+    }
 
 	public void conditionallyLoadFonts(Context context) {
 		if(mFontHashMap == null) {
@@ -131,74 +172,13 @@ public class AssetLibrary extends BaseObject {
 		return mFontHashMap.get(tName);
 	}
 
-	/**
-	 * allocate all the textures used in the menu
-	 * 
-	 */
-	public void loadMenuTextures() {
-		int[] textureArray = {
-				R.drawable.gold1,
-				R.drawable.gold2,
-				R.drawable.gold3,
-				R.drawable.gold4,
-				R.drawable.bg_head,
-				R.drawable.bg_base,
-				R.drawable.menu_pipe,
-				R.drawable.bg_red_gear,
-				R.drawable.bg_yellow_gear,
-				R.drawable.bg_pink_gear,
-				R.drawable.bg_crane,
-				R.drawable.bg_head_border_top,
-				R.drawable.bg_head_border_bottom,
-				R.drawable.bg_head_left,
-				R.drawable.bg_head_right,
-				R.drawable.bg_rail_segment,
-				R.drawable.bg_pipe,
-				R.drawable.bg_foot_left,
-				R.drawable.bg_foot_right
-		};
-
-		for(int i = 0; i < textureArray.length; i++) {
-			allocateTexture(textureArray[i], TEXTURE_TYPE_MENU);
-		}
-	}
-
-	/**
-	 * allocate all the textures used in the game
-	 * 
-	 */
-	public void loadGameTextures() {
-		int[] textureArray = {
-				R.drawable.node_dead,
-				R.drawable.node_trap_grey,
-				R.drawable.node_trap_yellow,
-				R.drawable.node_trap_green,
-				R.drawable.node_simple_grey,
-				R.drawable.node_simple_yellow,
-				R.drawable.node_simple_green,
-				R.drawable.node_gate_green,
-				R.drawable.white_box,
-				R.drawable.wire_segment,
-				R.drawable.spark_white,
-				R.drawable.spark_green,
-				R.drawable.arrow,
-				R.drawable.hud_gear_red,
-				R.drawable.hud_gear_blue,
-				R.drawable.hud_gear_green
-		};
-
-		for(int i = 0; i < textureArray.length; i++) {
-			allocateTexture(textureArray[i], TEXTURE_TYPE_GAME);
-		}
-	}
-
 	/** 
 	 * Creates a Texture object that is mapped to the passed resource id.  If a texture has already
 	 * been allocated for this id, the previously allocated Texture object is returned.
 	 * @param resourceID
 	 * @return
 	 */
-	public Texture allocateTexture(int resourceID, int type) {
+	private Texture allocateTexture(int resourceID, int type) {
 		Texture texture = getTextureByResource(resourceID);
 		if (texture == null) {
 			texture = addTexture(resourceID, -1, 0, 0, type);
@@ -236,7 +216,7 @@ public class AssetLibrary extends BaseObject {
 				gl.glDeleteTextures(1, mTextureNameWorkspace, 0);
 				int error = gl.glGetError();
 				if (error != GL10.GL_NO_ERROR) {
-					Log.d("Texture Delete", "GLError: " + error + " (" + GLU.gluErrorString(error) + "): " + mTextureHash[x].resource);
+					Log.d("joelog:Graphics", "GLError: " + error + " (" + GLU.gluErrorString(error) + "): " + mTextureHash[x].resource);
 				}
 
 				assert error == GL10.GL_NO_ERROR;
@@ -269,7 +249,7 @@ public class AssetLibrary extends BaseObject {
 
 			int error = gl.glGetError();
 			if (error != GL10.GL_NO_ERROR) {
-				Log.d("Texture Load 1", "GLError: " + error + " (" + GLU.gluErrorString(error) + "): " + texture.resource);
+				Log.d("joelog:Graphics", "GLError: " + error + " (" + GLU.gluErrorString(error) + "): " + texture.resource);
 			}
 
 			assert error == GL10.GL_NO_ERROR;
@@ -280,7 +260,7 @@ public class AssetLibrary extends BaseObject {
 
 			error = gl.glGetError();
 			if (error != GL10.GL_NO_ERROR) {
-				Log.d("Texture Load 2", "GLError: " + error + " (" + GLU.gluErrorString(error) + "): " + texture.resource);
+				Log.d("joelog:Graphics", "GLError: " + error + " (" + GLU.gluErrorString(error) + "): " + texture.resource);
 			}
 
 			assert error == GL10.GL_NO_ERROR;
@@ -308,14 +288,12 @@ public class AssetLibrary extends BaseObject {
 				BitmapFactory.Options opts = new BitmapFactory.Options();
 				opts.inScaled = false;
 				opts.inPreferredConfig  =  Bitmap.Config.RGB_565;
-				//Log.d("DEBUG", "Resource: " + texture.resource);
 				bitmap = BitmapFactory.decodeResource(context.getResources(), texture.resource, opts);
 			} finally {
 				try {
 					is.close();
 				} catch (IOException e) {
 					e.printStackTrace();
-					// Ignore.
 				}
 			}
 
@@ -323,7 +301,7 @@ public class AssetLibrary extends BaseObject {
 
 			error = gl.glGetError();
 			if (error != GL10.GL_NO_ERROR) {
-				Log.d("Texture Load 3", "GLError: " + error + " (" + GLU.gluErrorString(error) + "): " + texture.resource);
+				Log.d("joelog:Graphics", "GLError: " + error + " (" + GLU.gluErrorString(error) + "): " + texture.resource);
 			}
 
 			assert error == GL10.GL_NO_ERROR;
@@ -336,7 +314,7 @@ public class AssetLibrary extends BaseObject {
 
 			error = gl.glGetError();
 			if (error != GL10.GL_NO_ERROR) {
-				Log.d("Texture Load 4", "GLError: " + error + " (" + GLU.gluErrorString(error) + "): " + texture.resource);
+				Log.d("joelog:Graphics", "GLError: " + error + " (" + GLU.gluErrorString(error) + "): " + texture.resource);
 			}
 
 			assert error == GL10.GL_NO_ERROR;

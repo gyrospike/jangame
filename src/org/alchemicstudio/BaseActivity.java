@@ -45,8 +45,8 @@ public class BaseActivity extends Activity {
 
 		DisplayMetrics metrics = new DisplayMetrics();
 		getWindowManager().getDefaultDisplay().getMetrics(metrics);
-		Log.d("DEBUG", "Real dpi: " + metrics.densityDpi);
-		Log.d("DEBUG", "screen dimensions in dpi: " + metrics.widthPixels + " x " + metrics.heightPixels);
+		Log.d("joelog:Graphics", "Real dpi: " + metrics.densityDpi);
+		Log.d("joelog:Graphics", "screen dimensions in dpi: " + metrics.widthPixels + " x " + metrics.heightPixels);
 		
 		setContentView(R.layout.game);
 		mGLView = (GameSurfaceView)findViewById(R.id.GameSurfaceView01);
@@ -95,7 +95,7 @@ public class BaseActivity extends Activity {
 		super.onPause();
 		mGame.pause();
 		mGLView.onPause();
-		Log.d("DEBUG", "Game paused");
+		Log.d("joelog", "Game paused");
 	}
 
 	@Override
@@ -103,7 +103,7 @@ public class BaseActivity extends Activity {
 		super.onResume();
 		mGame.resume();
 		mGLView.onResume();
-		Log.d("DEBUG", "Game resumed");
+		Log.d("joelog", "Game resumed");
 	}
 
 	@Override

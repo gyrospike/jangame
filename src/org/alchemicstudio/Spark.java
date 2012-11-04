@@ -15,6 +15,9 @@ public class Spark extends BaseObject {
 	/** the standard acceleration for a spark */
 	private static final float BASE_ACCELERATION = 20.0f;
 
+    /** the velocity at which the spark will turn blue */
+    private static final float SPARK_SPEED_BLUE_THRESHOLD = 200.0f;
+
 	/** the spark's sprite */
 	public Sprite mSprite;
 	
@@ -51,22 +54,13 @@ public class Spark extends BaseObject {
 	/** has this spark been released yet? */
 	private boolean isReleased = false;
 	
-	/** the number of milliseconds that should elapse for each frame */
-	private int mMillisecondPerFrame;
-	
-	/** tracking how much time has elapsed every update call for animation purposes */
-	private long mElapsedTime = 0;
-	
 	/** record the last key this spark acquired */
 	private int mCurrentKey = 0;
 	
 	
 	public Spark() {
-		int[] ids = {R.drawable.spark_white, R.drawable.spark_green};
-		Texture[] textures = BaseObject.sSystemRegistry.mAssetLibrary.getTexturesByResources(ids);
-		mSprite = new Sprite(textures, 2, textures[0].width, textures[0].height);
-		mMillisecondPerFrame = 100;
-		
+		ImagePack imagePack = BaseObject.sSystemRegistry.mAssetLibrary.getImagePack("spark");
+		mSprite = new Sprite(imagePack, 2);
 		mPhysicsObject = new OnRailsPhysicsObject();
 	}
 	
@@ -196,21 +190,26 @@ public class Spark extends BaseObject {
 	public boolean getReadyForNextTarget() {
 		return mPhysicsObject.hasRemainder();
 	}
+
+    /**
+     * Update the appearance of the spark by changing the image it uses
+     * @param timeDelta
+     */
+    private void updateAppearance(long timeDelta) {
+        if(getCurrentSpeed() > SPARK_SPEED_BLUE_THRESHOLD) {
+            mSprite.setImageId("blue");
+        } else {
+            mSprite.setImageId("idle");
+        }
+        mSprite.updateFrame(timeDelta);
+    }
 	
 	/**
 	 * update the sprite position and send it to be drawn
 	 */
 	public void updateSprite(long timeDelta) {
 		mSprite.setPosition(mPhysicsObject.getXPos(), mPhysicsObject.getYPos());
-		/*
-		if (mMillisecondPerFrame != 0) {
-			mElapsedTime += timeDelta;
-			if (mElapsedTime > mMillisecondPerFrame) {
-				mElapsedTime = mElapsedTime - mMillisecondPerFrame;
-				mSprite.incrementFrame();
-			}
-		}
-		*/
+        updateAppearance(timeDelta);
 		sSystemRegistry.mRenderSystem.scheduleForDraw(mSprite);
 	}
 	

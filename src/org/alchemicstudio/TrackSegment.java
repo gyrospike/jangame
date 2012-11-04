@@ -6,8 +6,6 @@ public class TrackSegment extends BaseObject {
 	/** sprite drawable for a track segment */
 	public Sprite mSprite;
 	
-	public boolean permanent;
-	
 	/** is this track segment being used currently */
 	private boolean mInUse = false;
 
@@ -18,8 +16,8 @@ public class TrackSegment extends BaseObject {
 	 * Constructor
 	 */
 	public TrackSegment(){
-		Texture texture = BaseObject.sSystemRegistry.mAssetLibrary.getTextureByResource(R.drawable.wire_segment);
-		mSprite = new Sprite(texture, 0, texture.width, texture.height);
+		ImagePack imagePack = BaseObject.sSystemRegistry.mAssetLibrary.getImagePack("track_segment");
+		mSprite = new Sprite(imagePack, 0);
 	}
 	
 	/**
