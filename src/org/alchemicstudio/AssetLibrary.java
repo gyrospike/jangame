@@ -8,9 +8,7 @@ import java.util.Map;
 import javax.microedition.khronos.opengles.GL10;
 
 import android.content.Context;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.graphics.Typeface;
+import android.graphics.*;
 import android.opengl.GLU;
 import android.opengl.GLUtils;
 import android.util.Log;
@@ -51,6 +49,8 @@ public class AssetLibrary extends BaseObject {
 	private static BitmapFactory.Options sBitmapOptions  = new BitmapFactory.Options();
 
 	private int[] mTextureNameWorkspace;
+
+    private double mTotalTextureMemoryBytes = 0;
 
     /** image packs contains all the available textures in game keyed off of id and then image id inside each pack */
     private HashMap<String, ImagePack> mImagePacks;
@@ -203,6 +203,8 @@ public class AssetLibrary extends BaseObject {
 				loadBitmap(context, gl, mTextureHash[x]);
 			}
 		}
+        Log.d("joelog", "total texture memory usage: " + (mTotalTextureMemoryBytes/1000) + " kB");
+        mTotalTextureMemoryBytes = 0;
 	}
 
 	/** Flushes all textures from OpenGL memory */
@@ -247,9 +249,13 @@ public class AssetLibrary extends BaseObject {
 		if (texture.loaded == false && texture.resource != -1) {
 			gl.glGenTextures(1, mTextureNameWorkspace, 0);
 
+            int[] maxTextureSize = new int[1];
+            gl.glGetIntegerv(GL10.GL_MAX_TEXTURE_SIZE, maxTextureSize, 0);
+            Log.i("glinfo", "Max texture size = " + maxTextureSize[0]);
+
 			int error = gl.glGetError();
 			if (error != GL10.GL_NO_ERROR) {
-				Log.d("joelog:Graphics", "GLError: " + error + " (" + GLU.gluErrorString(error) + "): " + texture.resource);
+				Log.d("joelog", "GLError: " + error + " (" + GLU.gluErrorString(error) + "): " + texture.resource);
 			}
 
 			assert error == GL10.GL_NO_ERROR;
@@ -260,7 +266,7 @@ public class AssetLibrary extends BaseObject {
 
 			error = gl.glGetError();
 			if (error != GL10.GL_NO_ERROR) {
-				Log.d("joelog:Graphics", "GLError: " + error + " (" + GLU.gluErrorString(error) + "): " + texture.resource);
+				Log.d("joelog", "GLError: " + error + " (" + GLU.gluErrorString(error) + "): " + texture.resource);
 			}
 
 			assert error == GL10.GL_NO_ERROR;
@@ -282,39 +288,48 @@ public class AssetLibrary extends BaseObject {
 			// using GL_REPLACE instead of GL_MODULATE makes it so only PNGs with no alpha channel could be transparent
 			gl.glTexEnvf(GL10.GL_TEXTURE_ENV, GL10.GL_TEXTURE_ENV_MODE, GL10.GL_MODULATE);
 
-			InputStream is = context.getResources().openRawResource(texture.resource);
-			Bitmap bitmap;
-			try {
-				BitmapFactory.Options opts = new BitmapFactory.Options();
-				opts.inScaled = false;
-				opts.inPreferredConfig  =  Bitmap.Config.RGB_565;
-				bitmap = BitmapFactory.decodeResource(context.getResources(), texture.resource, opts);
-			} finally {
-				try {
-					is.close();
-				} catch (IOException e) {
-					e.printStackTrace();
-				}
-			}
+            BitmapFactory.Options opts = new BitmapFactory.Options();
+            opts.inScaled = false;
+            // R - 5 bits, G - 6 bits, B - 5 bits, so 16 bits total, or 2 bytes
+            // to find total memory used do width * height * 2 = number of bytes the bitmap uses
+            opts.inPreferredConfig  =  Bitmap.Config.RGB_565;
 
-			GLUtils.texImage2D(GL10.GL_TEXTURE_2D, 0, bitmap, 0);
+            // galaxy nexus tablet resolution is 800 x 1205, the fat texture shows up but is clamp distorted, the big texture does not show up
+            // the galaxy nexus phone is 720 x 1184, the fat texture does not show up at all, nor does the big texture
+            /*
+            Bitmap.Config config = Bitmap.Config.RGB_565;
+            Bitmap bitmap = Bitmap.createBitmap(1024, 512, config);
+            Canvas myCanvas = new Canvas(bitmap);
+            Paint myPaint = new Paint();
+            myPaint.setColor(Color.MAGENTA);
+            myCanvas.drawCircle(100.0f, 100.0f, 20.0f, myPaint);
+            */
+
+            Bitmap bitmap = BitmapFactory.decodeResource(context.getResources(), texture.resource, opts);
+            GLUtils.texImage2D(GL10.GL_TEXTURE_2D, 0, bitmap, 0);
 
 			error = gl.glGetError();
 			if (error != GL10.GL_NO_ERROR) {
-				Log.d("joelog:Graphics", "GLError: " + error + " (" + GLU.gluErrorString(error) + "): " + texture.resource);
+				Log.d("joelog", "GLError: " + error + " (" + GLU.gluErrorString(error) + "): " + texture.resource);
 			}
 
 			assert error == GL10.GL_NO_ERROR;
+
+            mTotalTextureMemoryBytes += (bitmap.getWidth() * bitmap.getHeight() * 2);
 
 			texture.name = textureName;
 			texture.width = bitmap.getWidth();
 			texture.height = bitmap.getHeight();
 
+            if(bitmap.getWidth() > 1024 || bitmap.getHeight() > 1024) {
+                Log.d("joelog", "GLWarning: your bitmap is larger in at least one dimension that most screens, if a texture is not showing or is just black, you may need to scale it down");
+            }
+
 			bitmap.recycle();
 
 			error = gl.glGetError();
 			if (error != GL10.GL_NO_ERROR) {
-				Log.d("joelog:Graphics", "GLError: " + error + " (" + GLU.gluErrorString(error) + "): " + texture.resource);
+				Log.d("joelog", "GLError: " + error + " (" + GLU.gluErrorString(error) + "): " + texture.resource);
 			}
 
 			assert error == GL10.GL_NO_ERROR;

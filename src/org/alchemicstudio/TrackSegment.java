@@ -11,6 +11,12 @@ public class TrackSegment extends BaseObject {
 
 	/** render system reference */
 	private RenderSystem system = sSystemRegistry.mRenderSystem;
+
+    /** the x scale of the sprite for this track segment */
+    private float mSpriteScaleX;
+
+    /** the y scale of the sprite for this track segment */
+    private float mSpriteScaleY;
 	
 	/**
 	 * Constructor
@@ -18,7 +24,30 @@ public class TrackSegment extends BaseObject {
 	public TrackSegment(){
 		ImagePack imagePack = BaseObject.sSystemRegistry.mAssetLibrary.getImagePack("track_segment");
 		mSprite = new Sprite(imagePack, 0);
+        mSpriteScaleX = mSprite.getPolyScale().x;
+        mSpriteScaleY = mSprite.getPolyScale().y;
 	}
+
+    /**
+     * @return  the scale of the y dimension by the scale of teh x dimension of the sprite
+     */
+    public float getSegmentYScale() {
+        return mSpriteScaleY/mSpriteScaleX;
+    }
+
+    /**
+     * @return  the x scale of the sprite for this track segment
+     */
+    public float getScaleX() {
+        return mSpriteScaleX;
+    }
+
+    /**
+     * @return  the y scale of the sprite for this track segment
+     */
+    public float getScaleY() {
+        return mSpriteScaleY;
+    }
 	
 	/**
 	 * setter

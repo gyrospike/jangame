@@ -1,5 +1,5 @@
 <?xml version="1.0" ?>
-<MAP NUMBER="4" WIDTH="5" HEIGHT="8" SPACING="60">
+<MAP NUMBER="4" WIDTH="5" HEIGHT="8" SPACING="90">
     <NODE I="-1" J="1" K="24">
   		<STATS TYPE="NODE_TYPE_START" />
   	</NODE>

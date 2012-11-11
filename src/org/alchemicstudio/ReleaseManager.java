@@ -325,7 +325,7 @@ public class ReleaseManager extends BaseObject {
 
         int numPotentialBadges = mParsedMapData.mBadges.getCount();
         for(int i = 0; i < numPotentialBadges; i++) {
-            FixedSizeArray<ParsedMapData.RequirementTemplate> reqs = mParsedMapData.mBadges.get(i).mRequirements; //mParsedMapData.mBadges.get(i).getType();
+            FixedSizeArray<ParsedMapData.RequirementTemplate> reqs = mParsedMapData.mBadges.get(i).mRequirements;
             Boolean pass = false;
             for(int j = 0; j < reqs.getCount(); j++) {
                 String reqType = reqs.get(j).getType();

@@ -122,4 +122,9 @@
             <Textures>node_dead</Textures>
         </Image>
     </ImagePack>
+    <ImagePack id="gameBackground" usage="1">
+        <Image id="idle">
+            <Textures>circuit_bg</Textures>
+        </Image>
+    </ImagePack>
 </ImagePacks>

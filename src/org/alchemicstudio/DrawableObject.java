@@ -1,6 +1,5 @@
 package org.alchemicstudio;
 
-import android.os.SystemClock;
 
 public class DrawableObject extends BaseObject {
 	

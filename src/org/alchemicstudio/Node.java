@@ -110,12 +110,12 @@ public class Node extends BaseObject {
 		}
 
         ImagePack imagePack = BaseObject.sSystemRegistry.mAssetLibrary.getImagePack("node");
-        mSprite = new Sprite(imagePack, 1);
+        mSprite = new Sprite(imagePack, 1, (int)Grid.NODE_DIMENSION, (int)Grid.NODE_DIMENSION);
 
 		if(mType.equals(NODE_TYPE_SPEED_TRAP)) {
 			HUD.getInstance().addTextElement(-1, Integer.toString(mMaxSpeedLimit), 24, Color.GREEN, mPosition.x + SPEED_OFFSET_RIGHT, mPosition.y, true, HUD.NOT_UNIQUE_ELEMENT);
 			HUD.getInstance().addTextElement(-1, Integer.toString(mMinSpeedLimit), 24, Color.RED, mPosition.x - SPEED_OFFSET_LEFT, mPosition.y, true, HUD.NOT_UNIQUE_ELEMENT);
-            mSprite.setImageId("dead");
+            mSprite.setImageId("green_trap");
 		} else if(mType.equals(NODE_TYPE_DEAD)){
             mSprite.setImageId("dead");
 		} else if(mType.equals(NODE_TYPE_KEY)) {

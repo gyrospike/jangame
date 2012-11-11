@@ -4,21 +4,6 @@ import android.util.DisplayMetrics;
 
 public class MenuManager extends BaseManager {
 
-	/** const representing origin method of aligning an object */
-	public static final int ORIGIN_CENTER = 0;
-
-	/** const representing origin method of aligning an object */
-	public static final int ORIGIN_TOP_LEFT = 1;
-
-	/** const representing origin method of aligning an object */
-	public static final int ORIGIN_TOP_RIGHT = 2;
-
-	/** const representing origin method of aligning an object */
-	public static final int ORIGIN_BOTTOM_LEFT = 3;
-
-	/** const representing origin method of aligning an object */
-	public static final int ORIGIN_BOTTOM_RIGHT = 4;
-
 	/** max number of animated deco objects on the menu */
 	private static final int MAX_NUM_ANIM_DECO = 10;
 	
@@ -34,11 +19,8 @@ public class MenuManager extends BaseManager {
 	/** the reference to the title which is a stored static texture rendered on game init */
 	private HUDStaticTextElement mTitle;
 
-	/** contains information about the screen */
-	private DisplayMetrics mSMetrics;
-
 	public MenuManager(DisplayMetrics metrics) {
-		mSMetrics = metrics;
+        super(metrics);
 
 		//Log.d("DEBUG", "pixels per inch y: " + mScreenMetrics.ydpi);
 		//Log.d("DEBUG", "pixels per inch x: " + mScreenMetrics.xdpi);
@@ -51,16 +33,15 @@ public class MenuManager extends BaseManager {
 	 * 
 	 */
 	public void init() {
-        int screenWidth = mSMetrics.widthPixels;
 
 		mTitle  = new HUDStaticTextElement(HUD.NOT_UNIQUE_ELEMENT, 205, 190, AssetLibrary.PRERENDERED_TEXT_INDEX_CIRCUIT);
 
         ImagePack borderTop = BaseObject.sSystemRegistry.mAssetLibrary.getImagePack("borderTop");
-		mStaticDeco.add(new DrawableObject(borderTop, 0, screenWidth, -1));
+		mStaticDeco.add(new DrawableObject(borderTop, 0, mScreenWidth, -1));
 		mStaticDeco.getLast().setRelativePosition(getRelativePosition(mStaticDeco.getLast().mSprite.getPolyScale(), 0.0f, 0.0f, ORIGIN_TOP_LEFT));
 
         ImagePack borderBottom = BaseObject.sSystemRegistry.mAssetLibrary.getImagePack("borderBottom");
-		mStaticDeco.add(new DrawableObject(borderBottom, 0, screenWidth, -1));
+		mStaticDeco.add(new DrawableObject(borderBottom, 0, mScreenWidth, -1));
 		mStaticDeco.getLast().setRelativePosition(getRelativePosition(mStaticDeco.getLast().mSprite.getPolyScale(), 0.0f, 168.0f, ORIGIN_TOP_LEFT));
 
 		mStaticDeco.add(new DrawableObject(BaseObject.sSystemRegistry.mAssetLibrary.getImagePack("bg_head_left"), 0));
@@ -75,28 +56,28 @@ public class MenuManager extends BaseManager {
 
 
         ImagePack railImage = BaseObject.sSystemRegistry.mAssetLibrary.getImagePack("bg_rail_segment");
-		mStaticDeco.add(new DrawableObject(railImage, 0, screenWidth, -1));
+		mStaticDeco.add(new DrawableObject(railImage, 0, mScreenWidth, -1));
 		// 136dpi is 126dpi + 10dpi, the xml dpi offsets, + 37px, the offset in the image to the point I want
 		mStaticDeco.getLast().setRelativePosition(getRelativePosition(mStaticDeco.getLast().mSprite.getPolyScale(), 0.0f, dipToPx(136.0f) + 37.0f, ORIGIN_TOP_LEFT));
 
-		mStaticDeco.add(new DrawableObject(railImage, 0, screenWidth, -1));
+		mStaticDeco.add(new DrawableObject(railImage, 0, mScreenWidth, -1));
 		// 241dpi is 231dpi + 10dpi, the xml dpi offsets, + 37px, the offset in the image to the point I want
 		mStaticDeco.getLast().setRelativePosition(getRelativePosition(mStaticDeco.getLast().mSprite.getPolyScale(), 0.0f, dipToPx(241.0f) + 37.0f, ORIGIN_TOP_LEFT));
 		
-		mStaticDeco.add(new DrawableObject(railImage, 0, screenWidth, -1));
+		mStaticDeco.add(new DrawableObject(railImage, 0, mScreenWidth, -1));
 		// 346dpi is 336dpi + 10dpi, the xml dpi offsets, + 37px, the offset in the image to the point I want
 		mStaticDeco.getLast().setRelativePosition(getRelativePosition(mStaticDeco.getLast().mSprite.getPolyScale(), 0.0f, dipToPx(346.0f) + 37.0f, ORIGIN_TOP_LEFT));
 
         ImagePack pipeImage = BaseObject.sSystemRegistry.mAssetLibrary.getImagePack("bg_pipe");
-		mStaticDeco.add(new DrawableObject(pipeImage, 0, screenWidth, -1));
+		mStaticDeco.add(new DrawableObject(pipeImage, 0, mScreenWidth, -1));
 		// 136dpi is 126dpi + 10dpi, the xml dpi offsets, + 37px, the offset in the image to the point I want
 		mStaticDeco.getLast().setRelativePosition(getRelativePosition(mStaticDeco.getLast().mSprite.getPolyScale(), 0.0f, dipToPx(136.0f) + 67.0f, ORIGIN_TOP_LEFT));
 
-		mStaticDeco.add(new DrawableObject(pipeImage, 0, screenWidth, -1));
+		mStaticDeco.add(new DrawableObject(pipeImage, 0, mScreenWidth, -1));
 		// 241dpi is 231dpi + 10dpi, the xml dpi offsets, + 37px, the offset in the image to the point I want
 		mStaticDeco.getLast().setRelativePosition(getRelativePosition(mStaticDeco.getLast().mSprite.getPolyScale(), 0.0f, dipToPx(241.0f) + 67.0f, ORIGIN_TOP_LEFT));
 		
-		mStaticDeco.add(new DrawableObject(pipeImage, 0, screenWidth, -1));
+		mStaticDeco.add(new DrawableObject(pipeImage, 0, mScreenWidth, -1));
 		// 346dpi is 336dpi + 10dpi, the xml dpi offsets, + 37px, the offset in the image to the point I want
 		mStaticDeco.getLast().setRelativePosition(getRelativePosition(mStaticDeco.getLast().mSprite.getPolyScale(), 0.0f, dipToPx(346.0f) + 67.0f, ORIGIN_TOP_LEFT));
 		
@@ -104,7 +85,7 @@ public class MenuManager extends BaseManager {
 		mStaticDeco.add(new DrawableObject(BaseObject.sSystemRegistry.mAssetLibrary.getImagePack("bg_crane"), 1));
 		mStaticDeco.getLast().setRelativePosition(getRelativePosition(mStaticDeco.getLast().mSprite.getPolyScale(), 0.2f*mSMetrics.xdpi, 16.0f, ORIGIN_BOTTOM_RIGHT));
 		
-		mStaticDeco.add(new DrawableObject(borderBottom, 0, screenWidth, -1));
+		mStaticDeco.add(new DrawableObject(borderBottom, 0, mScreenWidth, -1));
 		mStaticDeco.getLast().setRelativePosition(getRelativePosition(mStaticDeco.getLast().mSprite.getPolyScale(), 0.0f, 0.0f, ORIGIN_BOTTOM_LEFT));
 		
 		mStaticDeco.add(new DrawableObject(BaseObject.sSystemRegistry.mAssetLibrary.getImagePack("bg_foot_left"), 0));
@@ -139,48 +120,6 @@ public class MenuManager extends BaseManager {
 	private float dipToPx(float dip) {
 		float px = dip * (mSMetrics.densityDpi / mSMetrics.DENSITY_DEFAULT);
 		return px;
-	}
-
-	/**
-	 * Returns a vector location given the corner or center you want to make your reference point for aligning a sprite
-	 * 
-	 * @param spriteScale
-	 * @param xOffset
-	 * @param yOffset
-	 * @param originCode
-	 * @return
-	 */
-	public Vector2 getRelativePosition(Vector2 spriteScale, float xOffset, float yOffset, int originCode) {
-		Vector2 originPoint = null;
-		Vector2 result = new Vector2();
-		switch(originCode) {
-		case ORIGIN_CENTER:
-			originPoint = new Vector2(mSMetrics.widthPixels/2, mSMetrics.heightPixels/2);
-			result.x = originPoint.x + xOffset + spriteScale.x/2;
-			result.y = originPoint.y + yOffset + spriteScale.y/2;
-			break;
-		case ORIGIN_TOP_LEFT:
-			originPoint = new Vector2(0, 0);
-			result.x = originPoint.x + xOffset;
-			result.y = originPoint.y + yOffset + spriteScale.y;
-			break;
-		case ORIGIN_TOP_RIGHT:
-			originPoint = new Vector2(mSMetrics.widthPixels, 0);
-			result.x = originPoint.x - xOffset - spriteScale.x;
-			result.y = originPoint.y + yOffset + spriteScale.y;
-			break;
-		case ORIGIN_BOTTOM_LEFT:
-			originPoint = new Vector2(0, mSMetrics.heightPixels);
-			result.x = originPoint.x + xOffset;
-			result.y = originPoint.y - yOffset;
-			break;
-		case ORIGIN_BOTTOM_RIGHT:
-			originPoint = new Vector2(mSMetrics.widthPixels, mSMetrics.heightPixels);
-			result.x = originPoint.x - xOffset - spriteScale.x;
-			result.y = originPoint.y - yOffset;
-			break;
-		}
-		return result;
 	}
 
 	/**

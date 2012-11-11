@@ -11,9 +11,8 @@ import java.util.concurrent.ArrayBlockingQueue;
 
 import android.app.Activity;
 import android.content.Context;
-import android.os.Bundle;
 import android.os.Handler;
-import android.os.Message;
+import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -37,7 +36,7 @@ public class GameManager extends BaseManager {
 	private GameMode[] mGameModeArray = new GameMode[2];
 	
 	/** queue of input objects ready to be processed */
-	private ArrayBlockingQueue<InputObject> mInputQueue = new ArrayBlockingQueue<InputObject>(BaseActivity.INPUT_QUEUE_SIZE);
+	private ArrayBlockingQueue<InputObject> mInputQueue = new ArrayBlockingQueue<InputObject>(GameActivity.INPUT_QUEUE_SIZE);
 	
 	/** locking object for accessing the input queue */
 	private Object inputQueueMutex = new Object();
@@ -51,23 +50,27 @@ public class GameManager extends BaseManager {
 	/** the data set containing all the level data */
 	private ParsedMapData mDataSet;
 	
-	/** width of the screen */
-	private int mScreenWidth;
-	
-	/** height of the screen */
-	private int mScreenHeight;
-	
 	/** the effects overlay */
 	private DrawableOverlay mOverlay;
 
     /** handler for the on level complete ui event */
     private Handler mHandler;
 
+    /** max number of static deco objects in the game */
+    private static final int MAX_NUM_STATIC_DECO = 5;
+
+    /** fixed array of static deco for game background */
+    private FixedSizeArray<DrawableObject> mStaticDeco = new FixedSizeArray<DrawableObject>(MAX_NUM_STATIC_DECO);
+
+    /** length of the static deco array */
+    private int mStaticLen;
+
     /**
      *
      * @param context   reference to the base activity
      */
-    public GameManager(Context context, Handler handler) {
+    public GameManager(DisplayMetrics metrics, Context context, Handler handler) {
+        super(metrics);
         mContext = context;
         mHandler = handler;
     }
@@ -76,13 +79,9 @@ public class GameManager extends BaseManager {
 	 * create the primary logical entities for the game
 	 *
 	 * @param dataSet		the game's grid data loaded from xml
-	 * @param screenWidth
-	 * @param screenHeight
 	 */
-	public void loadData(ParsedMapData dataSet, int screenWidth, int screenHeight) {
+	public void loadData(ParsedMapData dataSet) {
 		mDataSet = dataSet;
-		mScreenWidth = screenWidth;
-		mScreenHeight = screenHeight;
 	}
 	
 	/**
@@ -98,12 +97,17 @@ public class GameManager extends BaseManager {
 		mActiveGameMode = GAME_MODE_BUILD;
 
 		Button gameModeToggleButton = (Button) ((Activity) mContext).findViewById(R.id.gameModeToggleButton);
-		gameModeToggleButton.setOnClickListener(new OnClickListener() {
+        gameModeToggleButton.setOnClickListener(new OnClickListener() {
 			public void onClick(View v) {
 				toggleGameModes();
 			}
 		});
 
+        ImagePack gameBG = BaseObject.sSystemRegistry.mAssetLibrary.getImagePack("gameBackground");
+        mStaticDeco.add(new DrawableObject(gameBG, 0, mScreenWidth, mScreenHeight));
+        mStaticDeco.getLast().setRelativePosition(getRelativePosition(mStaticDeco.getLast().mSprite.getPolyScale(), 0.0f, 0.0f, ORIGIN_BOTTOM_LEFT));
+
+        mStaticLen = mStaticDeco.getCount();
 		super.init();
 	}
 
@@ -113,6 +117,9 @@ public class GameManager extends BaseManager {
 	 * @param timeDelta
 	 */
 	public void update(long timeDelta) {
+        for(int i = 0; i < mStaticLen; i++) {
+            mStaticDeco.get(i).update(timeDelta);
+        }
 		processInput();
 		mGameModeArray[mActiveGameMode].update(timeDelta);
 		mOverlay.update(timeDelta);
