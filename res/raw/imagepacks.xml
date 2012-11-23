@@ -95,31 +95,67 @@
         <Image id="idle" framesMS="200">
             <Textures>spark_0,spark_1,spark_2</Textures>
         </Image>
-        <Image id="blue" framesMS="300">
-            <Textures>spark_blue_0,spark_blue_1,spark_blue_2</Textures>
+        <Image id="red" framesMS="300">
+            <Textures>spark_red_0,spark_red_1,spark_red_2</Textures>
+        </Image>
+        <Image id="green" framesMS="300">
+            <Textures>spark_green_0,spark_green_1,spark_green_2</Textures>
         </Image>
     </ImagePack>
     <ImagePack id="node" usage="1">
-        <Image id="idle">
-            <Textures>node_simple_grey</Textures>
-        </Image>
-        <Image id="green" usage="1">
-            <Textures>node_simple_green</Textures>
-        </Image>
-        <Image id="green_gate" usage="1">
-            <Textures>node_gate_green</Textures>
-        </Image>
-        <Image id="green_trap" usage="1">
-            <Textures>node_trap_green</Textures>
-        </Image>
-        <Image id="grey_trap" usage="1">
-            <Textures>node_trap_grey</Textures>
-        </Image>
-        <Image id="yellow_trap" usage="1">
-            <Textures>node_trap_yellow</Textures>
-        </Image>
         <Image id="dead" usage="1">
             <Textures>node_dead</Textures>
+        </Image>
+        <Image id="idle">
+            <Textures>node_grey_simple</Textures>
+        </Image>
+        <Image id="grey_to_green">
+            <Textures>node_grey_switch_green</Textures>
+        </Image>
+        <Image id="grey_to_red">
+            <Textures>node_grey_switch_red</Textures>
+        </Image>
+        <Image id="white">
+            <Textures>node_white_simple</Textures>
+        </Image>
+        <Image id="white_to_green">
+            <Textures>node_white_switch_green</Textures>
+        </Image>
+        <Image id="white_to_red">
+            <Textures>node_white_switch_red</Textures>
+        </Image>
+        <Image id="white_to_white">
+            <Textures>node_white_switch_white</Textures>
+        </Image>
+        <Image id="green" usage="1">
+            <Textures>node_green_simple</Textures>
+        </Image>
+        <Image id="green_to_green" usage="1">
+            <Textures>node_green_switch_green</Textures>
+        </Image>
+        <Image id="green_to_red" usage="1">
+            <Textures>node_green_switch_red</Textures>
+        </Image>
+        <Image id="red" usage="1">
+            <Textures>node_red_simple</Textures>
+        </Image>
+        <Image id="red_to_green" usage="1">
+            <Textures>node_red_switch_green</Textures>
+        </Image>
+        <Image id="red_to_red" usage="1">
+            <Textures>node_red_switch_red</Textures>
+        </Image>
+        <Image id="blue" usage="1">
+            <Textures>node_blue_simple</Textures>
+        </Image>
+        <Image id="blue_to_green" usage="1">
+            <Textures>node_blue_switch_green</Textures>
+        </Image>
+        <Image id="blue_to_red" usage="1">
+            <Textures>node_blue_switch_red</Textures>
+        </Image>
+        <Image id="blue_to_blue" usage="1">
+            <Textures>node_blue_switch_blue</Textures>
         </Image>
     </ImagePack>
     <ImagePack id="gameBackground" usage="1">

@@ -132,7 +132,6 @@ public class GameManager extends BaseManager {
 	 * @param input
 	 */
 	public void feedInput(InputObject input) {
-		// Log.d("DEBUG", "Got to feeding");
 		synchronized (inputQueueMutex) {
 			try {
 				mInputQueue.put(input);

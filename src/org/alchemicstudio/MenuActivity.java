@@ -159,21 +159,19 @@ public class MenuActivity extends Activity {
      */
     private LayerDrawable getBadgesFromMapNumber(Button button, int mapNumber) {
 
-        Boolean hasBronzeBadge = mSavedUserState.getBoolean(mapNumber+BaseObject.SAVE_POSTFIX_BADGE+ReleaseManager.BADGE_INDEX_BRONZE, false);
+        Boolean hasSilerBadge = mSavedUserState.getBoolean(mapNumber+BaseObject.SAVE_POSTFIX_BADGE+ReleaseManager.BADGE_INDEX_SILVER, false);
+        Boolean hasGoldBadge = mSavedUserState.getBoolean(mapNumber+BaseObject.SAVE_POSTFIX_BADGE+ReleaseManager.BADGE_INDEX_GOLD, false);
 
         Resources res = this.getResources();
-
-        //Drawable greenBadgeDrawable = res.getDrawable(R.drawable.badge_green);
-        //Drawable blueBadgeDrawable = res.getDrawable(R.drawable.badge_blue);
-
         LayerDrawable layerDrawable = (LayerDrawable) button.getBackground();
-        if(hasBronzeBadge) {
-            Drawable redBadgeDrawable = res.getDrawable(R.drawable.badge_red);
-            layerDrawable.setDrawableByLayerId(R.id.red_badge_id, redBadgeDrawable);
+        if(hasSilerBadge) {
+            Drawable silverBadgeDrawable = res.getDrawable(R.drawable.badge_silver);
+            layerDrawable.setDrawableByLayerId(R.id.silver_badge_id, silverBadgeDrawable);
         }
-
-        //layerDrawable.setDrawableByLayerId(R.id.green_badge_id, greenBadgeDrawable);
-        //layerDrawable.setDrawableByLayerId(R.id.blue_badge_id, blueBadgeDrawable);
+        if(hasGoldBadge) {
+            Drawable silverBadgeDrawable = res.getDrawable(R.drawable.badge_gold);
+            layerDrawable.setDrawableByLayerId(R.id.gold_badge_id, silverBadgeDrawable);
+        }
 
         return layerDrawable;
     }

@@ -15,7 +15,7 @@ public class DebugWindow extends BaseObject {
 	
 	public DebugWindow() {
 		mDebugTextMap = new HashMap<String, String>();
-		mDebugTextBox = new TextBox(10, 100);
+		mDebugTextBox = new TextBox(10, 200);
 		mDebugTextBox.setARGB(255, 255, 255, 255);
 	}
 	

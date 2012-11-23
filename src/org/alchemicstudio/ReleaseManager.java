@@ -11,18 +11,13 @@ import android.util.Log;
 
 public class ReleaseManager extends BaseObject {
 
-    /** index representing the bronze badge */
-    public final static int BADGE_INDEX_BRONZE = 0;
-
     /** index representing the silver badge */
-    public final static int BADGE_INDEX_SILVER = 1;
+    public final static int BADGE_INDEX_SILVER = 0;
 
     /** index representing the gold badge */
-    public final static int BADGE_INDEX_GOLD = 2;
+    public final static int BADGE_INDEX_GOLD = 1;
 
-    private final static String[] sBadgeMessage = {"Bronze Badge Unlocked", "Silver Badge Unlocked", "Gold Badge Unlocked"};
-
-    private final static int[] sBadgeImage = {R.drawable.hud_gear_red, R.drawable.hud_gear_green, R.drawable.hud_gear_blue};
+    private final static int[] sBadgeImage = {R.drawable.silver_coin, R.drawable.gold_coin};
 
     /** constant, number of miliseconds in a minute */
     private final static int MS_PER_MIN = 60*1000;
@@ -63,16 +58,38 @@ public class ReleaseManager extends BaseObject {
     /** handles the level complete ui callback */
     private Handler mHandler;
 
+    /** reference to the prerendered text prefix */
+    private String mElapsedPrefix;
+
+    /** string resource ids to be used as message when badge is unlocked */
+    private int[] sBadgeMessage = {R.string.silver_badge_message, R.string.gold_badge_message};
+
     public ReleaseManager(DrawableOverlay overlay, Context context, Handler handler, ParsedMapData parsedMapData) {
         mOverlay = overlay;
         mContext = context;
         mHandler = handler;
         mParsedMapData = parsedMapData;
 
+        int parTime = 0;
+        int numPotentialBadges = mParsedMapData.mBadges.getCount();
+        outerloop:
+        for(int i = 0; i < numPotentialBadges; i++) {
+            FixedSizeArray<ParsedMapData.RequirementTemplate> reqs = mParsedMapData.mBadges.get(i).mRequirements;
+            for(int j = 0; j < reqs.getCount(); j++) {
+                String reqType = reqs.get(j).getType();
+                int reqValue = reqs.get(j).getValue();
+                if(reqType.equals("time")) {
+                    parTime = reqValue;
+                    break outerloop;
+                }
+            }
+        }
+
         mSpark = new Spark();
-        String prefix = sSystemRegistry.mAssetLibrary.getStringById(R.string.speed_meter);
-        HUD.getInstance().addTextElement(-1,prefix + mSpark.getCurrentSpeed(), 24, Color.YELLOW, 500, 40, true, HUD.UNIQUE_ELEMENT_SPARK_SPEED);
-        HUD.getInstance().addTextElement(-1,convertMilisecondsToDisplayTime(mPlayTime), 24, Color.CYAN, 500, 80, true, HUD.UNIQUE_ELEMENT_PLAY_TIME);
+        mElapsedPrefix = sSystemRegistry.mAssetLibrary.getStringById(R.string.elapsed_time);
+        String parPrefix = sSystemRegistry.mAssetLibrary.getStringById(R.string.par_time);
+        HUD.getInstance().addTextElement(-1,mElapsedPrefix + convertMilisecondsToDisplayTime(mPlayTime), 36, Color.CYAN, 20, 60, true, HUD.UNIQUE_ELEMENT_PLAY_TIME);
+        HUD.getInstance().addTextElement(-1,parPrefix + convertMilisecondsToDisplayTime(parTime), 36, Color.YELLOW, 300, 60, true, HUD.UNIQUE_ELEMENT_PAR_TIME);
     }
 
     /**
@@ -160,7 +177,7 @@ public class ReleaseManager extends BaseObject {
                 }
             }
             mPlayTime += timeDelta;
-            HUD.getInstance().modifyTextElement(convertMilisecondsToDisplayTime(mPlayTime), HUD.UNIQUE_ELEMENT_PLAY_TIME);
+            HUD.getInstance().modifyTextElement(mElapsedPrefix + convertMilisecondsToDisplayTime(mPlayTime), HUD.UNIQUE_ELEMENT_PLAY_TIME);
         }
     }
 
@@ -253,7 +270,7 @@ public class ReleaseManager extends BaseObject {
             String[] textArray = new String[numBadgesWon];
             int[] badgeImageArray = new int[numBadgesWon];
             for(int i = 0; i < numBadgesWon; i++) {
-                textArray[i] = sBadgeMessage[badgesWon.get(i)];
+                textArray[i] = mContext.getString(sBadgeMessage[badgesWon.get(i)]);
                 badgeImageArray[i] = sBadgeImage[badgesWon.get(i)];
             }
             bund.putStringArray("textArray", textArray);
@@ -300,6 +317,8 @@ public class ReleaseManager extends BaseObject {
             if(value > mPlayTime) {
                 result = true;
             }
+        } else if(type.equals("complete")) {
+            result = true;
         }
         return result;
     }
@@ -312,8 +331,10 @@ public class ReleaseManager extends BaseObject {
      * @return
      */
     private FixedSizeArray<Integer> checkForBadgesEarned() {
-        int[] earnedBadgeArray = new int[1];
-        earnedBadgeArray[BADGE_INDEX_BRONZE] = 0;
+        // temporary hack, this needs to be automatic
+        int[] earnedBadgeArray = new int[2];
+        earnedBadgeArray[BADGE_INDEX_SILVER] = 0;
+        earnedBadgeArray[BADGE_INDEX_GOLD] = 0;
 
         // saving best time just for the heck of it right now
         SharedPreferences settings = mContext.getSharedPreferences(BaseObject.SHARED_PREFS_KEY, 0);

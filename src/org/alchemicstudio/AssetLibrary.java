@@ -136,7 +136,8 @@ public class AssetLibrary extends BaseObject {
 				R.string.app_title,
 				R.string.circuit_complete,
 				R.string.circuit_incomplete,
-				R.string.speed_meter
+				R.string.elapsed_time,
+                R.string.par_time
 		};
 		mStringHashMap = new HashMap<Integer, String>();
 		for(int i = 0; i < stringArray.length; i++) {

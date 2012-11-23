@@ -136,6 +136,8 @@ public class Grid extends BaseObject {
 
         // create preconnections, must wait until previous loop is complete
         // NOTE - for this block we assume no border node has a preconnection defined
+        // NOTE - for this block we also assume that only nodes have preconnections to borders, NOT borders with
+        //        preconnections to nodes
         for (int k = 0; k < nodeDataLen; k++) {
             int tempI = dataSet.mNodes.get(k).i;
             int tempJ = dataSet.mNodes.get(k).j;
@@ -144,7 +146,7 @@ public class Grid extends BaseObject {
                 int preconnectionIIndex = dataSet.mNodes.get(k).mPreconnections.get(p).i;
                 int preconnectionJIndex = dataSet.mNodes.get(k).mPreconnections.get(p).j;
                 int preconnectionKIndex = dataSet.mNodes.get(k).mPreconnections.get(p).k;
-                if(preconnectionKIndex == -1) {
+                if(preconnectionKIndex == -1 && tempK == -1 ) {
                     conditionallyCreateConnectionBetweenNodes(tempI, tempJ, preconnectionIIndex, preconnectionJIndex, true);
                 } else {
                     conditionallyCreateConnectionWithBorder(tempI, tempJ, tempK, preconnectionKIndex, true);

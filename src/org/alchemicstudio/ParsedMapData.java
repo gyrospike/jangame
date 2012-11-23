@@ -3,6 +3,9 @@ package org.alchemicstudio;
 
 public class ParsedMapData {
 
+    /** const representing number of badges you can earn */
+    public final static int NUM_BADGES = 2;
+
 	/** the nodes that make up the game board */
 	public FixedSizeArray<NodeTemplate> mNodes;
 
@@ -108,7 +111,7 @@ public class ParsedMapData {
 	}
 
     public void initBadges() {
-        mBadges = new FixedSizeArray<BadgeTemplate>(3);
+        mBadges = new FixedSizeArray<BadgeTemplate>(NUM_BADGES);
     }
 
     public void addBadge(int type) {

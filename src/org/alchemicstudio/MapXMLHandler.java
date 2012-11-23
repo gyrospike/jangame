@@ -59,7 +59,7 @@ public class MapXMLHandler extends DefaultHandler {
 	 * @param atts
 	 */
 	private void parseStats(Attributes atts) {
-		Log.d("DEBUG", "Parsing : " + mCurrentI + ", " + mCurrentJ + ", " + mCurrentK);
+		Log.d("joelog", "Parsing : " + mCurrentI + ", " + mCurrentJ + ", " + mCurrentK);
 		mParsedDataSet.mNodes.get(mCurrentNodeIndex).type = atts.getValue("TYPE");
 		if(atts.getValue("MIN_SPEED") != null) {
 			mParsedDataSet.mNodes.get(mCurrentNodeIndex).minSpeed = Integer.parseInt(atts.getValue("MIN_SPEED"));
@@ -134,13 +134,13 @@ public class MapXMLHandler extends DefaultHandler {
 
 	@Override
 	public void endDocument() throws SAXException {
-		Log.d("DEBUG", "enddocument called");
+		Log.d("joelog", "enddocument called");
 		//mParsedDataSet.setStartAndEndIndices();
 	}
 
 	@Override
 	public void startElement(String namespaceURI, String localName, String qName, Attributes atts) throws SAXException {
-		Log.d("DEBUG", "startElement called, localName: " + localName);
+		Log.d("joelog", "startElement called, localName: " + localName);
 		if (localName.equals("MAP")) {
 			parseMap(atts);
 		} else if (localName.equals("NODE")) {

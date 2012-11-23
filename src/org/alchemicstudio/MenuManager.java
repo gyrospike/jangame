@@ -54,6 +54,9 @@ public class MenuManager extends BaseManager {
 		mStaticDeco.add(new DrawableObject(goldRobot, 0));
 		mStaticDeco.getLast().setRelativePosition(getRelativePosition(mStaticDeco.getLast().mSprite.getPolyScale(),  0.2f*mSMetrics.xdpi, 0.33f*mSMetrics.ydpi, ORIGIN_TOP_RIGHT));
 
+        /*
+
+        // Commenting out the rail and pipes from the menu as those don't align well with the menu buttons on different screen sizes
 
         ImagePack railImage = BaseObject.sSystemRegistry.mAssetLibrary.getImagePack("bg_rail_segment");
 		mStaticDeco.add(new DrawableObject(railImage, 0, mScreenWidth, -1));
@@ -80,7 +83,7 @@ public class MenuManager extends BaseManager {
 		mStaticDeco.add(new DrawableObject(pipeImage, 0, mScreenWidth, -1));
 		// 346dpi is 336dpi + 10dpi, the xml dpi offsets, + 37px, the offset in the image to the point I want
 		mStaticDeco.getLast().setRelativePosition(getRelativePosition(mStaticDeco.getLast().mSprite.getPolyScale(), 0.0f, dipToPx(346.0f) + 67.0f, ORIGIN_TOP_LEFT));
-		
+		*/
 
 		mStaticDeco.add(new DrawableObject(BaseObject.sSystemRegistry.mAssetLibrary.getImagePack("bg_crane"), 1));
 		mStaticDeco.getLast().setRelativePosition(getRelativePosition(mStaticDeco.getLast().mSprite.getPolyScale(), 0.2f*mSMetrics.xdpi, 16.0f, ORIGIN_BOTTOM_RIGHT));

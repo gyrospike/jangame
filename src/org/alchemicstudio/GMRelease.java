@@ -11,6 +11,9 @@ public class GMRelease extends GameMode {
 	
 	/** the game grid, huge fat class with too much stuff in it */
 	private Grid mGrid = null;
+
+    /** the nodes from the game grid */
+    private Node[][] mNodes;
 	
 	/** the track manages the spark navigation of the grid */
 	private ReleaseManager mReleaseManager = null;
@@ -47,6 +50,19 @@ public class GMRelease extends GameMode {
 			}
 		});
 	}
+
+    /**
+     * Toggle the power settings (image to id to use) for each node
+     */
+    private void toggleNodesPower() {
+        for(int i = 0; i < mNodes.length; i++) {
+            for(int j = 0; j < mNodes[i].length; j++) {
+                if(mNodes[i][j] != null) {
+                    mNodes[i][j].togglePower();
+                }
+            }
+        }
+    }
 
 	/**
 	 * update the release game mode
@@ -89,7 +105,9 @@ public class GMRelease extends GameMode {
 		//sparkReleaseButton.setVisibility(View.VISIBLE);
         sparkReleaseButton.setEnabled(true);
 		HUD.getInstance().setElementsVisibility(GameManager.GAME_MODE_RELEASE, true);
-		mReleaseManager.loadNodes(mGrid.getNodes(), mGrid.getBorderNodes());
+        mNodes = mGrid.getNodes();
+        toggleNodesPower();
+		mReleaseManager.loadNodes(mNodes, mGrid.getBorderNodes());
 	}
 
 	@Override
@@ -97,6 +115,7 @@ public class GMRelease extends GameMode {
 		mReleaseManager.resetSpark();
 		//sparkReleaseButton.setVisibility(View.INVISIBLE);
         sparkReleaseButton.setEnabled(false);
+        toggleNodesPower();
 		HUD.getInstance().setElementsVisibility(GameManager.GAME_MODE_RELEASE, false);
 		//HUD.getInstance().removeStaticTextElement(HUD.UNIQUE_ELEMENT_COMPLETE);
 	}

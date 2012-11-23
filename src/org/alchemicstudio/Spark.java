@@ -6,6 +6,12 @@ import android.util.Log;
 
 public class Spark extends BaseObject {
 
+    /** const representing the red id */
+    public static final int KEY_ID_RED = 1;
+
+    /** const representing the green id */
+    public static final int KEY_ID_GREEN = 2;
+
     /** the max velocity at which a spark will be able to move */
     public static final float MAX_VELOCITY = 400.0f;
 
@@ -17,6 +23,9 @@ public class Spark extends BaseObject {
 
     /** the velocity at which the spark will turn blue */
     private static final float SPARK_SPEED_BLUE_THRESHOLD = 200.0f;
+
+    /** the scale of the spark sprite */
+    private static final int SPARK_SPRITE_SCALE = 48;
 
     /** the spark's sprite */
     public Sprite mSprite;
@@ -66,7 +75,7 @@ public class Spark extends BaseObject {
 
     public Spark() {
         ImagePack imagePack = BaseObject.sSystemRegistry.mAssetLibrary.getImagePack("spark");
-        mSprite = new Sprite(imagePack, 2);
+        mSprite = new Sprite(imagePack, 1, SPARK_SPRITE_SCALE, SPARK_SPRITE_SCALE);
         mSpriteScaleX = mSprite.getPolyScale().x;
         mSpriteScaleY = mSprite.getPolyScale().y;
         mPhysicsObject = new OnRailsPhysicsObject();
@@ -88,7 +97,7 @@ public class Spark extends BaseObject {
     }
 
     /**
-     * set the position of the sprite
+     * set the position of the spritegimp-`
      *
      * @param x
      * @param y
@@ -120,6 +129,17 @@ public class Spark extends BaseObject {
     }
 
     public void setCurrentKey(int id) {
+        switch(id) {
+            case KEY_ID_RED:
+                mSprite.setImageId("red");
+                break;
+            case KEY_ID_GREEN:
+                mSprite.setImageId("green");
+                break;
+            default:
+                mSprite.setImageId("idle");
+                break;
+        }
         mCurrentKey = id;
     }
 
@@ -224,11 +244,13 @@ public class Spark extends BaseObject {
      * @param timeDelta
      */
     private void updateAppearance(long timeDelta) {
+        /*
         if(getCurrentSpeed() > SPARK_SPEED_BLUE_THRESHOLD) {
             mSprite.setImageId("blue");
         } else {
             mSprite.setImageId("idle");
         }
+        */
         mSprite.updateFrame(timeDelta);
     }
 

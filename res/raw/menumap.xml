@@ -1,8 +1,8 @@
 <?xml version="1.0" ?>
 <menuMap>
     <row>
-        <entry mapNumber="0" buttonId="Button00" sourceFile="R.raw.map0" />
-        <entry mapNumber="1" buttonId="Button01" sourceFile="R.raw.map1" />
+        <entry mapNumber="12" buttonId="Button00" sourceFile="R.raw.map12" />
+        <entry mapNumber="13" buttonId="Button01" sourceFile="R.raw.map13" />
         <entry mapNumber="2" buttonId="Button02" sourceFile="R.raw.map2" />
         <entry mapNumber="3" buttonId="Button03" sourceFile="R.raw.map3" />
     </row>

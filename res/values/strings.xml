@@ -2,7 +2,25 @@
 <resources>
     <string name="app_name">Circuit</string>
     <string name="app_title">CIRCUIT</string>
+    <string name="elapsed_time">elapsed time:\u0020</string>
+    <string name="par_time">par time:\u0020</string>
     <string name="speed_meter">Spark Speed:\u0020</string>
     <string name="circuit_complete">Circuit Complete</string>
     <string name="circuit_incomplete">Circuit Incomplete</string>
+    <string name="silver_badge_message">Level Complete, Silver Badge Unlocked!</string>
+    <string name="gold_badge_message">Par time achieved, Gold Badge Unlocked!</string>
+    <string name ="spark_button">Release Spark</string>
+    <string name ="mode_button">Toggle Power</string>
+    <string name = "level1">easy 1</string>
+    <string name = "level2">easy 2</string>
+    <string name = "level3">easy 3</string>
+    <string name = "level4">easy 4</string>
+    <string name = "level5">normal 1</string>
+    <string name = "level6">normal 2</string>
+    <string name = "level7">normal 3</string>
+    <string name = "level8">normal 4</string>
+    <string name = "level9">hard 1</string>
+    <string name = "level10">hard 2</string>
+    <string name = "level11">hard 3</string>
+    <string name = "level12">hard 4</string>
 </resources>
