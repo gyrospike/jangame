@@ -17,7 +17,7 @@ public class Grid extends BaseObject {
     private final static int SPARKS_PER_TOUCH = 5;
 
     /** max number of node connections that can be stored in the chain */
-    private final static int MAX_CHAIN_LENGTH = 30;
+    private final static int MAX_CHAIN_LENGTH = 3;
 
     /** the amount to hide the border nodes beyond the screen by 30.0f */
     private final static float BORDER_NODE_OFFSET = 30.0f;
@@ -345,7 +345,7 @@ public class Grid extends BaseObject {
             // if the user clicked a released the same node
             if (mCurrentTrackSourceNodeI == i && mCurrentTrackSourceNodeJ == j) {
                 deactivateNode(i, j);
-                mOverlay.createParticle((int) (mNodes[i][j].getPosition().x + 16.0f), (int) (mNodes[i][j].getPosition().y - 16.0f), SPARKS_PER_TOUCH);
+                mOverlay.createParticle((int) (mNodes[i][j].getPosition().x + (NODE_DIMENSION/2)), (int) (mNodes[i][j].getPosition().y - (NODE_DIMENSION/2)), SPARKS_PER_TOUCH);
             }
             // if the user clicked a node and released on a node to the direct left or right, or above or below (just not diagonal)
             else if ((mCurrentTrackSourceNodeI == i && mCurrentTrackSourceNodeJ != j) || (mCurrentTrackSourceNodeI != i && mCurrentTrackSourceNodeJ == j)) {
@@ -457,8 +457,8 @@ public class Grid extends BaseObject {
         //Log.d("DEBUG", "x, y : " + x + ", " + y);
         //Log.d("DEBUG", "mSpacing : " + mSpacing);
         //Log.d("DEBUG", "xSideBuffer, ySideBuffer : " + mSideBufferX + ", " + mSideBufferY);
-        int xIndex = (int) Math.round((x - mSideBufferX) / (mSpacing + 32));
-        int yIndex = (int) Math.round((y - mSideBufferY) / (mSpacing + 32));
+        int xIndex = (int) Math.round((x - mSideBufferX) / (mSpacing + NODE_DIMENSION));
+        int yIndex = (int) Math.round((y - mSideBufferY) / (mSpacing + NODE_DIMENSION));
         //Log.d("DEBUG", "xIndex, yIndex : " + xIndex + ", " + yIndex);
 
         if (xIndex < 0) {
@@ -581,15 +581,15 @@ public class Grid extends BaseObject {
      *
      */
     public void stopTrackSwitchChain() {
-        for(int i = 1; i < mNodeChain.length-1; i++) {
+        for(int i = 1; i < MAX_CHAIN_LENGTH-1; i++) {
             if(mNodeChain[i-1] != null && mNodeChain[i+1] != null) {
                 if(eligibleToCreatePreferredConnection(mNodeChain[i-1], mNodeChain[i])) {
-                    mNodes[mNodeChain[i].getI()][mNodeChain[i].getJ()].setPreferredConnection(mNodeChain[i-1], mNodeChain[i+1]);
+                    mNodes[mNodeChain[i].getI()][mNodeChain[i].getJ()].setPreferredConnection(mNodeChain[i-1], mNodeChain[i]);
                 }
             }
             mNodeChain[i] = null;
         }
-        mNodeChain[mNodeChain.length-1] = null;
+        mNodeChain[MAX_CHAIN_LENGTH-1] = null;
         mNodeChainIndex=0;
     }
 
@@ -637,8 +637,8 @@ public class Grid extends BaseObject {
     @Override
     public void update(long timeDelta) {
 
-        for(int w = 0; w < mNodes.length; w++) {
-            for(int q = 0; q < mNodes[w].length; q++) {
+        for(int w = 0; w < mWidth; w++) {
+            for(int q = 0; q < mHeight; q++) {
                 if(mNodes[w][q] != null) {
                     mNodes[w][q].update(timeDelta);
                 }
@@ -654,7 +654,7 @@ public class Grid extends BaseObject {
           }
           */
 
-        for(int e = 0; e < mTrackSegments.length; e++) {
+        for(int e = 0; e < mMaxTrackSegments; e++) {
             mTrackSegments[e].update(timeDelta);
         }
     }

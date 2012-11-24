@@ -108,7 +108,7 @@ public class Node extends BaseObject {
         mNodeConnections = new NodeConnection[mMaxConnections];
         mTrackIdArray = new int[CONNECTION_LIMIT_DEFAULT];
 
-        for (int p = 0; p < mNodeConnections.length; p++) {
+        for (int p = 0; p < mMaxConnections; p++) {
             mNodeConnections[p] = new NodeConnection(-1, -1, -1);
         }
 
@@ -138,7 +138,7 @@ public class Node extends BaseObject {
         mSprite.setImageId(mCurrentImageId);
         mSprite.setPosition(vec.x, vec.y);
 
-        for(int h = 0; h < mTrackIdArray.length; h++) {
+        for(int h = 0; h < CONNECTION_LIMIT_DEFAULT; h++) {
             mTrackIdArray[h] = -1;
         }
 
@@ -207,7 +207,7 @@ public class Node extends BaseObject {
      * @param trackID	the id for the track segment that represents the visual component of a connection
      */
     public void setConnection(int i, int j, int k, int trackID, boolean fixed) {
-        for (int p = 0; p < mNodeConnections.length; p++) {
+        for (int p = 0; p < mMaxConnections; p++) {
             if (mNodeConnections[p].isEmptyNodeConnection()) {
                 mNodeConnections[p] = new NodeConnection(i, j, k);
                 mNodeConnections[p].setTrackID(trackID);
@@ -226,7 +226,7 @@ public class Node extends BaseObject {
      * @param j		the k index for the node to be removed
      */
     public void removeConnection(int i, int j) {
-        for (int p = 0; p < mNodeConnections.length; p++) {
+        for (int p = 0; p < mMaxConnections; p++) {
             if (mNodeConnections[p].hasValueOf(i, j, -1)) {
                 mNodeConnections[p] = new NodeConnection(-1, -1, -1);
                 mNumCurrentConnections--;
@@ -242,7 +242,7 @@ public class Node extends BaseObject {
      * remove all non-fixed node connections from this node
      */
     public void removeAllConnections() {
-        for (int i = 0; i < mNodeConnections.length; i++) {
+        for (int i = 0; i < mMaxConnections; i++) {
             // if not a fixed connection and not already an empty connection
             if(!mNodeConnections[i].getFixed() && mNodeConnections[i].getI() != -1 && mNodeConnections[i].getJ() != -1) {
                 mNodeConnections[i] = new NodeConnection(-1, -1, -1);
@@ -307,7 +307,7 @@ public class Node extends BaseObject {
     public NodeConnection[] getConnections() {
         NodeConnection[] nonEmptyConnections = new NodeConnection[mNumCurrentConnections];
         int index = 0;
-        for(int i = 0; i < mNodeConnections.length; i++) {
+        for(int i = 0; i < mMaxConnections; i++) {
             if(!mNodeConnections[i].isEmptyNodeConnection()) {
                 nonEmptyConnections[index] = mNodeConnections[i];
                 index++;

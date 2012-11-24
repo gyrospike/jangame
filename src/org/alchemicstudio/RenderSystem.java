@@ -10,7 +10,7 @@ public class RenderSystem extends BaseObject {
 	private final static int DRAW_QUEUE_COUNT = 2;
 	
 	/** the number of elements that can fit in one queue */
-	private final static int MAX_DRAWABLE_ELEMENTS = 200;
+	private final static int MAX_DRAWABLE_ELEMENTS = 100;
 	
 	private PriorityComparator priorityComparator = new PriorityComparator();
 	private FixedSizeArray<Sprite>[] spriteList = new FixedSizeArray[DRAW_QUEUE_COUNT];
