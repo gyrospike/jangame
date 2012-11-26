@@ -1,21 +1,21 @@
 <?xml version="1.0" ?>
 <menuMap>
     <row>
-        <entry mapNumber="12" buttonId="Button00" sourceFile="R.raw.map12" />
-        <entry mapNumber="13" buttonId="Button01" sourceFile="R.raw.map13" />
-        <entry mapNumber="2" buttonId="Button02" sourceFile="R.raw.map2" />
-        <entry mapNumber="3" buttonId="Button03" sourceFile="R.raw.map3" />
+        <entry buttonId="Button00" mapName="level0" saveID="1" sourceFile="map1" />
+        <entry buttonId="Button01" mapName="level1" saveID="2" sourceFile="map2" />
+        <entry buttonId="Button02" mapName="level2" saveID="3" sourceFile="map3" />
+        <entry buttonId="Button03" mapName="level3" saveID="4" sourceFile="map13" />
     </row>
     <row>
-        <entry mapNumber="4" buttonId="Button10" sourceFile="R.raw.map4" />
-        <entry mapNumber="5" buttonId="Button11" sourceFile="R.raw.map5" />
-        <entry mapNumber="6" buttonId="Button12" sourceFile="R.raw.map6" />
-        <entry mapNumber="7" buttonId="Button13" sourceFile="R.raw.map7" />
+        <entry buttonId="Button10" mapName="level4" saveID="5" sourceFile="map4" />
+        <entry buttonId="Button11" mapName="level5" saveID="6" sourceFile="map5" />
+        <entry buttonId="Button12" mapName="level6" saveID="7" sourceFile="map6" />
+        <entry buttonId="Button13" mapName="level7" saveID="8" sourceFile="map7" />
     </row>
     <row>
-        <entry mapNumber="8" buttonId="Button20" sourceFile="R.raw.map8" />
-        <entry mapNumber="9" buttonId="Button21" sourceFile="R.raw.map9" />
-        <entry mapNumber="10" buttonId="Button22" sourceFile="R.raw.map10" />
-        <entry mapNumber="11" buttonId="Button23" sourceFile="R.raw.map11" />
+        <entry buttonId="Button20" mapName="level8" saveID="9" sourceFile="map9" />
+        <entry buttonId="Button21" mapName="level9" saveID="10" sourceFile="map10" />
+        <entry buttonId="Button22" mapName="level10" saveID="11" sourceFile="map11" />
+        <entry buttonId="Button23" mapName="level11" saveID="12" sourceFile="map15" />
     </row>
 </menuMap>

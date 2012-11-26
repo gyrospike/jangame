@@ -23,6 +23,7 @@
 
     <NODE I="0" J="2" K="-1" >
         <PRECONNECTION I="-1" J="2" K="17" />
+        <PRECONNECTION I="1" J="2" K="-1" />
     </NODE>
     <NODE I="0" J="3" K="-1" >
         <PRECONNECTION I="-1" J="3" K="16" />
@@ -64,7 +65,7 @@
             <requirement type="complete" value="0" />
         </badge>
         <badge type="1">
-            <requirement type="time" value="8000" />
+            <requirement type="time" value="80000" />
         </badge>
     </badges>
 </MAP>

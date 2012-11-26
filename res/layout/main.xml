@@ -38,8 +38,7 @@
                     android:id="@+id/Button00"
                     android:layout_column="1"
                     android:layout_margin="10dip"
-                    android:text="@string/level1"
-                    android:background="@layout/level_badge_list"
+                    android:background="@layout/level_badge_list_0"
                     style="@style/circuit_button"
                     android:layout_width="100dp"
                     android:layout_height="89dp"/>
@@ -47,8 +46,7 @@
                 <Button
                     android:id="@+id/Button01"
                     android:layout_margin="10dip"
-                    android:text="@string/level2"
-                    android:background="@layout/level_badge_list"
+                    android:background="@layout/level_badge_list_1"
                     style="@style/circuit_button"
                     android:layout_width="100dp"
                     android:layout_height="89dp"/>
@@ -56,8 +54,7 @@
                 <Button
                     android:id="@+id/Button02"
                     android:layout_margin="10dip"
-                    android:text="@string/level3"
-                    android:background="@layout/level_badge_list"
+                    android:background="@layout/level_badge_list_2"
                     style="@style/circuit_button"
                     android:layout_width="100dp"
                     android:layout_height="89dp"/>
@@ -65,8 +62,7 @@
                 <Button
                     android:id="@+id/Button03"
                     android:layout_margin="10dip"
-                    android:text="@string/level4"
-                    android:background="@layout/level_badge_list"
+                    android:background="@layout/level_badge_list_3"
                     style="@style/circuit_button"
                     android:layout_width="100dp"
                     android:layout_height="89dp"/>
@@ -98,8 +94,7 @@
                     android:id="@+id/Button10"
                     android:layout_column="1"
                     android:layout_margin="10dip"
-                    android:text="@string/level5"
-                    android:background="@layout/level_badge_list"
+                    android:background="@layout/level_badge_list_4"
                     style="@style/circuit_button"
                     android:layout_width="100dp"
                     android:layout_height="89dp"/>
@@ -107,8 +102,7 @@
                 <Button
                     android:id="@+id/Button11"
                     android:layout_margin="10dip"
-                    android:text="@string/level6"
-                    android:background="@layout/level_badge_list"
+                    android:background="@layout/level_badge_list_5"
                     style="@style/circuit_button"
                     android:layout_width="100dp"
                     android:layout_height="89dp"/>
@@ -116,8 +110,7 @@
                 <Button
                     android:id="@+id/Button12"
                     android:layout_margin="10dip"
-                    android:text="@string/level7"
-                    android:background="@layout/level_badge_list"
+                    android:background="@layout/level_badge_list_6"
                     style="@style/circuit_button"
                     android:layout_width="100dp"
                     android:layout_height="89dp"/>
@@ -125,8 +118,7 @@
                 <Button
                     android:id="@+id/Button13"
                     android:layout_margin="10dip"
-                    android:text="@string/level8"
-                    android:background="@layout/level_badge_list"
+                    android:background="@layout/level_badge_list_7"
                     style="@style/circuit_button"
                     android:layout_width="100dp"
                     android:layout_height="89dp"/>
@@ -157,8 +149,7 @@
                     android:id="@+id/Button20"
                     android:layout_column="1"
                     android:layout_margin="10dip"
-                    android:text="@string/level9"
-                    android:background="@layout/level_badge_list"
+                    android:background="@layout/level_badge_list_8"
                     style="@style/circuit_button"
                     android:layout_width="100dp"
                     android:layout_height="89dp"/>
@@ -166,8 +157,7 @@
                 <Button
                     android:id="@+id/Button21"
                     android:layout_margin="10dip"
-                    android:text="@string/level10"
-                    android:background="@layout/level_badge_list"
+                    android:background="@layout/level_badge_list_9"
                     style="@style/circuit_button"
                     android:layout_width="100dp"
                     android:layout_height="89dp"/>
@@ -175,8 +165,7 @@
                 <Button
                     android:id="@+id/Button22"
                     android:layout_margin="10dip"
-                    android:text="@string/level11"
-                    android:background="@layout/level_badge_list"
+                    android:background="@layout/level_badge_list_10"
                     style="@style/circuit_button"
                     android:layout_width="100dp"
                     android:layout_height="89dp"/>
@@ -184,8 +173,7 @@
                 <Button
                     android:id="@+id/Button23"
                     android:layout_margin="10dip"
-                    android:text="@string/level12"
-                    android:background="@layout/level_badge_list"
+                    android:background="@layout/level_badge_list_11"
                     style="@style/circuit_button"
                     android:layout_width="100dp"
                     android:layout_height="89dp"/>

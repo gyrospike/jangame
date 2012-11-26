@@ -8,11 +8,11 @@ import java.util.Iterator;
 
 public class ParsedMenuData {
 
-    public static final String MAP_NUMBER_KEY = "mapNum";
+    public static final String MAP_SAVE_ID_KEY = "saveId";
+
+    public static final String MAP_NAME_RESOURCE_KEY = "mapNameRes";
 
     public static final String MAP_RESOURCE_KEY = "mapRes";
-
-    private static final String PREFIX_KEY = "map";
 
     private int mCurrentRow = -1;
 
@@ -23,9 +23,9 @@ public class ParsedMenuData {
     /** hash map of menu row, column to level data */
     HashMap<String, MenuObject> mMenuHash = new HashMap<String, MenuObject>();
 
-    public void appendNewColumn(int mapNumber, String mapSourceFile, String buttonId) {
+    public void appendNewColumn(String mapName, String mapSourceFile, String buttonId, int saveId) {
         mCurrentColumn++;
-        mMenuHash.put(PREFIX_KEY+mCurrentRow+mCurrentColumn, new MenuObject(mapNumber, mapSourceFile, buttonId));
+        mMenuHash.put(buttonId, new MenuObject(mapName, mapSourceFile, buttonId, saveId));
         if(mCurrentColumn > mMaxNumColumns) {
             mMaxNumColumns = mCurrentColumn;
         }
@@ -44,17 +44,29 @@ public class ParsedMenuData {
         return mMaxNumColumns+1;
     }
 
-    public int getMapNumber(int row, int col) {
-        return mMenuHash.get(PREFIX_KEY+row+col).getMapNumber();
+    public int getSaveId(String buttonId) {
+        return mMenuHash.get(buttonId).getSaveId();
     }
 
+    public String getMapName(String buttonId) {
+        return mMenuHash.get(buttonId).getMapName();
+    }
+
+    public String getMapSourceFileName(String buttonId) {
+        return mMenuHash.get(buttonId).getSourceFile();
+    }
+
+    /**
+     * I know, I know... terrible
+     * @param row
+     * @param col
+     * @return
+     */
     public String getButtonName(int row, int col) {
-        return mMenuHash.get(PREFIX_KEY+row+col).getButtonId();
+        return mMenuHash.get("Button"+row+col).getButtonId();
     }
 
-    public String getMapSourceFileName(int row, int col) {
-        return mMenuHash.get(PREFIX_KEY+row+col).getSourceFile();
-    }
+
 
 }
 
@@ -64,12 +76,15 @@ class MenuObject {
 
     private String mButtonId;
 
-    private int mMapNumber;
+    private String mMapName;
 
-    public MenuObject(int mapNum, String srcFile, String buttonId) {
-        mMapNumber = mapNum;
+    private int mSaveId;
+
+    public MenuObject(String mapName, String srcFile, String buttonId, int saveId) {
+        mMapName = mapName;
         mMapSourceFile = srcFile;
         mButtonId = buttonId;
+        mSaveId = saveId;
     }
 
     public String getButtonId() {
@@ -80,7 +95,11 @@ class MenuObject {
         return mMapSourceFile;
     }
 
-    public int getMapNumber() {
-        return mMapNumber;
+    public String getMapName() {
+        return mMapName;
+    }
+
+    public int getSaveId() {
+        return mSaveId;
     }
 }

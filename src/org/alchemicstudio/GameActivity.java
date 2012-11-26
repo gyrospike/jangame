@@ -80,24 +80,24 @@ public class GameActivity extends Activity {
             MapXMLHandler myMapXMLHandler = new MapXMLHandler();
 
             int mapResource = R.raw.map0;
-            int mapNumber = 0;
+            int mapNameResource = R.string.level0;
+            int saveId = 0;
             Bundle extras = getIntent().getExtras();
             if (extras != null) {
                 mapResource = extras.getInt(ParsedMenuData.MAP_RESOURCE_KEY, R.raw.map0);
-                mapNumber = extras.getInt(ParsedMenuData.MAP_NUMBER_KEY, 0);
+                mapNameResource = extras.getInt(ParsedMenuData.MAP_NAME_RESOURCE_KEY);
+                saveId = extras.getInt(ParsedMenuData.MAP_SAVE_ID_KEY);
             }
 
             sp.parse(getResources().openRawResource(mapResource), myMapXMLHandler);
             parsedMapData = myMapXMLHandler.getParsedData();
-            // TODO - we only need one of the xml files to set this, right now the menumap is doing it
-            parsedMapData.setNumber(mapNumber);
 
             mGameManager = new GameManager(metrics, this, levelCompleteHandler);
             mGameRunnable = new GameRunnable();
             mGameRunnable.setGameRenderer(mGLView.getGameRenderer());
             mGameRunnable.setGameManager(mGameManager);
 
-            mGameManager.loadData(parsedMapData);
+            mGameManager.loadData(parsedMapData, mapNameResource, saveId);
             HUD.getInstance().flushAll();
             start();
 

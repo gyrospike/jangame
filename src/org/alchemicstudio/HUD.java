@@ -15,6 +15,8 @@ public class HUD extends BaseObject {
 
     public static final String UNIQUE_ELEMENT_PAR_TIME = "partime";
 
+    public static final String UNIQUE_ELEMENT_MAP_NAME = "mapName";
+
 	private static final int MAX_HUD_ELEMENTS = 100; 
 
 	private static HUD mInstance = null;

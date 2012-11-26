@@ -488,18 +488,20 @@ public class Grid extends BaseObject {
 
         //Log.d("DEBUG", "current track i, j: " + mCurrentTrackSourceNodeI + ", " + mCurrentTrackSourceNodeJ);
 
-        float trackOriginX = tempNode.getPosition().x + getTrackOffsetX();
-        float trackOriginY = tempNode.getPosition().y - getTrackOffsetY();
+        if(tempNode != null) {
+            float trackOriginX = tempNode.getPosition().x + getTrackOffsetX();
+            float trackOriginY = tempNode.getPosition().y - getTrackOffsetY();
 
-        double angle= Math.atan((dragPoint.y - trackOriginY)/(trackOriginX - dragPoint.x)) - (Math.PI / 2);
-        //.02 tolerance stops the angle from exploding to infinity and the track switching signs
-        if((dragPoint.x - trackOriginX) <= .02) angle += Math.PI;
+            double angle= Math.atan((dragPoint.y - trackOriginY)/(trackOriginX - dragPoint.x)) - (Math.PI / 2);
+            //.02 tolerance stops the angle from exploding to infinity and the track switching signs
+            if((dragPoint.x - trackOriginX) <= .02) angle += Math.PI;
 
-        float distance = dragPoint.distance(new Vector2(trackOriginX, trackOriginY));
+            float distance = dragPoint.distance(new Vector2(trackOriginX, trackOriginY));
 
-        mTrackSegments[POINTER_TRACK_SEGMENT_INDEX].mSprite.setPosition(trackOriginX, trackOriginY);
-        mTrackSegments[POINTER_TRACK_SEGMENT_INDEX].mSprite.setScale(1.0f, distance * getTrackSegmentYScale());
-        mTrackSegments[POINTER_TRACK_SEGMENT_INDEX].mSprite.setRotation((float) angle);
+            mTrackSegments[POINTER_TRACK_SEGMENT_INDEX].mSprite.setPosition(trackOriginX, trackOriginY);
+            mTrackSegments[POINTER_TRACK_SEGMENT_INDEX].mSprite.setScale(1.0f, distance * getTrackSegmentYScale());
+            mTrackSegments[POINTER_TRACK_SEGMENT_INDEX].mSprite.setRotation((float) angle);
+        }
     }
 
     /**
@@ -584,7 +586,7 @@ public class Grid extends BaseObject {
         for(int i = 1; i < MAX_CHAIN_LENGTH-1; i++) {
             if(mNodeChain[i-1] != null && mNodeChain[i+1] != null) {
                 if(eligibleToCreatePreferredConnection(mNodeChain[i-1], mNodeChain[i])) {
-                    mNodes[mNodeChain[i].getI()][mNodeChain[i].getJ()].setPreferredConnection(mNodeChain[i-1], mNodeChain[i]);
+                    mNodes[mNodeChain[i].getI()][mNodeChain[i].getJ()].setPreferredConnection(mNodeChain[i-1], mNodeChain[i+1]);
                 }
             }
             mNodeChain[i] = null;

@@ -42,9 +42,6 @@
     <NODE I="1" J="1" K="-1">
         <STATS TYPE="NODE_TYPE_EMPTY" />
     </NODE>
-    <NODE I="3" J="1" K="-1">
-        <STATS TYPE="NODE_TYPE_EMPTY" />
-    </NODE>
     <NODE I="5" J="1" K="-1">
         <STATS TYPE="NODE_TYPE_EMPTY" />
     </NODE>
@@ -58,9 +55,6 @@
         <STATS TYPE="NODE_TYPE_EMPTY" />
     </NODE>
     <NODE I="1" J="3" K="-1">
-        <STATS TYPE="NODE_TYPE_EMPTY" />
-    </NODE>
-    <NODE I="4" J="3" K="-1">
         <STATS TYPE="NODE_TYPE_EMPTY" />
     </NODE>
     <NODE I="5" J="3" K="-1">

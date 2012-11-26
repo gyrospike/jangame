@@ -65,6 +65,12 @@ public class GameManager extends BaseManager {
     /** length of the static deco array */
     private int mStaticLen;
 
+    /** user facing name of the level we are loading, ex: resource id for "easy 1" in strings.xml */
+    private int mMapNameResource;
+
+    /** maps this level to a save file on the HD */
+    private int mSaveId;
+
     /**
      *
      * @param context   reference to the base activity
@@ -79,9 +85,13 @@ public class GameManager extends BaseManager {
 	 * create the primary logical entities for the game
 	 *
 	 * @param dataSet		the game's grid data loaded from xml
+     * @param mapName       the name of the map, stored in menumap.xml
+     * @param saveId        the id mapped to the save file for this level
 	 */
-	public void loadData(ParsedMapData dataSet) {
+	public void loadData(ParsedMapData dataSet, int mapName, int saveId) {
 		mDataSet = dataSet;
+        mMapNameResource = mapName;
+        mSaveId = saveId;
 	}
 	
 	/**
@@ -90,7 +100,7 @@ public class GameManager extends BaseManager {
 	public void init() {
 		mOverlay = new DrawableOverlay();
 		Grid gameGrid = new Grid(mDataSet, mScreenWidth, mScreenHeight, mOverlay);
-		ReleaseManager releaseManager = new ReleaseManager(mOverlay, mContext, mHandler, mDataSet);
+		ReleaseManager releaseManager = new ReleaseManager(mOverlay, mContext, mHandler, mMapNameResource, mSaveId, mDataSet);
 
 		mGameModeArray[GAME_MODE_BUILD] = new GMGridBuild(gameGrid);
 		mGameModeArray[GAME_MODE_RELEASE] = new GMRelease(gameGrid, releaseManager, mContext);

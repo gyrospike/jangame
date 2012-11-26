@@ -145,18 +145,6 @@
         <Image id="red_to_red" usage="1">
             <Textures>node_red_switch_red</Textures>
         </Image>
-        <Image id="blue" usage="1">
-            <Textures>node_blue_simple</Textures>
-        </Image>
-        <Image id="blue_to_green" usage="1">
-            <Textures>node_blue_switch_green</Textures>
-        </Image>
-        <Image id="blue_to_red" usage="1">
-            <Textures>node_blue_switch_red</Textures>
-        </Image>
-        <Image id="blue_to_blue" usage="1">
-            <Textures>node_blue_switch_blue</Textures>
-        </Image>
     </ImagePack>
     <ImagePack id="gameBackground" usage="1">
         <Image id="idle">

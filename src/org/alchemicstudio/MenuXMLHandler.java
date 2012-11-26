@@ -33,10 +33,11 @@ public class MenuXMLHandler extends DefaultHandler {
      * @param atts
      */
     private void parseEntry(Attributes atts) {
-        int mapNumber = Integer.parseInt(atts.getValue("mapNumber"));
         String sourceFile = atts.getValue("sourceFile");
+        String mapName = atts.getValue("mapName");
         String buttonId = atts.getValue("buttonId");
-        mParsedDataSet.appendNewColumn(mapNumber, sourceFile, buttonId);
+        int saveId = Integer.parseInt(atts.getValue("saveID"));
+        mParsedDataSet.appendNewColumn(mapName, sourceFile, buttonId, saveId);
     }
 
     @Override

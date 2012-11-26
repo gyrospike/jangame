@@ -14,9 +14,6 @@ public class ParsedMapData {
 	
 	/** the total number of nodes that make up the game board, including the border nodes */
 	public int mTotalNumNodes;
-
-	/** map number we are currently processing */
-	public int mMapNumber;
 	
 	/** width of map in nodes */
 	public int mMapWidth;
@@ -68,22 +65,6 @@ public class ParsedMapData {
 			result[1] = (2*mMapWidth)+(2*mMapHeight) - (k+1);
 		}
 		return result;
-	}
-
-    /**
-     * getter
-     * @return
-     */
-    public int getNumber() {
-        return mMapNumber;
-    }
-
-	/**
-	 * setter
-	 * @param num
-	 */
-	public void setNumber(int num) {
-		mMapNumber = num;
 	}
 
 	/**

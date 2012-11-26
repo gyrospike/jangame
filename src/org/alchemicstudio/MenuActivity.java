@@ -117,28 +117,42 @@ public class MenuActivity extends Activity {
         Button[][] mapButtons = new Button[numRows][numCols];
         for(int j = 0; j < numRows; j++) {
             for(int i = 0; i < numCols; i++) {
-                int mapNum = mMenuData.getMapNumber(j, i);
                 String buttonName = mMenuData.getButtonName(j,i); //"Button" + j + i;
+                String mapName = mMenuData.getMapName(buttonName);
+                int saveId = mMenuData.getSaveId(buttonName);
                 Class resourceIdClass = R.id.class;
+                Class stringClass = R.string.class;
                 try {
                     int resourceID = (Integer)resourceIdClass.getField(buttonName).get(resourceIdClass);
+                    int mapNameResourceID = (Integer)stringClass.getField(mapName).get(stringClass);
                     Button currentButton = (Button) findViewById(resourceID);
-                    currentButton.setBackgroundDrawable(getBadgesFromMapNumber(currentButton, mapNum));
+                    currentButton.setText(getResources().getString(mapNameResourceID));
+                    LayerDrawable temp = getBadgesFromSaveId(currentButton, saveId);
+                    currentButton.setBackgroundDrawable(temp);
                     mapButtons[j][i] = currentButton;
                 } catch (Exception e) {
                     Log.e("DEBUG", "Error", e);
                 }
 
-				mapButtons[j][i].setTag(mapNum);
+				mapButtons[j][i].setTag(buttonName);
                 mapButtons[j][i].setOnClickListener(new OnClickListener() {
                     public void onClick(View v) {
                         Class c1 = R.raw.class;
-                        int mapNum = (Integer)v.getTag();
+                        Class st = R.string.class;
+                        String buttonName = (String)v.getTag();
+
+                        String mapSource = mMenuData.getMapSourceFileName(buttonName);
+                        String mapName = mMenuData.getMapName(buttonName);
+                        int saveId = mMenuData.getSaveId(buttonName);
+                        Log.d("joelog", "button name is: "+buttonName+" and the save id is "+saveId);
                         Intent startGameIntent = new Intent(MenuActivity.this, GameActivity.class);
                         try {
-                            int resourceID = (Integer)c1.getField("map"+mapNum).get(c1);
+                            int resourceID = (Integer)c1.getField(mapSource).get(c1);
+                            int mapNameResourceID = (Integer)st.getField(mapName).get(st);
                             startGameIntent.putExtra(ParsedMenuData.MAP_RESOURCE_KEY, resourceID );
-                            startGameIntent.putExtra(ParsedMenuData.MAP_NUMBER_KEY, mapNum );
+                            startGameIntent.putExtra(ParsedMenuData.MAP_NAME_RESOURCE_KEY, mapNameResourceID );
+                            startGameIntent.putExtra(ParsedMenuData.MAP_SAVE_ID_KEY, saveId);
+
                         } catch (Exception e) {
                             Log.e("DEBUG", "Error", e);
                         }
@@ -154,13 +168,13 @@ public class MenuActivity extends Activity {
      * number passed in
      *
      * @param   button      the current button so we can reference the base background image
-     * @param   mapNumber   map number to look up the saved state with
+     * @param   saveId      map number to look up the saved state with
      * @return
      */
-    private LayerDrawable getBadgesFromMapNumber(Button button, int mapNumber) {
+    private LayerDrawable getBadgesFromSaveId(Button button, int saveId) {
 
-        Boolean hasSilerBadge = mSavedUserState.getBoolean(mapNumber+BaseObject.SAVE_POSTFIX_BADGE+ReleaseManager.BADGE_INDEX_SILVER, false);
-        Boolean hasGoldBadge = mSavedUserState.getBoolean(mapNumber+BaseObject.SAVE_POSTFIX_BADGE+ReleaseManager.BADGE_INDEX_GOLD, false);
+        Boolean hasSilerBadge = mSavedUserState.getBoolean(saveId+BaseObject.SAVE_POSTFIX_BADGE+ReleaseManager.BADGE_INDEX_SILVER, false);
+        Boolean hasGoldBadge = mSavedUserState.getBoolean(saveId+BaseObject.SAVE_POSTFIX_BADGE+ReleaseManager.BADGE_INDEX_GOLD, false);
 
         Resources res = this.getResources();
         LayerDrawable layerDrawable = (LayerDrawable) button.getBackground();
@@ -183,13 +197,14 @@ public class MenuActivity extends Activity {
         Button[][] mapButtons = new Button[numRows][numCols];
         for(int j = 0; j < numRows; j++) {
             for(int i = 0; i < numCols; i++) {
-                int mapNum = mMenuData.getMapNumber(j, i);
                 String buttonName = mMenuData.getButtonName(j,i); //"Button" + j + i;
+                int saveId = mMenuData.getSaveId(buttonName);
                 Class resourceIdClass = R.id.class;
                 try {
                     int resourceID = (Integer)resourceIdClass.getField(buttonName).get(resourceIdClass);
                     Button currentButton = (Button) findViewById(resourceID);
-                    currentButton.setBackgroundDrawable(getBadgesFromMapNumber(currentButton, mapNum));
+                    LayerDrawable tempVar = getBadgesFromSaveId(currentButton, saveId);
+                    currentButton.setBackgroundDrawable(tempVar);
                     mapButtons[j][i] = currentButton;
                 } catch (Exception e) {
                     Log.e("DEBUG", "Error", e);

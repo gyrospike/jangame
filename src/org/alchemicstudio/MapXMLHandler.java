@@ -36,7 +36,6 @@ public class MapXMLHandler extends DefaultHandler {
 	 * @param atts
 	 */
 	private void parseMap(Attributes atts) {
-		mParsedDataSet.setNumber(Integer.parseInt(atts.getValue("NUMBER")));
 		mParsedDataSet.setWidth(Integer.parseInt(atts.getValue("WIDTH")));
 		mParsedDataSet.setHeight(Integer.parseInt(atts.getValue("HEIGHT")));
 		mParsedDataSet.setSpacing(Integer.parseInt(atts.getValue("SPACING")));

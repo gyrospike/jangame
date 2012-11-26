@@ -58,17 +58,18 @@ public class ReleaseManager extends BaseObject {
     /** handles the level complete ui callback */
     private Handler mHandler;
 
-    /** reference to the prerendered text prefix */
-    private String mElapsedPrefix;
+    /** id maps the save file to this level */
+    private int mSaveId;
 
     /** string resource ids to be used as message when badge is unlocked */
     private int[] sBadgeMessage = {R.string.silver_badge_message, R.string.gold_badge_message};
 
-    public ReleaseManager(DrawableOverlay overlay, Context context, Handler handler, ParsedMapData parsedMapData) {
+    public ReleaseManager(DrawableOverlay overlay, Context context, Handler handler, int mapNameResource, int saveId, ParsedMapData parsedMapData) {
         mOverlay = overlay;
         mContext = context;
         mHandler = handler;
         mParsedMapData = parsedMapData;
+        mSaveId = saveId;
 
         int parTime = 0;
         int numPotentialBadges = mParsedMapData.mBadges.getCount();
@@ -86,10 +87,10 @@ public class ReleaseManager extends BaseObject {
         }
 
         mSpark = new Spark();
-        mElapsedPrefix = sSystemRegistry.mAssetLibrary.getStringById(R.string.elapsed_time);
-        String parPrefix = sSystemRegistry.mAssetLibrary.getStringById(R.string.par_time);
-        HUD.getInstance().addTextElement(-1,mElapsedPrefix + convertMilisecondsToDisplayTime(mPlayTime), 36, Color.CYAN, 20, 60, true, HUD.UNIQUE_ELEMENT_PLAY_TIME);
-        HUD.getInstance().addTextElement(-1,parPrefix + convertMilisecondsToDisplayTime(parTime), 36, Color.YELLOW, 300, 60, true, HUD.UNIQUE_ELEMENT_PAR_TIME);
+        String mapName = mContext.getResources().getString(mapNameResource);
+        HUD.getInstance().addTextElement(-1,mapName, 36, Color.GREEN, 30, 60, true, HUD.UNIQUE_ELEMENT_MAP_NAME);
+        HUD.getInstance().addTextElement(-1,convertMilisecondsToDisplayTime(mPlayTime), 36, Color.CYAN, 150, 60, true, HUD.UNIQUE_ELEMENT_PLAY_TIME);
+        HUD.getInstance().addTextElement(-1,convertMilisecondsToDisplayTime(parTime), 36, Color.YELLOW, 300, 60, true, HUD.UNIQUE_ELEMENT_PAR_TIME);
     }
 
     /**
@@ -177,7 +178,7 @@ public class ReleaseManager extends BaseObject {
                 }
             }
             mPlayTime += timeDelta;
-            HUD.getInstance().modifyTextElement(mElapsedPrefix + convertMilisecondsToDisplayTime(mPlayTime), HUD.UNIQUE_ELEMENT_PLAY_TIME);
+            HUD.getInstance().modifyTextElement(convertMilisecondsToDisplayTime(mPlayTime), HUD.UNIQUE_ELEMENT_PLAY_TIME);
         }
     }
 
@@ -259,11 +260,11 @@ public class ReleaseManager extends BaseObject {
         Message msg = mHandler.obtainMessage();
         Bundle bund = new Bundle();
 
-        String completeText = "Circuit Incomplete";
+        int completeTextId = R.string.circuit_incomplete;
         if(complete) {
-            completeText = "Circuit Complete";
+            completeTextId = R.string.circuit_complete;
         }
-        bund.putString("title", completeText);
+        bund.putString("title", mContext.getResources().getString(completeTextId));
 
         if(badgesWon != null) {
             int numBadgesWon = badgesWon.getCount();
@@ -298,7 +299,7 @@ public class ReleaseManager extends BaseObject {
         // now we use the UI thread for this
         //HUD.getInstance().showStaticTextElement(-1, AssetLibrary.PRERENDERED_TEXT_INDEX_INCOMPLETE, 250, 100, true, HUD.UNIQUE_ELEMENT_COMPLETE);
         Vector2 pos = mSpark.getPosition();
-        mOverlay.createParticle((int)pos.x, (int)pos.y, 10);
+        mOverlay.createParticle((int)(pos.x + (Grid.NODE_DIMENSION/2)), (int)(pos.y - (Grid.NODE_DIMENSION/2)) , 10);
         resetSpark();
         showFinishedDialog(false, null);
     }
@@ -339,9 +340,9 @@ public class ReleaseManager extends BaseObject {
         // saving best time just for the heck of it right now
         SharedPreferences settings = mContext.getSharedPreferences(BaseObject.SHARED_PREFS_KEY, 0);
         SharedPreferences.Editor editor = settings.edit();
-        long bestTime = settings.getLong("map"+mParsedMapData.getNumber()+BaseObject.SAVE_POSTFIX_BEST_TIME, 999999);
+        long bestTime = settings.getLong(mSaveId+BaseObject.SAVE_POSTFIX_BEST_TIME, 999999);
         if(mPlayTime < bestTime) {
-            editor.putLong("map"+mParsedMapData.getNumber()+BaseObject.SAVE_POSTFIX_BEST_TIME, mPlayTime);
+            editor.putLong(mSaveId+BaseObject.SAVE_POSTFIX_BEST_TIME, mPlayTime);
         }
 
         int numPotentialBadges = mParsedMapData.mBadges.getCount();
@@ -365,9 +366,9 @@ public class ReleaseManager extends BaseObject {
 
         for(int k = 0; k < earnedBadgeArray.length; k++) {
             if(earnedBadgeArray[k] > 0) {
-                Boolean hasBadge = settings.getBoolean(mParsedMapData.getNumber()+BaseObject.SAVE_POSTFIX_BADGE+k, false);
+                Boolean hasBadge = settings.getBoolean(mSaveId+BaseObject.SAVE_POSTFIX_BADGE+k, false);
                 if(!hasBadge) {
-                    editor.putBoolean(mParsedMapData.getNumber()+BaseObject.SAVE_POSTFIX_BADGE+k, true);
+                    editor.putBoolean(mSaveId+BaseObject.SAVE_POSTFIX_BADGE+k, true);
                     newBadges.add(k);
                 }
             }
