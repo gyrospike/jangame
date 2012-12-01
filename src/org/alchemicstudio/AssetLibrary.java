@@ -306,6 +306,7 @@ public class AssetLibrary extends BaseObject {
             myCanvas.drawCircle(100.0f, 100.0f, 20.0f, myPaint);
             */
 
+			Log.d("joelog", "resource name: " + context.getResources().getString(texture.resource));
             Bitmap bitmap = BitmapFactory.decodeResource(context.getResources(), texture.resource, opts);
             GLUtils.texImage2D(GL10.GL_TEXTURE_2D, 0, bitmap, 0);
 
