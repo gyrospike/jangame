@@ -1,6 +1,7 @@
 package org.alchemicstudio;
 
 import android.util.DisplayMetrics;
+import android.util.Log;
 
 public class MenuManager extends BaseManager {
 
@@ -22,8 +23,16 @@ public class MenuManager extends BaseManager {
 	public MenuManager(DisplayMetrics metrics) {
         super(metrics);
 
-		//Log.d("DEBUG", "pixels per inch y: " + mScreenMetrics.ydpi);
-		//Log.d("DEBUG", "pixels per inch x: " + mScreenMetrics.xdpi);
+        Log.d("DEBUG/joelog", "density dpi: " + metrics.densityDpi);
+        Log.d("DEBUG/joelog", "density: " + metrics.density);
+        Log.d("DEBUG/joelog", "scaled density: " + metrics.scaledDensity);
+		Log.d("DEBUG/joelog", "pixels per inch y: " + metrics.ydpi);
+		Log.d("DEBUG/joelog", "pixels per inch x: " + metrics.xdpi);
+
+        Log.d("DEBUG/joelog", "realPixelsToDIP(115): " + realPixelsToDIP(115.0f));
+        Log.d("DEBUG/joelog", "realPixelsToDIP(104): " + realPixelsToDIP(104.0f));
+
+
 	}
 
 	/**
@@ -34,6 +43,7 @@ public class MenuManager extends BaseManager {
 	 */
 	public void init() {
 
+        // It seems you CAN specify absolute pixel values when setting opengl positions?
 		mTitle  = new HUDStaticTextElement(HUD.NOT_UNIQUE_ELEMENT, 205, 190, AssetLibrary.PRERENDERED_TEXT_INDEX_CIRCUIT);
 
         ImagePack borderTop = BaseObject.sSystemRegistry.mAssetLibrary.getImagePack("borderTop");
@@ -52,7 +62,8 @@ public class MenuManager extends BaseManager {
 
         ImagePack goldRobot = BaseObject.sSystemRegistry.mAssetLibrary.getImagePack("gold_robot");
 		mStaticDeco.add(new DrawableObject(goldRobot, 0));
-		mStaticDeco.getLast().setRelativePosition(getRelativePosition(mStaticDeco.getLast().mSprite.getPolyScale(),  0.2f*mSMetrics.xdpi, 0.33f*mSMetrics.ydpi, ORIGIN_TOP_RIGHT));
+        // It seems you CAN specify absolute pixel values when setting opengl positions?
+		mStaticDeco.getLast().setRelativePosition(getRelativePosition(mStaticDeco.getLast().mSprite.getPolyScale(),  115.0f, 104.0f, ORIGIN_TOP_RIGHT));
 
         /*
 
@@ -115,14 +126,15 @@ public class MenuManager extends BaseManager {
 	}
 	
 	/**
-	 * convert dip units (density independent pixels) to actual pixels
+	 * convert actual pixels into dip (density independent pixels)
 	 * 
-	 * @param dip
+	 * @param pixels
 	 * @return
 	 */
-	private float dipToPx(float dip) {
-		float px = dip * (mSMetrics.densityDpi / mSMetrics.DENSITY_DEFAULT);
-		return px;
+	private float realPixelsToDIP(float pixels) {
+		float result = pixels / (mSMetrics.scaledDensity);
+        Log.d("joelog", "result: " + result);
+        return result;
 	}
 
 	/**

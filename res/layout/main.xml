@@ -1,185 +1,167 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="fill_parent"
-    android:layout_height="fill_parent"
-    android:orientation="vertical" >
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:orientation="vertical" >
 
-     <FrameLayout
-        android:layout_width="fill_parent"
-        android:layout_height="fill_parent" >
+    <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" >
 
         <org.alchemicstudio.MenuSurfaceView
-            android:id="@+id/MenuSurfaceView01"
-            android:layout_width="fill_parent"
-            android:layout_height="fill_parent" >
+                android:id="@+id/MenuSurfaceView01"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" >
         </org.alchemicstudio.MenuSurfaceView>
-      </FrameLayout>
+    </FrameLayout>
 
-    <HorizontalScrollView
-        android:id="@+id/ScrollView01"
-        android:layout_width="fill_parent"
-        android:layout_height="100dip"
-        android:layout_marginTop="120dip"
-        android:fadingEdge="none"
-        android:scrollbarAlwaysDrawHorizontalTrack="false" >
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                  android:orientation="vertical"
+                  android:layout_width="fill_parent"
+                  android:layout_height="fill_parent"
+                  android:gravity="center_vertical">
 
-        <TableLayout
-            android:id="@+id/TableLayout01"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content" >
-
-            <TableRow
-                android:id="@+id/TableRow00"
+        <HorizontalScrollView
+                android:id="@+id/ScrollView01"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
-                android:gravity="center" >
+                android:fadingEdge="none"
+                android:scrollbarAlwaysDrawHorizontalTrack="false" >
+
+            <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                          android:layout_width="fill_parent"
+                          android:layout_height="wrap_content"
+                          android:orientation="horizontal">
 
                 <Button
-                    android:id="@+id/Button00"
-                    android:layout_column="1"
-                    android:layout_margin="10dip"
-                    android:background="@layout/level_badge_list_0"
-                    style="@style/circuit_button"
-                    android:layout_width="100dp"
-                    android:layout_height="89dp"/>
+                        android:id="@+id/Button00"
+                        android:layout_margin="10dip"
+                        android:background="@layout/level_badge_list_0"
+                        style="@style/circuit_button"
+                        android:layout_width="100dp"
+                        android:layout_height="89dp" />
 
                 <Button
-                    android:id="@+id/Button01"
-                    android:layout_margin="10dip"
-                    android:background="@layout/level_badge_list_1"
-                    style="@style/circuit_button"
-                    android:layout_width="100dp"
-                    android:layout_height="89dp"/>
+                        android:id="@+id/Button01"
+                        android:layout_margin="10dip"
+                        android:background="@layout/level_badge_list_1"
+                        style="@style/circuit_button"
+                        android:layout_width="100dp"
+                        android:layout_height="89dp" />
 
                 <Button
-                    android:id="@+id/Button02"
-                    android:layout_margin="10dip"
-                    android:background="@layout/level_badge_list_2"
-                    style="@style/circuit_button"
-                    android:layout_width="100dp"
-                    android:layout_height="89dp"/>
+                        android:id="@+id/Button02"
+                        android:layout_margin="10dip"
+                        android:background="@layout/level_badge_list_2"
+                        style="@style/circuit_button"
+                        android:layout_width="100dp"
+                        android:layout_height="89dp" />
 
                 <Button
-                    android:id="@+id/Button03"
-                    android:layout_margin="10dip"
-                    android:background="@layout/level_badge_list_3"
-                    style="@style/circuit_button"
-                    android:layout_width="100dp"
-                    android:layout_height="89dp"/>
+                        android:id="@+id/Button03"
+                        android:layout_margin="10dip"
+                        android:background="@layout/level_badge_list_3"
+                        style="@style/circuit_button"
+                        android:layout_width="100dp"
+                        android:layout_height="89dp" />
 
-            </TableRow>
-        </TableLayout>
-    </HorizontalScrollView>
+            </LinearLayout>
+        </HorizontalScrollView>
 
-    <HorizontalScrollView
-        android:id="@+id/ScrollView02"
-        android:layout_width="fill_parent"
-        android:layout_height="100dip"
-        android:layout_marginTop="240dip"
-        android:fadingEdge="none"
-        android:scrollbarAlwaysDrawHorizontalTrack="false" >
-
-        <TableLayout
-            android:id="@+id/TableLayout01"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content" >
-
-            <TableRow
-                android:id="@+id/TableRow01"
+        <HorizontalScrollView
+                android:id="@+id/ScrollView02"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
-                android:gravity="center" >
+                android:fadingEdge="none"
+                android:scrollbarAlwaysDrawHorizontalTrack="false" >
+
+            <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                          android:layout_width="fill_parent"
+                          android:layout_height="wrap_content"
+                          android:orientation="horizontal" >
 
                 <Button
-                    android:id="@+id/Button10"
-                    android:layout_column="1"
-                    android:layout_margin="10dip"
-                    android:background="@layout/level_badge_list_4"
-                    style="@style/circuit_button"
-                    android:layout_width="100dp"
-                    android:layout_height="89dp"/>
+                        android:id="@+id/Button10"
+                        android:layout_column="1"
+                        android:layout_margin="10dip"
+                        android:background="@layout/level_badge_list_4"
+                        style="@style/circuit_button"
+                        android:layout_width="100dp"
+                        android:layout_height="89dp"/>
 
                 <Button
-                    android:id="@+id/Button11"
-                    android:layout_margin="10dip"
-                    android:background="@layout/level_badge_list_5"
-                    style="@style/circuit_button"
-                    android:layout_width="100dp"
-                    android:layout_height="89dp"/>
+                        android:id="@+id/Button11"
+                        android:layout_margin="10dip"
+                        android:background="@layout/level_badge_list_5"
+                        style="@style/circuit_button"
+                        android:layout_width="100dp"
+                        android:layout_height="89dp"/>
 
                 <Button
-                    android:id="@+id/Button12"
-                    android:layout_margin="10dip"
-                    android:background="@layout/level_badge_list_6"
-                    style="@style/circuit_button"
-                    android:layout_width="100dp"
-                    android:layout_height="89dp"/>
+                        android:id="@+id/Button12"
+                        android:layout_margin="10dip"
+                        android:background="@layout/level_badge_list_6"
+                        style="@style/circuit_button"
+                        android:layout_width="100dp"
+                        android:layout_height="89dp"/>
 
                 <Button
-                    android:id="@+id/Button13"
-                    android:layout_margin="10dip"
-                    android:background="@layout/level_badge_list_7"
-                    style="@style/circuit_button"
-                    android:layout_width="100dp"
-                    android:layout_height="89dp"/>
-            </TableRow>
-        </TableLayout>
-    </HorizontalScrollView>
+                        android:id="@+id/Button13"
+                        android:layout_margin="10dip"
+                        android:background="@layout/level_badge_list_7"
+                        style="@style/circuit_button"
+                        android:layout_width="100dp"
+                        android:layout_height="89dp"/>
+            </LinearLayout>
+        </HorizontalScrollView>
 
-    <HorizontalScrollView
-        android:id="@+id/ScrollView03"
-        android:layout_width="fill_parent"
-        android:layout_height="100dip"
-        android:layout_marginTop="360dip"
-        android:fadingEdge="none"
-        android:scrollbarAlwaysDrawHorizontalTrack="false" >
-
-        <TableLayout
-            android:id="@+id/TableLayout01"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content" >
-
-            <TableRow
-                android:id="@+id/TableRow01"
+        <HorizontalScrollView
+                android:id="@+id/ScrollView03"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
-                android:gravity="center" >
+                android:fadingEdge="none"
+                android:scrollbarAlwaysDrawHorizontalTrack="false" >
+
+            <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                          android:layout_width="fill_parent"
+                          android:layout_height="wrap_content"
+                          android:orientation="horizontal" >
 
                 <Button
-                    android:id="@+id/Button20"
-                    android:layout_column="1"
-                    android:layout_margin="10dip"
-                    android:background="@layout/level_badge_list_8"
-                    style="@style/circuit_button"
-                    android:layout_width="100dp"
-                    android:layout_height="89dp"/>
+                        android:id="@+id/Button20"
+                        android:layout_column="1"
+                        android:layout_margin="10dip"
+                        android:background="@layout/level_badge_list_8"
+                        style="@style/circuit_button"
+                        android:layout_width="100dp"
+                        android:layout_height="89dp"/>
 
                 <Button
-                    android:id="@+id/Button21"
-                    android:layout_margin="10dip"
-                    android:background="@layout/level_badge_list_9"
-                    style="@style/circuit_button"
-                    android:layout_width="100dp"
-                    android:layout_height="89dp"/>
+                        android:id="@+id/Button21"
+                        android:layout_margin="10dip"
+                        android:background="@layout/level_badge_list_9"
+                        style="@style/circuit_button"
+                        android:layout_width="100dp"
+                        android:layout_height="89dp"/>
 
                 <Button
-                    android:id="@+id/Button22"
-                    android:layout_margin="10dip"
-                    android:background="@layout/level_badge_list_10"
-                    style="@style/circuit_button"
-                    android:layout_width="100dp"
-                    android:layout_height="89dp"/>
+                        android:id="@+id/Button22"
+                        android:layout_margin="10dip"
+                        android:background="@layout/level_badge_list_10"
+                        style="@style/circuit_button"
+                        android:layout_width="100dp"
+                        android:layout_height="89dp"/>
 
                 <Button
-                    android:id="@+id/Button23"
-                    android:layout_margin="10dip"
-                    android:background="@layout/level_badge_list_11"
-                    style="@style/circuit_button"
-                    android:layout_width="100dp"
-                    android:layout_height="89dp"/>
+                        android:id="@+id/Button23"
+                        android:layout_margin="10dip"
+                        android:background="@layout/level_badge_list_11"
+                        style="@style/circuit_button"
+                        android:layout_width="100dp"
+                        android:layout_height="89dp"/>
 
-            </TableRow>
-        </TableLayout>
-    </HorizontalScrollView>
+            </LinearLayout>
+        </HorizontalScrollView>
+    </LinearLayout>
 
 </RelativeLayout>

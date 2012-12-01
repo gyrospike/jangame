@@ -26,7 +26,7 @@
     </ImagePack>
     <ImagePack id="gold_robot" usage="0">
         <Image id="idle" framesMS="300">
-            <Textures>gold1,gold2,gold3</Textures>
+            <Textures>gold1,gold2,gold3,gold4</Textures>
         </Image>
     </ImagePack>
     <ImagePack id="bg_rail_segment" usage="0">

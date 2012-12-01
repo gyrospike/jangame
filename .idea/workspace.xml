@@ -24,60 +24,52 @@
     </option>
   </component>
   <component name="AndroidLogFilters">
-    <option name="TOOL_WINDOW_LOG_LEVEL" value="INFO" />
+    <option name="TOOL_WINDOW_CONFIGURED_FILTER" value="circuit" />
   </component>
   <component name="ChangeListManager">
     <list default="true" id="1be4a04d-e181-48b8-9dc9-1fc719711aab" name="Default" comment="">
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/res/layout/level_badge_list_0.xml" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/res/layout/level_badge_list_1.xml" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/res/layout/level_badge_list_10.xml" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/res/layout/level_badge_list_11.xml" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/res/layout/level_badge_list_2.xml" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/res/layout/level_badge_list_3.xml" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/res/layout/level_badge_list_4.xml" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/res/layout/level_badge_list_5.xml" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/res/layout/level_badge_list_6.xml" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/res/layout/level_badge_list_7.xml" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/res/layout/level_badge_list_8.xml" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/res/layout/level_badge_list_9.xml" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/res/raw/map14.xml" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/res/raw/map15.xml" />
       <change type="DELETED" beforePath="$PROJECT_DIR$/res/drawable-hdpi/bg_head.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/res/drawable-hdpi/level_e0.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/res/drawable-hdpi/level_e0_s.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/res/drawable-hdpi/level_e1.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/res/drawable-hdpi/level_e1_s.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/res/drawable-hdpi/level_e2.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/res/drawable-hdpi/level_e2_s.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/res/drawable-hdpi/level_e3.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/res/drawable-hdpi/level_e3_s.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/res/drawable-hdpi/level_h0.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/res/drawable-hdpi/level_h0_s.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/res/drawable-hdpi/level_h1.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/res/drawable-hdpi/level_h1_s.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/res/drawable-hdpi/level_h2.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/res/drawable-hdpi/level_h2_s.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/res/drawable-hdpi/level_h3.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/res/drawable-hdpi/level_h3_s.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/res/drawable-hdpi/level_m0.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/res/drawable-hdpi/level_m0_s.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/res/drawable-hdpi/level_m1.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/res/drawable-hdpi/level_m1_s.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/res/drawable-hdpi/level_m2.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/res/drawable-hdpi/level_m2_s.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/res/drawable-hdpi/level_m3.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/res/drawable-hdpi/level_m3_s.png" afterPath="" />
       <change type="DELETED" beforePath="$PROJECT_DIR$/res/drawable-hdpi/node_blue_simple.png" afterPath="" />
       <change type="DELETED" beforePath="$PROJECT_DIR$/res/drawable-hdpi/node_blue_switch_blue.png" afterPath="" />
       <change type="DELETED" beforePath="$PROJECT_DIR$/res/drawable-hdpi/node_blue_switch_green.png" afterPath="" />
       <change type="DELETED" beforePath="$PROJECT_DIR$/res/drawable-hdpi/node_blue_switch_red.png" afterPath="" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/res/layout/level_badge_list.xml" afterPath="$PROJECT_DIR$/res/layout/level_badge_list_0.xml" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/res/raw/map12.xml" afterPath="$PROJECT_DIR$/res/raw/map13.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/res/drawable-hdpi/icon.png" afterPath="$PROJECT_DIR$/res/drawable-hdpi/icon.png" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/gen/org/alchemicstudio/R.java" afterPath="$PROJECT_DIR$/gen/org/alchemicstudio/R.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/res/layout/level_badge_list_0.xml" afterPath="$PROJECT_DIR$/res/layout/level_badge_list_0.xml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/res/layout/main.xml" afterPath="$PROJECT_DIR$/res/layout/main.xml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/res/raw/imagepacks.xml" afterPath="$PROJECT_DIR$/res/raw/imagepacks.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/res/raw/map1.xml" afterPath="$PROJECT_DIR$/res/raw/map1.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/res/raw/map10.xml" afterPath="$PROJECT_DIR$/res/raw/map10.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/res/raw/map11.xml" afterPath="$PROJECT_DIR$/res/raw/map11.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/res/raw/map7.xml" afterPath="$PROJECT_DIR$/res/raw/map7.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/res/raw/menumap.xml" afterPath="$PROJECT_DIR$/res/raw/menumap.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/res/values/strings.xml" afterPath="$PROJECT_DIR$/res/values/strings.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/org/alchemicstudio/GameActivity.java" afterPath="$PROJECT_DIR$/src/org/alchemicstudio/GameActivity.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/org/alchemicstudio/GameManager.java" afterPath="$PROJECT_DIR$/src/org/alchemicstudio/GameManager.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/org/alchemicstudio/Grid.java" afterPath="$PROJECT_DIR$/src/org/alchemicstudio/Grid.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/org/alchemicstudio/HUD.java" afterPath="$PROJECT_DIR$/src/org/alchemicstudio/HUD.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/org/alchemicstudio/MapXMLHandler.java" afterPath="$PROJECT_DIR$/src/org/alchemicstudio/MapXMLHandler.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/org/alchemicstudio/MenuActivity.java" afterPath="$PROJECT_DIR$/src/org/alchemicstudio/MenuActivity.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/org/alchemicstudio/MenuXMLHandler.java" afterPath="$PROJECT_DIR$/src/org/alchemicstudio/MenuXMLHandler.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/org/alchemicstudio/ParsedMapData.java" afterPath="$PROJECT_DIR$/src/org/alchemicstudio/ParsedMapData.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/org/alchemicstudio/ParsedMenuData.java" afterPath="$PROJECT_DIR$/src/org/alchemicstudio/ParsedMenuData.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/org/alchemicstudio/ReleaseManager.java" afterPath="$PROJECT_DIR$/src/org/alchemicstudio/ReleaseManager.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/org/alchemicstudio/MenuManager.java" afterPath="$PROJECT_DIR$/src/org/alchemicstudio/MenuManager.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/org/alchemicstudio/Sprite.java" afterPath="$PROJECT_DIR$/src/org/alchemicstudio/Sprite.java" />
     </list>
     <list id="5d726b25-c9cb-4d53-87ce-b57bdd1a9b88" name="intel" comment="" />
     <list id="dced38a0-96db-4cd5-98a6-00fbb8665564" name="asset" comment="" />
-    <list id="e1c1cbf2-d1aa-4f03-9539-a143191b65be" name="config" comment="">
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/gen/org/alchemicstudio/R.java" afterPath="$PROJECT_DIR$/gen/org/alchemicstudio/R.java" />
-    </list>
+    <list id="e1c1cbf2-d1aa-4f03-9539-a143191b65be" name="config" comment="" />
     <ignored path="jangame.iws" />
     <ignored path=".idea/workspace.xml" />
-    <file path="$PROJECT_DIR$/gen/org/alchemicstudio/R.java" changelist="1be4a04d-e181-48b8-9dc9-1fc719711aab" time="1353894927425" ignored="false" />
     <option name="TRACKING_ENABLED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -132,82 +124,48 @@
   </component>
   <component name="FileEditorManager">
     <leaf>
-      <file leaf-file-name="main.xml" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/res/layout/main.xml">
+      <file leaf-file-name="MenuManager.java" pinned="false" current="true" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/src/org/alchemicstudio/MenuManager.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="156" column="23" selection-start="5960" selection-end="5960" vertical-scroll-proportion="0.0">
+            <state line="42" column="7" selection-start="1616" selection-end="1616" vertical-scroll-proportion="0.1446541">
+              <folding>
+                <element signature="imports" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="HUD.java" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/org/alchemicstudio/HUD.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="205" column="11" selection-start="5418" selection-end="5418" vertical-scroll-proportion="0.0">
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="MenuActivity.java" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/org/alchemicstudio/MenuActivity.java">
+      <file leaf-file-name="DrawableObject.java" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/org/alchemicstudio/DrawableObject.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="121" column="39" selection-start="4700" selection-end="4700" vertical-scroll-proportion="0.0">
+            <state line="54" column="20" selection-start="1276" selection-end="1276" vertical-scroll-proportion="0.0">
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="ParsedMapData.java" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/org/alchemicstudio/ParsedMapData.java">
+      <file leaf-file-name="Sprite.java" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/org/alchemicstudio/Sprite.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="24" column="27" selection-start="663" selection-end="663" vertical-scroll-proportion="0.0">
+            <state line="232" column="6" selection-start="6650" selection-end="6650" vertical-scroll-proportion="0.0">
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="GameManager.java" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/org/alchemicstudio/GameManager.java">
+      <file leaf-file-name="BaseManager.java" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/org/alchemicstudio/BaseManager.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="93" column="8" selection-start="2892" selection-end="2892" vertical-scroll-proportion="0.0">
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="Particle.java" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/org/alchemicstudio/Particle.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0">
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="Grid.java" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/org/alchemicstudio/Grid.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state line="10" column="30" selection-start="255" selection-end="255" vertical-scroll-proportion="0.0">
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="ReleaseManager.java" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/org/alchemicstudio/ReleaseManager.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state line="71" column="8" selection-start="2323" selection-end="2323" vertical-scroll-proportion="0.0">
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="ParsedMenuData.java" pinned="false" current="true" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/src/org/alchemicstudio/ParsedMenuData.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state line="84" column="33" selection-start="1982" selection-end="1982" vertical-scroll-proportion="0.8579882">
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="DrawableOverlay.java" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/org/alchemicstudio/DrawableOverlay.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state line="27" column="16" selection-start="703" selection-end="703" vertical-scroll-proportion="0.0">
+            <state line="47" column="21" selection-start="1443" selection-end="1450" vertical-scroll-proportion="-0.68">
               <folding />
             </state>
           </provider>
@@ -229,22 +187,22 @@
   <component name="IdeDocumentHistory">
     <option name="changedFiles">
       <list>
-        <option value="$PROJECT_DIR$/src/org/alchemicstudio/MapXMLHandler.java" />
-        <option value="$PROJECT_DIR$/src/org/alchemicstudio/MenuXMLHandler.java" />
-        <option value="$PROJECT_DIR$/src/org/alchemicstudio/ParsedMenuData.java" />
         <option value="$PROJECT_DIR$/src/org/alchemicstudio/GameActivity.java" />
         <option value="$PROJECT_DIR$/src/org/alchemicstudio/GameManager.java" />
         <option value="$PROJECT_DIR$/res/raw/map1.xml" />
         <option value="$PROJECT_DIR$/res/raw/menumap.xml" />
         <option value="$PROJECT_DIR$/src/org/alchemicstudio/HUD.java" />
-        <option value="$PROJECT_DIR$/res/raw/imagepacks.xml" />
         <option value="$PROJECT_DIR$/src/org/alchemicstudio/Grid.java" />
         <option value="$PROJECT_DIR$/res/raw/map10.xml" />
         <option value="$PROJECT_DIR$/res/raw/map11.xml" />
-        <option value="$PROJECT_DIR$/src/org/alchemicstudio/MenuActivity.java" />
-        <option value="$PROJECT_DIR$/res/layout/main.xml" />
         <option value="$PROJECT_DIR$/src/org/alchemicstudio/ReleaseManager.java" />
         <option value="$PROJECT_DIR$/src/org/alchemicstudio/ParsedMapData.java" />
+        <option value="$PROJECT_DIR$/res/layout/level_badge_list_0.xml" />
+        <option value="$PROJECT_DIR$/res/layout/main.xml" />
+        <option value="$PROJECT_DIR$/res/raw/imagepacks.xml" />
+        <option value="$PROJECT_DIR$/src/org/alchemicstudio/MenuActivity.java" />
+        <option value="$PROJECT_DIR$/src/org/alchemicstudio/Sprite.java" />
+        <option value="$PROJECT_DIR$/src/org/alchemicstudio/MenuManager.java" />
       </list>
     </option>
   </component>
@@ -308,16 +266,6 @@
       <sortByType />
     </navigator>
     <panes>
-      <pane id="Scope">
-        <subPane subId="Project Files">
-          <PATH>
-            <PATH_ELEMENT USER_OBJECT="Root">
-              <option name="myItemId" value="" />
-              <option name="myItemType" value="" />
-            </PATH_ELEMENT>
-          </PATH>
-        </subPane>
-      </pane>
       <pane id="ProjectPane">
         <subPane>
           <PATH>
@@ -396,6 +344,16 @@
           </PATH>
         </subPane>
       </pane>
+      <pane id="Scope">
+        <subPane subId="Project Files">
+          <PATH>
+            <PATH_ELEMENT USER_OBJECT="Root">
+              <option name="myItemId" value="" />
+              <option name="myItemType" value="" />
+            </PATH_ELEMENT>
+          </PATH>
+        </subPane>
+      </pane>
       <pane id="PackagesPane">
         <subPane>
           <PATH>
@@ -427,8 +385,8 @@
     <property name="WebServerToolWindowFactoryState" value="false" />
     <property name="MemberChooser.showClasses" value="true" />
     <property name="GoToClass.includeLibraries" value="false" />
-    <property name="options.searchVisible" value="true" />
     <property name="options.splitter.details.proportions" value="0.2" />
+    <property name="options.searchVisible" value="true" />
   </component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
@@ -662,25 +620,25 @@
     <editor active="false" />
     <layout>
       <window_info id="Data Sources" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
-      <window_info id="Changes" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.26949543" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" x="176" y="133" width="1495" height="719" />
+      <window_info id="Changes" active="true" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.57683486" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" x="176" y="133" width="1495" height="719" />
       <window_info id="JetGradle" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
       <window_info id="Preview" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32965687" sideWeight="0.7363737" order="8" side_tool="false" content_ui="tabs" />
       <window_info id="Palette" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
       <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.29816514" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
-      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.3646789" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
+      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.2511468" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="IDEtalk Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="12" side_tool="false" content_ui="tabs" />
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32964602" sideWeight="0.49776927" order="8" side_tool="true" content_ui="tabs" />
       <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="2" side_tool="true" content_ui="tabs" />
       <window_info id="IDEtalk" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32912844" sideWeight="0.5" order="9" side_tool="false" content_ui="tabs" />
       <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.24770643" sideWeight="0.49776927" order="10" side_tool="false" content_ui="tabs" />
-      <window_info id="Android" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="FLOATING" visible="false" weight="0.36009175" sideWeight="0.5" order="11" side_tool="false" content_ui="tabs" x="1721" y="61" width="1470" height="699" />
+      <window_info id="Android" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="FLOATING" visible="false" weight="0.36009175" sideWeight="0.5" order="11" side_tool="false" content_ui="tabs" x="1703" y="45" width="1470" height="699" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.23738532" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="1" side_tool="true" content_ui="tabs" />
       <window_info id="Maven Projects" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32950923" sideWeight="0.670354" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Commander" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.4" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
-      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.17218137" sideWeight="0.6353211" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.17218137" sideWeight="0.42316514" order="0" side_tool="false" content_ui="combo" />
       <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Hierarchy" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="3" side_tool="false" content_ui="combo" />
       <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
@@ -784,115 +742,115 @@
     <option name="FILTER_TARGETS" value="false" />
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/res/layout/level_badge_list_8.xml">
+    <entry file="file://$PROJECT_DIR$/src/org/alchemicstudio/ReleaseManager.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/res/layout/level_badge_list_7.xml">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/res/layout/level_badge_list_6.xml">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/res/layout/level_badge_list_5.xml">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/res/layout/level_badge_list_4.xml">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/res/layout/level_badge_list_3.xml">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/res/layout/level_badge_list_2.xml">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/res/layout/main.xml">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="156" column="23" selection-start="5960" selection-end="5960" vertical-scroll-proportion="0.0">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/org/alchemicstudio/Particle.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/org/alchemicstudio/DrawableOverlay.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="27" column="16" selection-start="703" selection-end="703" vertical-scroll-proportion="0.0">
+        <state line="71" column="8" selection-start="2323" selection-end="2323" vertical-scroll-proportion="0.017730497">
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/org/alchemicstudio/Grid.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="10" column="30" selection-start="255" selection-end="255" vertical-scroll-proportion="0.0">
+        <state line="10" column="30" selection-start="255" selection-end="255" vertical-scroll-proportion="0.017730497">
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/org/alchemicstudio/MenuActivity.java">
+    <entry file="file://$PROJECT_DIR$/src/org/alchemicstudio/Particle.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="121" column="39" selection-start="4700" selection-end="4700" vertical-scroll-proportion="0.0">
-          <folding />
-        </state>
+        <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0" />
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/org/alchemicstudio/GameManager.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="93" column="8" selection-start="2892" selection-end="2892" vertical-scroll-proportion="0.0">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/org/alchemicstudio/ReleaseManager.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="71" column="8" selection-start="2323" selection-end="2323" vertical-scroll-proportion="0.0">
+        <state line="93" column="8" selection-start="2892" selection-end="2892" vertical-scroll-proportion="0.017730497">
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/org/alchemicstudio/ParsedMapData.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="24" column="27" selection-start="663" selection-end="663" vertical-scroll-proportion="0.0">
+        <state line="24" column="27" selection-start="663" selection-end="663" vertical-scroll-proportion="0.017730497">
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/org/alchemicstudio/ParsedMenuData.java">
+    <entry file="file://$PROJECT_DIR$/res/layout/level_badge_list_1.xml">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="84" column="33" selection-start="1982" selection-end="1982" vertical-scroll-proportion="0.8579882">
+        <state line="8" column="0" selection-start="0" selection-end="339" vertical-scroll-proportion="0.0">
           <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/res/layout/level_badge_list_0.xml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="8" column="0" selection-start="348" selection-end="348" vertical-scroll-proportion="0.0">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/res/layout/main.xml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="61" column="53" selection-start="2728" selection-end="2728" vertical-scroll-proportion="0.0">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/res/raw/imagepacks.xml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="24" column="16" selection-start="768" selection-end="768" vertical-scroll-proportion="0.4556314">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/org/alchemicstudio/MenuActivity.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="11" column="24" selection-start="347" selection-end="347" vertical-scroll-proportion="0.0">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="jar://$USER_HOME$/android-sdk-linux/platforms/android-14/android.jar!/android/util/DisplayMetrics.class">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="11" column="28" selection-start="436" selection-end="436" vertical-scroll-proportion="0.23923445">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/org/alchemicstudio/HUD.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="205" column="11" selection-start="5418" selection-end="5418" vertical-scroll-proportion="0.0">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/org/alchemicstudio/BaseManager.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="47" column="21" selection-start="1443" selection-end="1450" vertical-scroll-proportion="-0.68">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/org/alchemicstudio/DrawableObject.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="54" column="20" selection-start="1276" selection-end="1276" vertical-scroll-proportion="0.0">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/org/alchemicstudio/Sprite.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="232" column="6" selection-start="6650" selection-end="6650" vertical-scroll-proportion="0.0">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/org/alchemicstudio/MenuManager.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="42" column="7" selection-start="1616" selection-end="1616" vertical-scroll-proportion="0.1446541">
+          <folding>
+            <element signature="imports" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>
