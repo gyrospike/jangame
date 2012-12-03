@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:orientation="vertical" >
 
@@ -65,6 +65,22 @@
                         android:layout_width="100dp"
                         android:layout_height="89dp" />
 
+                <Button
+                        android:id="@+id/Button04"
+                        android:layout_margin="10dip"
+                        android:background="@layout/level_badge_list_4"
+                        style="@style/circuit_button"
+                        android:layout_width="100dp"
+                        android:layout_height="89dp"/>
+
+                <Button
+                        android:id="@+id/Button05"
+                        android:layout_margin="10dip"
+                        android:background="@layout/level_badge_list_5"
+                        style="@style/circuit_button"
+                        android:layout_width="100dp"
+                        android:layout_height="89dp"/>
+
             </LinearLayout>
         </HorizontalScrollView>
 
@@ -84,7 +100,7 @@
                         android:id="@+id/Button10"
                         android:layout_column="1"
                         android:layout_margin="10dip"
-                        android:background="@layout/level_badge_list_4"
+                        android:background="@layout/level_badge_list_6"
                         style="@style/circuit_button"
                         android:layout_width="100dp"
                         android:layout_height="89dp"/>
@@ -92,7 +108,7 @@
                 <Button
                         android:id="@+id/Button11"
                         android:layout_margin="10dip"
-                        android:background="@layout/level_badge_list_5"
+                        android:background="@layout/level_badge_list_7"
                         style="@style/circuit_button"
                         android:layout_width="100dp"
                         android:layout_height="89dp"/>
@@ -100,7 +116,7 @@
                 <Button
                         android:id="@+id/Button12"
                         android:layout_margin="10dip"
-                        android:background="@layout/level_badge_list_6"
+                        android:background="@layout/level_badge_list_8"
                         style="@style/circuit_button"
                         android:layout_width="100dp"
                         android:layout_height="89dp"/>
@@ -108,10 +124,51 @@
                 <Button
                         android:id="@+id/Button13"
                         android:layout_margin="10dip"
-                        android:background="@layout/level_badge_list_7"
+                        android:background="@layout/level_badge_list_9"
                         style="@style/circuit_button"
                         android:layout_width="100dp"
                         android:layout_height="89dp"/>
+
+                <Button
+                        android:id="@+id/Button14"
+                        android:layout_margin="10dip"
+                        android:background="@layout/level_badge_list_10"
+                        style="@style/circuit_button"
+                        android:layout_width="100dp"
+                        android:layout_height="89dp"/>
+
+                <Button
+                        android:id="@+id/Button15"
+                        android:layout_margin="10dip"
+                        android:background="@layout/level_badge_list_11"
+                        style="@style/circuit_button"
+                        android:layout_width="100dp"
+                        android:layout_height="89dp"/>
+
+                <Button
+                        android:id="@+id/Button16"
+                        android:layout_margin="10dip"
+                        android:background="@layout/level_badge_list_12"
+                        style="@style/circuit_button"
+                        android:layout_width="100dp"
+                        android:layout_height="89dp"/>
+
+                <Button
+                        android:id="@+id/Button17"
+                        android:layout_margin="10dip"
+                        android:background="@layout/level_badge_list_13"
+                        style="@style/circuit_button"
+                        android:layout_width="100dp"
+                        android:layout_height="89dp"/>
+
+                <Button
+                        android:id="@+id/Button18"
+                        android:layout_margin="10dip"
+                        android:background="@layout/level_badge_list_14"
+                        style="@style/circuit_button"
+                        android:layout_width="100dp"
+                        android:layout_height="89dp"/>
+
             </LinearLayout>
         </HorizontalScrollView>
 
@@ -131,7 +188,7 @@
                         android:id="@+id/Button20"
                         android:layout_column="1"
                         android:layout_margin="10dip"
-                        android:background="@layout/level_badge_list_8"
+                        android:background="@layout/level_badge_list_15"
                         style="@style/circuit_button"
                         android:layout_width="100dp"
                         android:layout_height="89dp"/>
@@ -139,7 +196,7 @@
                 <Button
                         android:id="@+id/Button21"
                         android:layout_margin="10dip"
-                        android:background="@layout/level_badge_list_9"
+                        android:background="@layout/level_badge_list_5"
                         style="@style/circuit_button"
                         android:layout_width="100dp"
                         android:layout_height="89dp"/>
@@ -147,7 +204,7 @@
                 <Button
                         android:id="@+id/Button22"
                         android:layout_margin="10dip"
-                        android:background="@layout/level_badge_list_10"
+                        android:background="@layout/level_badge_list_5"
                         style="@style/circuit_button"
                         android:layout_width="100dp"
                         android:layout_height="89dp"/>
@@ -155,13 +212,33 @@
                 <Button
                         android:id="@+id/Button23"
                         android:layout_margin="10dip"
-                        android:background="@layout/level_badge_list_11"
+                        android:background="@layout/level_badge_list_5"
+                        style="@style/circuit_button"
+                        android:layout_width="100dp"
+                        android:layout_height="89dp"/>
+
+                <Button
+                        android:id="@+id/Button24"
+                        android:layout_margin="10dip"
+                        android:background="@layout/level_badge_list_5"
                         style="@style/circuit_button"
                         android:layout_width="100dp"
                         android:layout_height="89dp"/>
 
             </LinearLayout>
         </HorizontalScrollView>
+    </LinearLayout>
+    <LinearLayout android:layout_width="fill_parent"
+                  android:layout_height="wrap_content"
+                  android:layout_marginBottom="20dp"
+                  android:layout_alignParentBottom="true"
+                  android:gravity="center_horizontal">
+        <Button
+                android:id="@+id/helpButton"
+                android:text="@string/help"
+                style="@style/circuit_button"
+
+                />
     </LinearLayout>
 
 </RelativeLayout>

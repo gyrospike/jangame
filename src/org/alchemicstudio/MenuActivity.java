@@ -2,6 +2,7 @@ package org.alchemicstudio;
 
 
 import android.app.Activity;
+import android.app.Dialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.Resources;
@@ -16,6 +17,8 @@ import android.view.WindowManager;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.HorizontalScrollView;
+import android.widget.ListView;
+import android.widget.TextView;
 
 import javax.xml.parsers.SAXParser;
 import javax.xml.parsers.SAXParserFactory;
@@ -92,11 +95,32 @@ public class MenuActivity extends Activity {
     }
 
     /**
+     * Show the help dialog
+     */
+    private void showHelpDialog() {
+        Dialog dialog = new Dialog(this, R.style.CircuitDialogStyle);
+        dialog.setContentView(R.layout.help_dialog);
+
+        TextView titleTextView = (TextView) dialog.findViewById(R.id.help_body);
+        titleTextView.setText(getString(R.string.help_body));
+
+        dialog.setCanceledOnTouchOutside(true);
+        dialog.show();
+    }
+
+    /**
      * Create the UI elements including the level buttons, the badges, and the scrollable rows
      */
     private void createUIElements() {
 
         setContentView(R.layout.main);
+
+        Button helpButton = (Button) findViewById(R.id.helpButton);
+        helpButton.setOnClickListener(new OnClickListener() {
+            public void onClick(View v) {
+                showHelpDialog();
+            }
+        });
 
         HorizontalScrollView sView1 = (HorizontalScrollView) findViewById(R.id.ScrollView01);
         sView1.setVerticalScrollBarEnabled(false);
@@ -118,47 +142,49 @@ public class MenuActivity extends Activity {
         for(int j = 0; j < numRows; j++) {
             for(int i = 0; i < numCols; i++) {
                 String buttonName = mMenuData.getButtonName(j,i); //"Button" + j + i;
-                String mapName = mMenuData.getMapName(buttonName);
-                int saveId = mMenuData.getSaveId(buttonName);
-                Class resourceIdClass = R.id.class;
-                Class stringClass = R.string.class;
-                try {
-                    int resourceID = (Integer)resourceIdClass.getField(buttonName).get(resourceIdClass);
-                    int mapNameResourceID = (Integer)stringClass.getField(mapName).get(stringClass);
-                    Button currentButton = (Button) findViewById(resourceID);
-                    currentButton.setText(getResources().getString(mapNameResourceID));
-                    LayerDrawable temp = getBadgesFromSaveId(currentButton, saveId);
-                    currentButton.setBackgroundDrawable(temp);
-                    mapButtons[j][i] = currentButton;
-                } catch (Exception e) {
-                    Log.e("DEBUG", "Error", e);
-                }
-
-				mapButtons[j][i].setTag(buttonName);
-                mapButtons[j][i].setOnClickListener(new OnClickListener() {
-                    public void onClick(View v) {
-                        Class c1 = R.raw.class;
-                        Class st = R.string.class;
-                        String buttonName = (String)v.getTag();
-
-                        String mapSource = mMenuData.getMapSourceFileName(buttonName);
-                        String mapName = mMenuData.getMapName(buttonName);
-                        int saveId = mMenuData.getSaveId(buttonName);
-                        Log.d("joelog", "button name is: "+buttonName+" and the save id is "+saveId);
-                        Intent startGameIntent = new Intent(MenuActivity.this, GameActivity.class);
-                        try {
-                            int resourceID = (Integer)c1.getField(mapSource).get(c1);
-                            int mapNameResourceID = (Integer)st.getField(mapName).get(st);
-                            startGameIntent.putExtra(ParsedMenuData.MAP_RESOURCE_KEY, resourceID );
-                            startGameIntent.putExtra(ParsedMenuData.MAP_NAME_RESOURCE_KEY, mapNameResourceID );
-                            startGameIntent.putExtra(ParsedMenuData.MAP_SAVE_ID_KEY, saveId);
-
-                        } catch (Exception e) {
-                            Log.e("DEBUG", "Error", e);
-                        }
-                        startActivity(startGameIntent);
+                if(!buttonName.equals("")) {
+                    String mapName = mMenuData.getMapName(buttonName);
+                    int saveId = mMenuData.getSaveId(buttonName);
+                    Class resourceIdClass = R.id.class;
+                    Class stringClass = R.string.class;
+                    try {
+                        int resourceID = (Integer)resourceIdClass.getField(buttonName).get(resourceIdClass);
+                        int mapNameResourceID = (Integer)stringClass.getField(mapName).get(stringClass);
+                        Button currentButton = (Button) findViewById(resourceID);
+                        currentButton.setText(getResources().getString(mapNameResourceID));
+                        LayerDrawable temp = getBadgesFromSaveId(currentButton, saveId);
+                        currentButton.setBackgroundDrawable(temp);
+                        mapButtons[j][i] = currentButton;
+                    } catch (Exception e) {
+                        Log.e("DEBUG", "Error", e);
                     }
-                });
+
+                    mapButtons[j][i].setTag(buttonName);
+                    mapButtons[j][i].setOnClickListener(new OnClickListener() {
+                        public void onClick(View v) {
+                            Class c1 = R.raw.class;
+                            Class st = R.string.class;
+                            String buttonName = (String)v.getTag();
+
+                            String mapSource = mMenuData.getMapSourceFileName(buttonName);
+                            String mapName = mMenuData.getMapName(buttonName);
+                            int saveId = mMenuData.getSaveId(buttonName);
+                            Log.d("joelog", "button name is: "+buttonName+" and the save id is "+saveId);
+                            Intent startGameIntent = new Intent(MenuActivity.this, GameActivity.class);
+                            try {
+                                int resourceID = (Integer)c1.getField(mapSource).get(c1);
+                                int mapNameResourceID = (Integer)st.getField(mapName).get(st);
+                                startGameIntent.putExtra(ParsedMenuData.MAP_RESOURCE_KEY, resourceID );
+                                startGameIntent.putExtra(ParsedMenuData.MAP_NAME_RESOURCE_KEY, mapNameResourceID );
+                                startGameIntent.putExtra(ParsedMenuData.MAP_SAVE_ID_KEY, saveId);
+
+                            } catch (Exception e) {
+                                Log.e("DEBUG", "Error", e);
+                            }
+                            startActivity(startGameIntent);
+                        }
+                    });
+                }
             }
         }
     }
@@ -190,6 +216,9 @@ public class MenuActivity extends Activity {
         return layerDrawable;
     }
 
+    /**
+     * Update the badges you may have earned after the last play session
+     */
     private void updateBadgesEarned() {
         int numRows = mMenuData.getNumRows();
         int numCols = mMenuData.getNumColumns();
@@ -198,16 +227,18 @@ public class MenuActivity extends Activity {
         for(int j = 0; j < numRows; j++) {
             for(int i = 0; i < numCols; i++) {
                 String buttonName = mMenuData.getButtonName(j,i); //"Button" + j + i;
-                int saveId = mMenuData.getSaveId(buttonName);
-                Class resourceIdClass = R.id.class;
-                try {
-                    int resourceID = (Integer)resourceIdClass.getField(buttonName).get(resourceIdClass);
-                    Button currentButton = (Button) findViewById(resourceID);
-                    LayerDrawable tempVar = getBadgesFromSaveId(currentButton, saveId);
-                    currentButton.setBackgroundDrawable(tempVar);
-                    mapButtons[j][i] = currentButton;
-                } catch (Exception e) {
-                    Log.e("DEBUG", "Error", e);
+                if(!buttonName.equals("")) {
+                    int saveId = mMenuData.getSaveId(buttonName);
+                    Class resourceIdClass = R.id.class;
+                    try {
+                        int resourceID = (Integer)resourceIdClass.getField(buttonName).get(resourceIdClass);
+                        Button currentButton = (Button) findViewById(resourceID);
+                        LayerDrawable tempVar = getBadgesFromSaveId(currentButton, saveId);
+                        currentButton.setBackgroundDrawable(tempVar);
+                        mapButtons[j][i] = currentButton;
+                    } catch (Exception e) {
+                        Log.e("DEBUG", "Error", e);
+                    }
                 }
             }
         }

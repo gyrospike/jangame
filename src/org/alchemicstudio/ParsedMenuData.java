@@ -63,7 +63,11 @@ public class ParsedMenuData {
      * @return
      */
     public String getButtonName(int row, int col) {
-        return mMenuHash.get("Button"+row+col).getButtonId();
+        String result = "";
+        if(mMenuHash.get("Button"+row+col) != null) {
+            result = mMenuHash.get("Button"+row+col).getButtonId();
+        }
+        return result;
     }
 
 

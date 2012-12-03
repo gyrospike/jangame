@@ -243,6 +243,7 @@ public class Grid extends BaseObject {
      * @param bj				node b, j index
      */
     private void conditionallyCreateConnectionBetweenNodes(int ai, int aj, int bi, int bj, boolean fixed) {
+        Log.d("joelog", "ai, aj, bi, bj: " + ai + ", " + aj + ", " + bi + ", " + bj);
         if(!mNodes[ai][aj].hasMaxConnections()) {
             if(!mNodes[bi][bj].hasMaxConnections()) {
                 if(!connectionBetween(ai, aj, bi, bj)) {
