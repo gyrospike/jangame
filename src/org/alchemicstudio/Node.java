@@ -28,16 +28,16 @@ public class Node extends BaseObject {
     public final static String NODE_TYPE_KEY = "NODE_TYPE_KEY";
 
     /** const for angles */
-    private final static double ANGLE_EAST = Math.PI;
+    public final static double ANGLE_EAST = Math.PI;
 
     /** const for angles */
-    private final static double ANGLE_SOUTH = Math.PI/2.0;
+    public final static double ANGLE_SOUTH = Math.PI/2.0;
 
     /** const for angles */
-    private final static double ANGLE_WEST = 0.0;
+    public final static double ANGLE_WEST = 0.0;
 
     /** const for angles */
-    private final static double ANGLE_NORTH = (3.0/2.0)*Math.PI;
+    public final static double ANGLE_NORTH = (3.0/2.0)*Math.PI;
 
     /** how far the preferred node arrow indicator is from it's node */
     private final static int PREFERRED_ARROW_OFFSET = 32;

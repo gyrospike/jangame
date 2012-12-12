@@ -100,7 +100,7 @@
             <requirement type="complete" value="0" />
         </badge>
         <badge type="1">
-            <requirement type="time" value="8000" />
+            <requirement type="time" value="12000" />
         </badge>
     </badges>
 </MAP>

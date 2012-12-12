@@ -1,36 +1,41 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">Circuit</string>
-    <string name="app_title">CIRCUIT</string>
-    <string name="help">help</string>
-    <string name="help_body">Welcome to Circuit!\n\nComplete levels by moving the spark from the start node to the end node.\n\nSilver Coins are awarded for completing a level, Gold Coins for completing it under par time.\n\nAfter toggling the power on your circuit to On you can set a Path Preference to influence which direction the spark will go when it hits a T intersection.\n\nTo set a Path Preference move your finger along the path you wish the spark to take.\n\nThanks for playing!</string>
-    <string name="elapsed_time">elapsed time:\u0020</string>
-    <string name="par_time">par time:\u0020</string>
-    <string name="speed_meter">Spark Speed:\u0020</string>
-    <string name="circuit_complete">Circuit Complete</string>
-    <string name="circuit_incomplete">Circuit Incomplete</string>
-    <string name="silver_badge_message">Level Complete, Silver Badge Unlocked!</string>
-    <string name="gold_badge_message">Par time achieved, Gold Badge Unlocked!</string>
-    <string name ="spark_button">Release Spark</string>
-    <string name ="mode_button">Toggle Power</string>
-    <string name = "level0">easy 4</string>
-    <string name = "level1">easy 2</string>
-    <string name = "level2">hard 2</string>
-    <string name = "level3">normal 10</string>
+    <string name = "app_name">Circuit</string>
+    <string name = "app_title">CIRCUIT</string>
+    <string name = "help">help</string>
+    <string name = "help_body">Welcome to Circuit!\n\nComplete levels by moving the spark from the start node to the end node.\n\nSilver Coins are awarded for completing a level, Gold Coins for completing it under par time.\n\nAfter toggling the power on your circuit to On you can set a Path Preference to influence which direction the spark will go when it hits a T intersection.\n\nTo set a Path Preference move your finger along the path you wish the spark to take.\n\nThanks for playing!</string>
+    <string name = "elapsed_time">elapsed time:\u0020</string>
+    <string name = "par_time">par time:\u0020</string>
+    <string name = "speed_meter">Spark Speed:\u0020</string>
+    <string name = "circuit_complete">Circuit Complete</string>
+    <string name = "circuit_incomplete">Circuit Incomplete</string>
+    <string name = "silver_badge_message">Level Complete, Silver Badge Unlocked!</string>
+    <string name = "gold_badge_message">Par time achieved, Gold Badge Unlocked!</string>
+    <string name = "spark_button">Release Spark</string>
+    <string name = "mode_button">Toggle Power</string>
+    <string name = "reset_button">Reset</string>
+
     <string name = "level4">easy 1</string>
+    <string name = "level1">easy 2</string>
+    <string name = "level13">easy 3</string>
+    <string name = "level0">easy 4</string>
+    <string name = "level9">easy 5</string>
+    <string name = "level23">easy 6</string>
+
     <string name = "level5">normal 1</string>
     <string name = "level6">normal 2</string>
     <string name = "level7">normal 3</string>
     <string name = "level8">normal 4</string>
-    <string name = "level13">easy 3</string>
     <string name = "level15">normal 5</string>
-    <string name = "level9">easy 5</string>
-    <string name = "level10">normal 7</string>
-    <string name = "level11">normal 8</string>
+    <string name = "level10">normal 6</string>
+    <string name = "level11">normal 7</string>
+    <string name = "level14">normal 8</string>
+    <string name = "level3">normal 9</string>
+
     <string name = "level12">hard 1</string>
-    <string name = "level14">normal 9</string>
+    <string name = "level2">hard 2</string>
     <string name = "level20">hard 3</string>
     <string name = "level21">hard 4</string>
     <string name = "level22">hard 5</string>
-    <string name = "level23">easy 6</string>
+
 </resources>

@@ -1,5 +1,5 @@
 <?xml version="1.0" ?>
-<MAP WIDTH="8" HEIGHT="10" SPACING="60">
+<MAP WIDTH="8" HEIGHT="10" SPACING="55">
     <NODE I="6" J="-1" K="6">
         <STATS TYPE="NODE_TYPE_START" />
     </NODE>
@@ -192,7 +192,7 @@
             <requirement type="complete" value="0" />
         </badge>
         <badge type="1">
-            <requirement type="time" value="16000" />
+            <requirement type="time" value="17500" />
         </badge>
     </badges>
 </MAP>

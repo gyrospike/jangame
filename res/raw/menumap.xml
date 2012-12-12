@@ -9,7 +9,7 @@
         <entry buttonId="Button05" mapName="level23" saveID="23" sourceFile="map23" />
     </row>
     <row>
-        <entry buttonId="Button10" mapName="level5" saveID="5" sourceFile="map4" />
+        <entry buttonId="Button10" mapName="level5" saveID="5" sourceFile="map13" />
         <entry buttonId="Button11" mapName="level6" saveID="6" sourceFile="map5" />
         <entry buttonId="Button12" mapName="level7" saveID="7" sourceFile="map6" />
         <entry buttonId="Button13" mapName="level8" saveID="8" sourceFile="map7" />
@@ -17,7 +17,7 @@
         <entry buttonId="Button15" mapName="level10" saveID="10" sourceFile="map10" />
         <entry buttonId="Button16" mapName="level11" saveID="11" sourceFile="map11" />
         <entry buttonId="Button17" mapName="level14" saveID="14" sourceFile="map17" />
-        <entry buttonId="Button18" mapName="level3" saveID="3" sourceFile="map13" />
+        <entry buttonId="Button18" mapName="level3" saveID="3" sourceFile="map4" />
     </row>
     <row>
         <entry buttonId="Button20" mapName="level12" saveID="12" sourceFile="map15" />

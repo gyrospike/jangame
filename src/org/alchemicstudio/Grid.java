@@ -10,6 +10,9 @@ public class Grid extends BaseObject {
     /** node size */
     public final static float NODE_DIMENSION = 40.0f;
 
+    /** the size of an arrow */
+    public final static int ARROW_DIMENSION = 32;
+
     /** the array index of the track segment used for visualizing where your current track piece will connect */
     private final static int POINTER_TRACK_SEGMENT_INDEX = 0;
 
@@ -139,20 +142,75 @@ public class Grid extends BaseObject {
         // NOTE - for this block we also assume that only nodes have preconnections to borders, NOT borders with
         //        preconnections to nodes
         for (int k = 0; k < nodeDataLen; k++) {
-            int tempI = dataSet.mNodes.get(k).i;
-            int tempJ = dataSet.mNodes.get(k).j;
-            int tempK = dataSet.mNodes.get(k).k;
-            for(int p = 0; p < dataSet.mNodes.get(k).mPreconnections.getCount(); p++) {
-                int preconnectionIIndex = dataSet.mNodes.get(k).mPreconnections.get(p).i;
-                int preconnectionJIndex = dataSet.mNodes.get(k).mPreconnections.get(p).j;
-                int preconnectionKIndex = dataSet.mNodes.get(k).mPreconnections.get(p).k;
+            ParsedMapData.NodeTemplate nodeTemplate = dataSet.mNodes.get(k);
+            int tempI = nodeTemplate.i;
+            int tempJ = nodeTemplate.j;
+            int tempK = nodeTemplate.k;
+            for(int p = 0; p < nodeTemplate.mPreconnections.getCount(); p++) {
+                int preconnectionIIndex = nodeTemplate.mPreconnections.get(p).i;
+                int preconnectionJIndex = nodeTemplate.mPreconnections.get(p).j;
+                int preconnectionKIndex = nodeTemplate.mPreconnections.get(p).k;
                 if(preconnectionKIndex == -1 && tempK == -1 ) {
                     conditionallyCreateConnectionBetweenNodes(tempI, tempJ, preconnectionIIndex, preconnectionJIndex, true);
                 } else {
                     conditionallyCreateConnectionWithBorder(tempI, tempJ, tempK, preconnectionKIndex, true);
+                    handleStartAndEndArrowCreation(mBorderNodes[preconnectionKIndex]);
                 }
             }
         }
+    }
+
+    /**
+     * Creates the start and end arrows to show which the beginning and which the end nodes are
+     *
+     * @param borderNode    the node on the border which is either a start or end node
+     */
+    private void handleStartAndEndArrowCreation(Node borderNode) {
+
+        // set the arrows that show where the start and end nodes are
+        float posX = 0.0f;
+        float posY = 0.0f;
+        double angle = 0.0;
+        String uniqueHudId = Node.NODE_TYPE_START;
+
+        NodeConnection[] borderNodeConnections = borderNode.getConnections();
+        int borderI = borderNode.getI();
+        int borderJ = borderNode.getJ();
+        int connectionI = borderNodeConnections[0].getI();
+        int connectionJ = borderNodeConnections[0].getJ();
+
+        Vector2 connectionPosition = mNodes[borderNodeConnections[0].getI()][borderNodeConnections[0].getJ()].getPosition();
+
+        // we assume we are dealing with a start node and later add 180 degrees if we're dealing with an end node
+        if(borderJ == connectionJ) {
+            if(borderI > connectionI) {
+                angle = Node.ANGLE_WEST;
+                posY = connectionPosition.y - (NODE_DIMENSION/2) + (ARROW_DIMENSION/2);
+                posX = connectionPosition.x + ((borderNode.getPosition().x - connectionPosition.x)/2);
+            } else {
+                angle = Node.ANGLE_EAST;
+                posY = connectionPosition.y - (NODE_DIMENSION/2) + (ARROW_DIMENSION/2);
+                posX = borderNode.getPosition().x + ((connectionPosition.x - borderNode.getPosition().x)/2);
+            }
+        } else {
+            if(borderJ > connectionJ) {
+                angle = Node.ANGLE_NORTH;
+                posY = connectionPosition.y + ((borderNode.getPosition().y - connectionPosition.y)/2);
+                posX = connectionPosition.x + (NODE_DIMENSION/2) - (ARROW_DIMENSION/2);
+            } else {
+                angle = Node.ANGLE_SOUTH;
+                posY = borderNode.getPosition().y + ((connectionPosition.y - borderNode.getPosition().y)/2);
+                posX = connectionPosition.x + (NODE_DIMENSION/2) - (ARROW_DIMENSION/2);
+            }
+        }
+
+        if(borderNode.getType().equals(Node.NODE_TYPE_END)) {
+            angle += Math.PI;
+            uniqueHudId = Node.NODE_TYPE_END;
+        }
+
+        ImagePack imagePack = BaseObject.sSystemRegistry.mAssetLibrary.getImagePack("arrow");
+        HUD.getInstance().addElement(-1, imagePack, posX, posY, angle, 0, true, uniqueHudId);
     }
 
     /**
@@ -432,18 +490,33 @@ public class Grid extends BaseObject {
     /**
      * deactivate the node specified by index, deactivate that node and remove all connections to it from other nodes
      *
-     * @param i
-     * @param j
+     * @param i the i index of the nodes
+     * @param j the j index of the nodes
      */
     private void deactivateNode(int i, int j) {
-        NodeConnection[] nodeConnections = mNodes[i][j].getConnections();
-        for(int n = 0; n < nodeConnections.length; n++) {
-            if(!nodeConnections[n].getFixed()) {
-                mNodes[nodeConnections[n].getI()][nodeConnections[n].getJ()].removeConnection(i, j);
-                mTrackSegments[nodeConnections[n].getTrackID()].setInUse(false);
+        if(mNodes[i][j] != null) {
+            NodeConnection[] nodeConnections = mNodes[i][j].getConnections();
+            for(int n = 0; n < nodeConnections.length; n++) {
+                if(!nodeConnections[n].getFixed()) {
+                    mNodes[nodeConnections[n].getI()][nodeConnections[n].getJ()].removeConnection(i, j);
+                    mTrackSegments[nodeConnections[n].getTrackID()].setInUse(false);
+                }
+            }
+            mNodes[i][j].removeAllConnections();
+        }
+    }
+
+    /**
+     * resets all the connections on the game board that are not fixed
+     */
+    public void resetAllConnections() {
+        int nodeWidth = mNodes.length;
+        int nodeHight = mNodes[0].length;
+        for(int i = 0; i < nodeWidth; i++) {
+            for(int j = 0; j < nodeHight; j++) {
+                deactivateNode(i, j);
             }
         }
-        mNodes[i][j].removeAllConnections();
     }
 
     /**
