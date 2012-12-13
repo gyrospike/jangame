@@ -1,0 +1,3 @@
+[submodule "res/drawable-hdpi/sample"]
+	path = res/drawable-hdpi/sample
+	url = git://github.com/gyrospike/stargame.git

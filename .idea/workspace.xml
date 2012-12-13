@@ -27,76 +27,10 @@
     <option name="TOOL_WINDOW_LOG_LEVEL" value="ERROR" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="1be4a04d-e181-48b8-9dc9-1fc719711aab" name="Default" comment="">
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/org/star/circuit/CircuitConstants.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/org/star/game/HUDElement.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/org/star/game/HUDStaticTextElement.java" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/res/drawable-hdpi/green_gate_node.png" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/res/drawable-hdpi/green_node.png" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/res/drawable-hdpi/grey_gate_node.png" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/res/drawable-hdpi/grey_node.png" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/src/org/alchemicstudio/TextGrid.java" afterPath="" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/src/org/alchemicstudio/AssetLibrary.java" afterPath="$PROJECT_DIR$/src/org/star/game/AssetLibrary.java" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/src/org/alchemicstudio/BaseManager.java" afterPath="$PROJECT_DIR$/src/org/star/circuit/BaseManager.java" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/src/org/alchemicstudio/BaseObject.java" afterPath="$PROJECT_DIR$/src/org/star/game/BaseObject.java" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/src/org/alchemicstudio/CompleteDialogAdapter.java" afterPath="$PROJECT_DIR$/src/org/star/circuit/CompleteDialogAdapter.java" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/src/org/alchemicstudio/DebugWindow.java" afterPath="$PROJECT_DIR$/src/org/star/game/DebugWindow.java" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/src/org/alchemicstudio/DrawableObject.java" afterPath="$PROJECT_DIR$/src/org/star/game/DrawableObject.java" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/src/org/alchemicstudio/DrawableOverlay.java" afterPath="$PROJECT_DIR$/src/org/star/game/DrawableOverlay.java" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/src/org/alchemicstudio/FixedSizeArray.java" afterPath="$PROJECT_DIR$/src/org/star/types/FixedSizeArray.java" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/src/org/alchemicstudio/GMGridBuild.java" afterPath="$PROJECT_DIR$/src/org/star/circuit/GMGridBuild.java" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/src/org/alchemicstudio/GMRelease.java" afterPath="$PROJECT_DIR$/src/org/star/circuit/GMRelease.java" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/src/org/alchemicstudio/GameActivity.java" afterPath="$PROJECT_DIR$/src/org/star/circuit/GameActivity.java" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/src/org/alchemicstudio/GameManager.java" afterPath="$PROJECT_DIR$/src/org/star/circuit/GameManager.java" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/src/org/alchemicstudio/GameMode.java" afterPath="$PROJECT_DIR$/src/org/star/circuit/GameMode.java" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/src/org/alchemicstudio/GameRenderer.java" afterPath="$PROJECT_DIR$/src/org/star/game/GameRenderer.java" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/src/org/alchemicstudio/GameRunnable.java" afterPath="$PROJECT_DIR$/src/org/star/game/GameRunnable.java" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/src/org/alchemicstudio/GameSurfaceView.java" afterPath="$PROJECT_DIR$/src/org/star/circuit/GameSurfaceView.java" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/src/org/alchemicstudio/Grid.java" afterPath="$PROJECT_DIR$/src/org/star/circuit/Grid.java" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/src/org/alchemicstudio/HUD.java" afterPath="$PROJECT_DIR$/src/org/star/game/HUD.java" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/src/org/alchemicstudio/Image.java" afterPath="$PROJECT_DIR$/src/org/star/game/Image.java" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/src/org/alchemicstudio/ImagePack.java" afterPath="$PROJECT_DIR$/src/org/star/game/ImagePack.java" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/src/org/alchemicstudio/ImagePackXMLHandler.java" afterPath="$PROJECT_DIR$/src/org/star/game/ImagePackXMLHandler.java" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/src/org/alchemicstudio/InputObject.java" afterPath="$PROJECT_DIR$/src/org/star/game/InputObject.java" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/src/org/alchemicstudio/LabelMaker.java" afterPath="$PROJECT_DIR$/src/org/star/game/LabelMaker.java" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/src/org/alchemicstudio/MapXMLHandler.java" afterPath="$PROJECT_DIR$/src/org/star/circuit/MapXMLHandler.java" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/src/org/alchemicstudio/Marker.java" afterPath="$PROJECT_DIR$/src/org/star/circuit/Marker.java" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/src/org/alchemicstudio/MenuActivity.java" afterPath="$PROJECT_DIR$/src/org/star/circuit/MenuActivity.java" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/src/org/alchemicstudio/MenuManager.java" afterPath="$PROJECT_DIR$/src/org/star/circuit/MenuManager.java" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/src/org/alchemicstudio/MenuSurfaceView.java" afterPath="$PROJECT_DIR$/src/org/star/circuit/MenuSurfaceView.java" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/src/org/alchemicstudio/MenuXMLHandler.java" afterPath="$PROJECT_DIR$/src/org/star/circuit/MenuXMLHandler.java" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/src/org/alchemicstudio/Node.java" afterPath="$PROJECT_DIR$/src/org/star/circuit/Node.java" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/src/org/alchemicstudio/NodeConnection.java" afterPath="$PROJECT_DIR$/src/org/star/circuit/NodeConnection.java" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/src/org/alchemicstudio/ObjectRegistry.java" afterPath="$PROJECT_DIR$/src/org/star/game/ObjectRegistry.java" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/src/org/alchemicstudio/OnRailsPhysicsObject.java" afterPath="$PROJECT_DIR$/src/org/star/circuit/OnRailsPhysicsObject.java" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/src/org/alchemicstudio/ParsedMapData.java" afterPath="$PROJECT_DIR$/src/org/star/circuit/ParsedMapData.java" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/src/org/alchemicstudio/ParsedMenuData.java" afterPath="$PROJECT_DIR$/src/org/star/circuit/ParsedMenuData.java" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/src/org/alchemicstudio/Particle.java" afterPath="$PROJECT_DIR$/src/org/star/circuit/Particle.java" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/src/org/alchemicstudio/PhysicsObject.java" afterPath="$PROJECT_DIR$/src/org/star/circuit/PhysicsObject.java" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/src/org/alchemicstudio/ReleaseManager.java" afterPath="$PROJECT_DIR$/src/org/star/circuit/ReleaseManager.java" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/src/org/alchemicstudio/RenderSystem.java" afterPath="$PROJECT_DIR$/src/org/star/game/RenderSystem.java" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/src/org/alchemicstudio/Sorter.java" afterPath="$PROJECT_DIR$/src/org/star/game/Sorter.java" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/src/org/alchemicstudio/Spark.java" afterPath="$PROJECT_DIR$/src/org/star/circuit/Spark.java" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/src/org/alchemicstudio/Sprite.java" afterPath="$PROJECT_DIR$/src/org/star/game/Sprite.java" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/src/org/alchemicstudio/StandardSorter.java" afterPath="$PROJECT_DIR$/src/org/star/circuit/StandardSorter.java" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/src/org/alchemicstudio/TextBox.java" afterPath="$PROJECT_DIR$/src/org/star/game/TextBox.java" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/src/org/alchemicstudio/TextBoxBase.java" afterPath="$PROJECT_DIR$/src/org/star/game/TextBoxBase.java" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/src/org/alchemicstudio/Texture.java" afterPath="$PROJECT_DIR$/src/org/star/game/Texture.java" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/src/org/alchemicstudio/TrackSegment.java" afterPath="$PROJECT_DIR$/src/org/star/circuit/TrackSegment.java" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/src/org/alchemicstudio/Vector2.java" afterPath="$PROJECT_DIR$/src/org/star/types/Vector2.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/AndroidManifest.xml" afterPath="$PROJECT_DIR$/AndroidManifest.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/project.properties" afterPath="$PROJECT_DIR$/project.properties" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/res/layout-v8/game.xml" afterPath="$PROJECT_DIR$/res/layout-v8/game.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/res/layout/level_badge_list_9.xml" afterPath="$PROJECT_DIR$/res/layout/level_badge_list_9.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/res/layout/main.xml" afterPath="$PROJECT_DIR$/res/layout/main.xml" />
-    </list>
+    <list default="true" id="1be4a04d-e181-48b8-9dc9-1fc719711aab" name="Default" comment="" />
     <list id="5d726b25-c9cb-4d53-87ce-b57bdd1a9b88" name="intel" comment="" />
     <list id="dced38a0-96db-4cd5-98a6-00fbb8665564" name="asset" comment="" />
-    <list id="e1c1cbf2-d1aa-4f03-9539-a143191b65be" name="config" comment="">
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/misc.xml" afterPath="$PROJECT_DIR$/.idea/misc.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/jangame_trunk.iml" afterPath="$PROJECT_DIR$/jangame_trunk.iml" />
-    </list>
+    <list id="e1c1cbf2-d1aa-4f03-9539-a143191b65be" name="config" comment="" />
     <ignored path="jangame.iws" />
     <ignored path=".idea/workspace.xml" />
     <option name="TRACKING_ENABLED" value="true" />
@@ -179,7 +113,7 @@
       <file leaf-file-name="main.xml" pinned="false" current="true" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/res/layout/main.xml">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="27" column="41" selection-start="1160" selection-end="1160" vertical-scroll-proportion="0.62367225">
+            <state line="52" column="50" selection-start="2305" selection-end="2305" vertical-scroll-proportion="0.47272727">
               <folding />
             </state>
           </provider>
@@ -381,11 +315,11 @@
     <property name="MemberChooser.copyJavadoc" value="false" />
     <property name="GoToClass.toSaveIncludeLibraries" value="false" />
     <property name="WebServerToolWindowFactoryState" value="false" />
-    <property name="MemberChooser.showClasses" value="true" />
     <property name="FullScreen" value="false" />
+    <property name="MemberChooser.showClasses" value="true" />
     <property name="GoToClass.includeLibraries" value="false" />
-    <property name="options.splitter.details.proportions" value="0.2" />
     <property name="options.searchVisible" value="true" />
+    <property name="options.splitter.details.proportions" value="0.2" />
   </component>
   <component name="PublishConfig">
     <servers>
@@ -661,16 +595,15 @@
   </component>
   <component name="ToolWindowManager">
     <frame x="66" y="22" width="1614" height="1028" extended-state="0" />
-    <editor active="false" />
+    <editor active="true" />
     <layout>
       <window_info id="Data Sources" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="Changes" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33296582" sideWeight="0.49744573" order="7" side_tool="false" content_ui="tabs" x="176" y="133" width="1495" height="719" />
       <window_info id="JetGradle" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
       <window_info id="Preview" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32965687" sideWeight="0.7363737" order="8" side_tool="false" content_ui="tabs" />
       <window_info id="Palette" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
-      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.29768467" sideWeight="0.49744573" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
-      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.24366042" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
+      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.24366042" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="IDEtalk Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="12" side_tool="false" content_ui="tabs" />
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.29768467" sideWeight="0.49808428" order="8" side_tool="true" content_ui="tabs" />
       <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="2" side_tool="true" content_ui="tabs" />
@@ -682,8 +615,7 @@
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="1" side_tool="true" content_ui="tabs" />
       <window_info id="Maven Projects" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32950923" sideWeight="0.670354" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Commander" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.39974457" sideWeight="0.70231533" order="1" side_tool="false" content_ui="tabs" />
-      <window_info id="Project" active="true" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.21072797" sideWeight="0.7563396" order="0" side_tool="false" content_ui="combo" />
-      <window_info id="Inspection" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.30319735" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.21072797" sideWeight="0.7563396" order="0" side_tool="false" content_ui="combo" />
       <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.3296582" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Remote Host" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="SVN Repositories" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32923368" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
@@ -692,6 +624,8 @@
       <window_info id="File Transfer" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32923368" sideWeight="0.5" order="12" side_tool="false" content_ui="tabs" />
       <window_info id="SVN Properties" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32923368" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Message" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
+      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.29768467" sideWeight="0.49744573" order="1" side_tool="false" content_ui="tabs" />
+      <window_info id="Inspection" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.30319735" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
     </layout>
   </component>
   <component name="VcsContentAnnotationSettings">
@@ -853,13 +787,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/AndroidManifest.xml">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="10" column="19" selection-start="797" selection-end="797" vertical-scroll-proportion="0.0">
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/gen/org/star/BuildConfig.java">
       <provider selected="true" editor-type-id="text-editor">
         <state line="5" column="1" selection-start="150" selection-end="150" vertical-scroll-proportion="0.14134276">
@@ -902,9 +829,16 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/AndroidManifest.xml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="10" column="19" selection-start="797" selection-end="797" vertical-scroll-proportion="0.0">
+          <folding />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/res/layout/main.xml">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="27" column="41" selection-start="1160" selection-end="1160" vertical-scroll-proportion="0.62367225">
+        <state line="52" column="50" selection-start="2305" selection-end="2305" vertical-scroll-proportion="0.47272727">
           <folding />
         </state>
       </provider>
