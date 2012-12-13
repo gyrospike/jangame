@@ -26,14 +26,14 @@ import javax.xml.parsers.SAXParserFactory;
 
 public class GameActivity extends Activity {
 
-	/** maximum number of input objects that we'll store*/
-	public static final int INPUT_QUEUE_SIZE = 32;
-	
-	/** TODO */
-	private ArrayBlockingQueue<InputObject> mInputObjectPool;
-	
-	/** The surface view that creates the game renderer */
-	private GameSurfaceView mGLView;
+    /** maximum number of input objects that we'll store*/
+    public static final int INPUT_QUEUE_SIZE = 32;
+
+    /** TODO */
+    private ArrayBlockingQueue<InputObject> mInputObjectPool;
+
+    /** The surface view that creates the game renderer */
+    private GameSurfaceView mGLView;
 
     /** timer system that takes in input, updates game logic, then updates drawable content */
     private GameRunnable mGameRunnable;
@@ -47,22 +47,30 @@ public class GameActivity extends Activity {
     /** true if the game thread is running */
     private boolean mRunning;
 
-	@Override
-	public void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
 
-		this.requestWindowFeature(Window.FEATURE_NO_TITLE);
-		getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
-		
-		BaseObject.conditionallyInitializeBaseObjects();
-		BaseObject.sSystemRegistry.mAssetLibrary.conditionallyLoadFonts(this);
+        this.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
 
-		DisplayMetrics metrics = new DisplayMetrics();
-		getWindowManager().getDefaultDisplay().getMetrics(metrics);
-		Log.d("joelog:Graphics", "Real dpi: " + metrics.densityDpi);
-		Log.d("joelog:Graphics", "screen dimensions in dpi: " + metrics.widthPixels + " x " + metrics.heightPixels);
-		
-		setContentView(R.layout.game);
+        int[] stringArray = {
+                R.string.app_title,
+                R.string.circuit_complete,
+                R.string.circuit_incomplete,
+                R.string.elapsed_time,
+                R.string.par_time
+        };
+
+        BaseObject.conditionallyInitializeBaseObjects();
+        BaseObject.sSystemRegistry.mAssetLibrary.conditionallyLoadFonts(this, stringArray);
+
+        DisplayMetrics metrics = new DisplayMetrics();
+        getWindowManager().getDefaultDisplay().getMetrics(metrics);
+        Log.d("joelog:Graphics", "Real dpi: " + metrics.densityDpi);
+        Log.d("joelog:Graphics", "screen dimensions in dpi: " + metrics.widthPixels + " x " + metrics.heightPixels);
+
+        setContentView(R.layout.game);
         mGLView = (GameSurfaceView)findViewById(R.id.GameSurfaceView01);
 
         Handler levelCompleteHandler = new Handler() {
@@ -106,8 +114,8 @@ public class GameActivity extends Activity {
             Log.e("DEBUG", "QueryError", e);
         }
 
-		createInputObjectPool();
-	}
+        createInputObjectPool();
+    }
 
     /**
      * Display the custom level complete dialog alerting users to any badges the earned
@@ -150,30 +158,30 @@ public class GameActivity extends Activity {
         }
     }
 
-	@Override
-	protected void onPause() {
-		super.onPause();
+    @Override
+    protected void onPause() {
+        super.onPause();
         if (mRunning) {
             mGameRunnable.pauseGame();
         }
-		mGLView.onPause();
-		Log.d("joelog", "Game paused");
-	}
+        mGLView.onPause();
+        Log.d("joelog", "Game paused");
+    }
 
-	@Override
-	protected void onResume() {
-		super.onResume();
+    @Override
+    protected void onResume() {
+        super.onResume();
         Log.d("DEBUG", "resuming...");
         mGameRunnable.resumeGame();
-		mGLView.onResume();
-		Log.d("joelog", "Game resumed");
-	}
+        mGLView.onResume();
+        Log.d("joelog", "Game resumed");
+    }
 
-	@Override
-	public boolean onKeyDown(int keyCode, KeyEvent event) {
-		boolean result = false;
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        boolean result = false;
         if (keyCode == KeyEvent.KEYCODE_BACK) {
-			finish();
+            finish();
             if (mRunning) {
                 if (mGameRunnable.getPaused()) {
                     mGameRunnable.resumeGame();
@@ -187,47 +195,47 @@ public class GameActivity extends Activity {
                 mThread = null;
                 mRunning = false;
             }
-			result = true;
-		}
-		return result;
-	}
+            result = true;
+        }
+        return result;
+    }
 
-	@Override
-	public boolean onTouchEvent(MotionEvent event) {
-		// we only care about down actions in this game.
-		try {
-			// history first
-			int hist = event.getHistorySize();
-			if (hist > 0) {
-				// add from oldest to newest
-				for (int i = 0; i < hist; i++) {
-					InputObject input = mInputObjectPool.take();
-					input.useEventHistory(event, i);
+    @Override
+    public boolean onTouchEvent(MotionEvent event) {
+        // we only care about down actions in this game.
+        try {
+            // history first
+            int hist = event.getHistorySize();
+            if (hist > 0) {
+                // add from oldest to newest
+                for (int i = 0; i < hist; i++) {
+                    InputObject input = mInputObjectPool.take();
+                    input.useEventHistory(event, i);
                     mGameManager.feedInput(input);
-				}
-			}
-			// current last
-			InputObject input = mInputObjectPool.take();
-			input.useEvent(event);
+                }
+            }
+            // current last
+            InputObject input = mInputObjectPool.take();
+            input.useEvent(event);
             mGameManager.feedInput(input);
-		} catch (InterruptedException e) {
-		}
-		// don't allow more than 60 motion events per second
-		try {
-			Thread.sleep(16);
-		} catch (InterruptedException e) {
-		}
-		return true;
-	}
+        } catch (InterruptedException e) {
+        }
+        // don't allow more than 60 motion events per second
+        try {
+            Thread.sleep(16);
+        } catch (InterruptedException e) {
+        }
+        return true;
+    }
 
-	/**
-	 * initializes the input pool
-	 */
-	private void createInputObjectPool() {
-		mInputObjectPool = new ArrayBlockingQueue<InputObject>(INPUT_QUEUE_SIZE);
-		for (int i = 0; i < INPUT_QUEUE_SIZE; i++) {
-			mInputObjectPool.add(new InputObject(mInputObjectPool));
-		}
-	}
+    /**
+     * initializes the input pool
+     */
+    private void createInputObjectPool() {
+        mInputObjectPool = new ArrayBlockingQueue<InputObject>(INPUT_QUEUE_SIZE);
+        for (int i = 0; i < INPUT_QUEUE_SIZE; i++) {
+            mInputObjectPool.add(new InputObject(mInputObjectPool));
+        }
+    }
 
 }

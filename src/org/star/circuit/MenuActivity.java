@@ -55,8 +55,16 @@ public class MenuActivity extends Activity {
         this.requestWindowFeature(Window.FEATURE_NO_TITLE);
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
 
+        int[] stringArray = {
+                R.string.app_title,
+                R.string.circuit_complete,
+                R.string.circuit_incomplete,
+                R.string.elapsed_time,
+                R.string.par_time
+        };
+
         BaseObject.conditionallyInitializeBaseObjects();
-        BaseObject.sSystemRegistry.mAssetLibrary.conditionallyLoadFonts(this);
+        BaseObject.sSystemRegistry.mAssetLibrary.conditionallyLoadFonts(this, stringArray);
 
         DisplayMetrics metrics = new DisplayMetrics();
         getWindowManager().getDefaultDisplay().getMetrics(metrics);

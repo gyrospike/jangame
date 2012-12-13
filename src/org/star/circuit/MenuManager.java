@@ -2,12 +2,7 @@ package org.star.circuit;
 
 import android.util.DisplayMetrics;
 import android.util.Log;
-import org.star.common.game.DrawableObject;
-import org.star.common.game.HUDStaticTextElement;
-import org.star.common.game.ImagePack;
-import org.star.common.game.BaseObject;
-import org.star.common.game.HUD;
-import org.star.common.game.AssetLibrary;
+import org.star.common.game.*;
 import org.star.common.types.FixedSizeArray;
 
 public class MenuManager extends BaseManager {
