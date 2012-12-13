@@ -1,6 +1,6 @@
 package org.star.circuit;
 
-import org.star.game.InputObject;
+import org.star.common.game.InputObject;
 
 public abstract class GameMode {
 

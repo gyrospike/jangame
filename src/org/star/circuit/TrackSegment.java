@@ -1,10 +1,10 @@
 package org.star.circuit;
 
 
-import org.star.game.BaseObject;
-import org.star.game.ImagePack;
-import org.star.game.RenderSystem;
-import org.star.game.Sprite;
+import org.star.common.game.BaseObject;
+import org.star.common.game.ImagePack;
+import org.star.common.game.RenderSystem;
+import org.star.common.game.Sprite;
 
 public class TrackSegment extends BaseObject {
 

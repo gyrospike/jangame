@@ -18,8 +18,13 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 import org.star.R;
-import org.star.game.*;
-import org.star.types.FixedSizeArray;
+import org.star.common.game.BaseObject;
+import org.star.common.game.ImagePack;
+import org.star.common.game.DrawableObject;
+import org.star.common.game.DrawableOverlay;
+import org.star.common.game.InputObject;
+import org.star.common.types.FixedSizeArray;
+import org.star.common.game.HUD;
 
 public class GameManager extends BaseManager {
 

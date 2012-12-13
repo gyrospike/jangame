@@ -1,7 +1,7 @@
 package org.star.circuit;
 
 
-import org.star.types.FixedSizeArray;
+import org.star.common.types.FixedSizeArray;
 
 public class ParsedMapData {
 

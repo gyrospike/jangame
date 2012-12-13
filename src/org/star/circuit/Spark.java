@@ -1,11 +1,11 @@
 package org.star.circuit;
 
 import org.star.R;
-import org.star.game.BaseObject;
-import org.star.game.HUD;
-import org.star.game.ImagePack;
-import org.star.game.Sprite;
-import org.star.types.Vector2;
+import org.star.common.game.BaseObject;
+import org.star.common.game.HUD;
+import org.star.common.game.ImagePack;
+import org.star.common.game.Sprite;
+import org.star.common.types.Vector2;
 
 
 public class Spark extends BaseObject {

@@ -1,7 +1,7 @@
 package org.star.circuit;
 
 import android.util.DisplayMetrics;
-import org.star.types.Vector2;
+import org.star.common.types.Vector2;
 
 public class BaseManager {
 

@@ -3,9 +3,9 @@ package org.star.circuit;
 import android.content.Context;
 import android.opengl.GLSurfaceView;
 import android.util.AttributeSet;
-import org.star.game.AssetLibrary;
-import org.star.game.BaseObject;
-import org.star.game.GameRenderer;
+import org.star.common.game.AssetLibrary;
+import org.star.common.game.BaseObject;
+import org.star.common.game.GameRenderer;
 
 public class MenuSurfaceView extends GLSurfaceView {
 

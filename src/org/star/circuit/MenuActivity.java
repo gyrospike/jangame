@@ -20,9 +20,9 @@ import android.widget.HorizontalScrollView;
 import android.widget.TextView;
 
 import org.star.R;
-import org.star.game.BaseObject;
-import org.star.game.GameRunnable;
-import org.star.game.ImagePackXMLHandler;
+import org.star.common.game.BaseObject;
+import org.star.common.game.GameRunnable;
+import org.star.common.game.ImagePackXMLHandler;
 
 import javax.xml.parsers.SAXParser;
 import javax.xml.parsers.SAXParserFactory;

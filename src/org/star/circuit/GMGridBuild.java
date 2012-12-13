@@ -1,7 +1,7 @@
 package org.star.circuit;
 
-import org.star.game.HUD;
-import org.star.game.InputObject;
+import org.star.common.game.HUD;
+import org.star.common.game.InputObject;
 
 public class GMGridBuild extends GameMode {
 

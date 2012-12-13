@@ -8,11 +8,11 @@ import android.os.Handler;
 import android.os.Message;
 import android.util.Log;
 import org.star.R;
-import org.star.game.BaseObject;
-import org.star.game.DrawableOverlay;
-import org.star.game.HUD;
-import org.star.types.FixedSizeArray;
-import org.star.types.Vector2;
+import org.star.common.game.BaseObject;
+import org.star.common.game.DrawableOverlay;
+import org.star.common.game.HUD;
+import org.star.common.types.FixedSizeArray;
+import org.star.common.types.Vector2;
 
 public class ReleaseManager extends BaseObject {
 

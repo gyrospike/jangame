@@ -7,8 +7,8 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 import org.star.R;
-import org.star.game.HUD;
-import org.star.game.InputObject;
+import org.star.common.game.HUD;
+import org.star.common.game.InputObject;
 
 public class GMRelease extends GameMode {
 	
