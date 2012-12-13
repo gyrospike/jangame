@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
-
+<layer-list android:layout_height="match_parent"
+            android:layout_width="match_parent"
+            xmlns:android="http://schemas.android.com/apk/res/android">
 	<item android:drawable="@layout/circuit_button" />
 	<item android:id="@+id/silver_badge_id" android:drawable="@drawable/no_badge"/>
 	<item android:id="@+id/gold_badge_id" android:drawable="@drawable/no_badge"/>

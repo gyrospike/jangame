@@ -8,11 +8,11 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent" >
 
-        <org.alchemicstudio.MenuSurfaceView
+        <org.star.circuit.MenuSurfaceView
                 android:id="@+id/MenuSurfaceView01"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content" >
-        </org.alchemicstudio.MenuSurfaceView>
+        </org.star.circuit.MenuSurfaceView>
     </FrameLayout>
 
     <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
@@ -98,7 +98,6 @@
 
                 <Button
                         android:id="@+id/Button10"
-                        android:layout_column="1"
                         android:layout_margin="10dip"
                         android:background="@layout/level_badge_list_6"
                         style="@style/circuit_button"
@@ -186,7 +185,6 @@
 
                 <Button
                         android:id="@+id/Button20"
-                        android:layout_column="1"
                         android:layout_margin="10dip"
                         android:background="@layout/level_badge_list_15"
                         style="@style/circuit_button"
