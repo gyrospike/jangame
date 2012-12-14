@@ -46,7 +46,7 @@ public class MenuManager extends BaseManager {
     public void init() {
 
         // It seems you CAN specify absolute pixel values when setting opengl positions?
-        mTitle  = new HUDStaticTextElement(HUD.NOT_UNIQUE_ELEMENT, 205, 190, AssetLibrary.PRERENDERED_TEXT_INDEX_CIRCUIT);
+        mTitle  = new HUDStaticTextElement(HUD.NOT_UNIQUE_ELEMENT, 205, 190, CircuitConstants.PRERENDERED_TEXT_INDEX_CIRCUIT);
 
         ImagePack borderTop = BaseObject.sSystemRegistry.mAssetLibrary.getImagePack("borderTop");
         mStaticDeco.add(new DrawableObject(borderTop, 0, mScreenWidth, -1));

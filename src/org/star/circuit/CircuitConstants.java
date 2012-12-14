@@ -1,12 +1,5 @@
 package org.star.circuit;
 
-/**
- * Created with IntelliJ IDEA.
- * User: jharding
- * Date: 12/13/12
- * Time: 2:46 PM
- * To change this template use File | Settings | File Templates.
- */
 class CircuitConstants {
 
     static final String SHARED_PREFS_KEY = "CircuitSave";
@@ -24,5 +17,17 @@ class CircuitConstants {
     static final String UNIQUE_ELEMENT_PAR_TIME = "partime";
 
     static final String UNIQUE_ELEMENT_MAP_NAME = "mapName";
+
+    static final String TYPE_FACE_AGENCY = "agency";
+
+    static final String BADGE_TYPE_TIME = "time";
+
+    static final String BADGE_TYPE_COMPLETE = "complete";
+
+    public static final int PRERENDERED_TEXT_INDEX_CIRCUIT = 0;
+
+   	public static final int PRERENDERED_TEXT_INDEX_COMPLETE = 1;
+
+   	public static final int PRERENDERED_TEXT_INDEX_INCOMPLETE = 2;
 
 }

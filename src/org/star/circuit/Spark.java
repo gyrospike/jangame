@@ -271,7 +271,7 @@ public class Spark extends BaseObject {
     public void update(long timeDelta) {
         calculateForce();
         mPhysicsObject.updateState(timeDelta, mDistanceToTargetX, mDistanceToTargetY);
-        HUD.getInstance().modifyTextElement(sSystemRegistry.mAssetLibrary.getStringById(R.string.speed_meter)+(int) getCurrentSpeed(), CircuitConstants.UNIQUE_ELEMENT_SPARK_SPEED);
+        // HUD.getInstance().modifyTextElement(sSystemRegistry.mAssetLibrary.getStringById(R.string.speed_meter)+(int) getCurrentSpeed(), CircuitConstants.UNIQUE_ELEMENT_SPARK_SPEED);
         if(!mPhysicsObject.hasRemainder()) {
             updateSprite(timeDelta);
         }

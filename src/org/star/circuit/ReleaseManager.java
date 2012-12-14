@@ -84,7 +84,7 @@ public class ReleaseManager extends BaseObject {
             for(int j = 0; j < reqs.getCount(); j++) {
                 String reqType = reqs.get(j).getType();
                 int reqValue = reqs.get(j).getValue();
-                if(reqType.equals("time")) {
+                if(reqType.equals(CircuitConstants.BADGE_TYPE_TIME)) {
                     parTime = reqValue;
                     break outerloop;
                 }
@@ -93,9 +93,9 @@ public class ReleaseManager extends BaseObject {
 
         mSpark = new Spark();
         String mapName = mContext.getResources().getString(mapNameResource);
-        HUD.getInstance().addTextElement(-1,mapName, 36, Color.GREEN, 30, 60, true, CircuitConstants.UNIQUE_ELEMENT_MAP_NAME);
-        HUD.getInstance().addTextElement(-1,convertMilisecondsToDisplayTime(mPlayTime), 36, Color.CYAN, 150, 60, true, CircuitConstants.UNIQUE_ELEMENT_PLAY_TIME);
-        HUD.getInstance().addTextElement(-1,convertMilisecondsToDisplayTime(parTime), 36, Color.YELLOW, 300, 60, true, CircuitConstants.UNIQUE_ELEMENT_PAR_TIME);
+        HUD.getInstance().addTextElement(-1,mapName, 36, Color.GREEN, CircuitConstants.TYPE_FACE_AGENCY, 30, 60, true, CircuitConstants.UNIQUE_ELEMENT_MAP_NAME);
+        HUD.getInstance().addTextElement(-1,convertMilisecondsToDisplayTime(mPlayTime), 36, Color.CYAN, CircuitConstants.TYPE_FACE_AGENCY, 150, 60, true, CircuitConstants.UNIQUE_ELEMENT_PLAY_TIME);
+        HUD.getInstance().addTextElement(-1,convertMilisecondsToDisplayTime(parTime), 36, Color.YELLOW, CircuitConstants.TYPE_FACE_AGENCY, 300, 60, true, CircuitConstants.UNIQUE_ELEMENT_PAR_TIME);
     }
 
     /**
@@ -154,7 +154,7 @@ public class ReleaseManager extends BaseObject {
      */
     public void releaseSpark() {
         mPlayTime = 0;
-        HUD.getInstance().removeTextElement("complete");
+        HUD.getInstance().removeTextElement(CircuitConstants.BADGE_TYPE_COMPLETE);
         mSpark.resetSpark();
         if(mStartNode != null) {
             mSpark.setPosition(mStartNode.getPosition().x, mStartNode.getPosition().y);
@@ -292,7 +292,7 @@ public class ReleaseManager extends BaseObject {
      */
     private void handleCircuitComplete() {
         // now we use the UI thread for this
-        //HUD.getInstance().showStaticTextElement(-1, AssetLibrary.PRERENDERED_TEXT_INDEX_COMPLETE, 250, 100, true, HUD.UNIQUE_ELEMENT_COMPLETE);
+        //HUD.getInstance().showStaticTextElement(-1, CircuitConstants.PRERENDERED_TEXT_INDEX_COMPLETE, 250, 100, true, HUD.UNIQUE_ELEMENT_COMPLETE);
         resetSpark();
         showFinishedDialog(true, checkForBadgesEarned());
     }
@@ -302,7 +302,7 @@ public class ReleaseManager extends BaseObject {
      */
     private void handleCircuitIncomplete() {
         // now we use the UI thread for this
-        //HUD.getInstance().showStaticTextElement(-1, AssetLibrary.PRERENDERED_TEXT_INDEX_INCOMPLETE, 250, 100, true, HUD.UNIQUE_ELEMENT_COMPLETE);
+        //HUD.getInstance().showStaticTextElement(-1, CircuitConstants.PRERENDERED_TEXT_INDEX_INCOMPLETE, 250, 100, true, HUD.UNIQUE_ELEMENT_COMPLETE);
         Vector2 pos = mSpark.getPosition();
         mOverlay.createParticle((int)(pos.x + (Grid.NODE_DIMENSION/2)), (int)(pos.y - (Grid.NODE_DIMENSION/2)) , 10);
         resetSpark();
@@ -319,11 +319,11 @@ public class ReleaseManager extends BaseObject {
      */
     private Boolean evaluateBadgeRequirement(String type, int value) {
         Boolean result = false;
-        if(type.equals("time")) {
+        if(type.equals(CircuitConstants.BADGE_TYPE_TIME)) {
             if(value > mPlayTime) {
                 result = true;
             }
-        } else if(type.equals("complete")) {
+        } else if(type.equals(CircuitConstants.BADGE_TYPE_COMPLETE)) {
             result = true;
         }
         return result;

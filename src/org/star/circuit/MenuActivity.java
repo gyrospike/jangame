@@ -6,6 +6,7 @@ import android.app.Dialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.Resources;
+import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.LayerDrawable;
 import android.os.Bundle;
@@ -20,12 +21,11 @@ import android.widget.HorizontalScrollView;
 import android.widget.TextView;
 
 import org.star.R;
-import org.star.common.game.BaseObject;
-import org.star.common.game.GameRunnable;
-import org.star.common.game.ImagePackXMLHandler;
+import org.star.common.game.*;
 
 import javax.xml.parsers.SAXParser;
 import javax.xml.parsers.SAXParserFactory;
+import java.util.HashMap;
 
 
 public class MenuActivity extends Activity {
@@ -55,16 +55,7 @@ public class MenuActivity extends Activity {
         this.requestWindowFeature(Window.FEATURE_NO_TITLE);
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
 
-        int[] stringArray = {
-                R.string.app_title,
-                R.string.circuit_complete,
-                R.string.circuit_incomplete,
-                R.string.elapsed_time,
-                R.string.par_time
-        };
-
-        BaseObject.conditionallyInitializeBaseObjects();
-        BaseObject.sSystemRegistry.mAssetLibrary.conditionallyLoadFonts(this, stringArray);
+        initializeActivityText();
 
         DisplayMetrics metrics = new DisplayMetrics();
         getWindowManager().getDefaultDisplay().getMetrics(metrics);
@@ -104,6 +95,38 @@ public class MenuActivity extends Activity {
         mRunnable.setGameManager(new MenuManager(metrics));
         mRunnable.setGameRenderer(mGLView.getRenderer());
         start();
+    }
+
+    /**
+     * Order dependent block of text/font initialization
+     */
+    private void initializeActivityText() {
+        BaseObject.conditionallyInitializeBaseObjects();
+
+        HashMap<String, Typeface> fontHashMap = new HashMap<String, Typeface>();
+        fontHashMap.put(CircuitConstants.TYPE_FACE_AGENCY, Typeface.createFromAsset(getAssets(), "fonts/AGENCYR.TTF"));
+        BaseObject.sSystemRegistry.mAssetLibrary.setCustomFonts(fontHashMap);
+
+        TextBoxBase[] preRenderedText = new TextBoxBase[1];
+        preRenderedText[CircuitConstants.PRERENDERED_TEXT_INDEX_CIRCUIT] = new TextBoxBase();
+        preRenderedText[CircuitConstants.PRERENDERED_TEXT_INDEX_CIRCUIT].setText(getResources().getString(R.string.app_title));
+        preRenderedText[CircuitConstants.PRERENDERED_TEXT_INDEX_CIRCUIT].setARGB(255, 255, 255, 255);
+        preRenderedText[CircuitConstants.PRERENDERED_TEXT_INDEX_CIRCUIT].setTextSize(128);
+        preRenderedText[CircuitConstants.PRERENDERED_TEXT_INDEX_CIRCUIT].setCustomTypeFace(CircuitConstants.TYPE_FACE_AGENCY);
+
+        /*
+        preRenderedText[CircuitConstants.PRERENDERED_TEXT_INDEX_COMPLETE] = new TextBoxBase();
+        preRenderedText[CircuitConstants.PRERENDERED_TEXT_INDEX_COMPLETE].setText(getResources().getString(R.string.circuit_complete));
+        preRenderedText[CircuitConstants.PRERENDERED_TEXT_INDEX_COMPLETE].setARGB(255, 0, 255, 0);
+        preRenderedText[CircuitConstants.PRERENDERED_TEXT_INDEX_COMPLETE].setTextSize(48);
+
+        preRenderedText[CircuitConstants.PRERENDERED_TEXT_INDEX_INCOMPLETE] = new TextBoxBase();
+        preRenderedText[CircuitConstants.PRERENDERED_TEXT_INDEX_INCOMPLETE].setText(getResources().getString(R.string.circuit_incomplete));
+        preRenderedText[CircuitConstants.PRERENDERED_TEXT_INDEX_INCOMPLETE].setARGB(255, 255, 0, 0);
+        preRenderedText[CircuitConstants.PRERENDERED_TEXT_INDEX_INCOMPLETE].setTextSize(48);
+        */
+
+        BaseObject.sSystemRegistry.mAssetLibrary.setPrerenderedText(preRenderedText);
     }
 
     /**
