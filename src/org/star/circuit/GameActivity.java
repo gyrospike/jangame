@@ -25,7 +25,7 @@ import javax.xml.parsers.SAXParserFactory;
 
 public class GameActivity extends Activity {
 
-    /** maximum number of input objects that we'll store*/
+    /** maximum number of input objects that we'll store */
     public static final int INPUT_QUEUE_SIZE = 32;
 
     /** TODO */

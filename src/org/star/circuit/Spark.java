@@ -1,10 +1,6 @@
 package org.star.circuit;
 
-import org.star.R;
-import org.star.common.game.BaseObject;
-import org.star.common.game.HUD;
-import org.star.common.game.ImagePack;
-import org.star.common.game.Sprite;
+import org.star.common.game.*;
 import org.star.common.types.Vector2;
 
 

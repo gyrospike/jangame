@@ -2,6 +2,9 @@
 package org.star.circuit;
 
 
+import org.star.common.game.PhysicalState;
+import org.star.common.game.PhysicsObject;
+
 public class OnRailsPhysicsObject extends PhysicsObject {
 
 	/** amount truncated from delta x that needs to be added to the new target vector */
